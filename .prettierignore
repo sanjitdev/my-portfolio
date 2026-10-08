@@ -1,0 +1,13 @@
+.next/
+node_modules/
+bun.lockb
+yarn.lock
+pnpm-lock.yaml
+
+# AI-DLC artifacts — generated and tracked, not formatted by Prettier
+memory-bank/
+public/
+out/
+*.min.js
+*.min.css
+.next-env.d.ts

@@ -1,0 +1,121 @@
+---
+last_updated: 2026-10-08T20:42:00Z
+total_decisions: 0
+adr_count: 0
+---
+
+# Decision Index
+
+This index tracks all Architecture Decision Records (ADRs) created during Construction bolts.
+It also tracks the high-level project decisions made during `project-init` (the standards).
+
+Use this to find relevant prior decisions when working on related features.
+
+## How to Use
+
+**For Agents**: Scan the "Read when" fields below to identify decisions relevant to your current task. Before implementing new features, check if existing ADRs constrain or guide your approach. Load the full standard/ADR for matching entries.
+
+**For Humans**: Browse decisions chronologically or search for keywords. Each entry links to the full document with complete context, alternatives considered, and consequences.
+
+---
+
+## Project-Init Decisions (Standards)
+
+These are the foundational choices made when the project was initialized. They establish baseline constraints and conventions for all subsequent work.
+
+### PI-001: Frontend-only architecture (no backend, no database)
+- **Status**: accepted
+- **Date**: 2026-10-08
+- **Source**: `project.yaml`
+- **Summary**: Project type set to `frontend-app`. CV data is static and sourced from `docs/LinkedIn_CV.json` at build time. No server, no API, no database.
+- **Read when**: Anything that might suggest adding a backend, API, or data persistence — first confirm it's still required, then question whether the data could be static.
+- **Implications**: Skip data-stack standard. Authentication not applicable. Vercel static hosting is sufficient (no serverless functions needed initially).
+
+### PI-002: Next.js 15+ (App Router) as the framework
+- **Status**: accepted
+- **Date**: 2026-10-08
+- **Source**: `standards/tech-stack.md`
+- **Summary**: Chose Next.js App Router over plain Vite for the React framework — gives us file-system routing, image optimization, and first-class Vercel integration while keeping the option open to add server features later.
+- **Read when**: Choosing where new code goes (App Router conventions), evaluating build performance, considering SSR vs SSG.
+- **Implications**: Use Server Components by default; only mark `"use client"` when interactivity requires it. Routes live in `app/`.
+
+### PI-003: Tailwind CSS v4 for styling (no UI library)
+- **Status**: accepted
+- **Date**: 2026-10-08
+- **Source**: `standards/tech-stack.md`, `standards/ux-guide.md`
+- **Summary**: Pure Tailwind utility classes; no shadcn/MUI/Chakra. Hand-rolled components in `components/shared/`.
+- **Read when**: Adding any visual element, evaluating whether to add a UI dependency.
+- **Implications**: No `@apply` in components. Custom theme values only via `tailwind.config.ts`. Icons via `lucide-react`.
+
+### PI-004: Vercel as hosting target
+- **Status**: accepted
+- **Date**: 2026-10-08
+- **Source**: `standards/tech-stack.md`
+- **Summary**: Git-based deploys to Vercel. Push to main → production. Every PR gets a preview URL.
+- **Read when**: Configuring env vars, build commands, deployment steps, custom domain setup.
+- **Implications**: No Dockerfile needed. Vercel auto-detects Next.js. Bun is supported (commit `bun.lockb`).
+
+### PI-005: Bun as package manager
+- **Status**: accepted
+- **Date**: 2026-10-08
+- **Source**: `standards/tech-stack.md`
+- **Summary**: Use `bun install` and `bun run <script>` for all package management and task running.
+- **Read when**: Adding dependencies, running scripts, troubleshooting install issues.
+- **Implications**: Commit `bun.lockb` (not `package-lock.json` or `yarn.lock`). Node.js still executes the app at runtime (Vercel handles this).
+
+### PI-006: Strict TypeScript with no `any` (prefer `unknown`)
+- **Status**: accepted
+- **Date**: 2026-10-08
+- **Source**: `standards/coding-standards.md`
+- **Summary**: TypeScript strict mode. `any` is discouraged; use `unknown` + type guards. ESLint warns on `any` but doesn't block.
+- **Read when**: Defining types for the CV JSON, handling external data, working with third-party libraries that have loose types.
+- **Implications**: All CV fields have explicit types in `lib/cv-types.ts`. Build-time data validation catches schema drift.
+
+### PI-007: Build-time data validation (fail fast, not silent)
+- **Status**: accepted
+- **Date**: 2026-10-08
+- **Source**: `standards/coding-standards.md`
+- **Summary**: If `docs/LinkedIn_CV.json` fails to load or doesn't match the expected schema, the build fails. A broken portfolio should never silently render empty.
+- **Read when**: Modifying the data loading path, adding new CV fields, debugging build failures.
+- **Implications**: Use Zod (or similar) for runtime validation in `lib/cv-data.ts`. TypeScript types are derived from the schema.
+
+### PI-008: Minimal testing (critical paths only, no busywork)
+- **Status**: accepted
+- **Date**: 2026-10-08
+- **Source**: `standards/coding-standards.md`
+- **Summary**: Vitest tests for `lib/` utilities, data validation, and shared/reusable components. No tests for one-off display components.
+- **Read when**: Deciding what to test, adding tests, evaluating CI test runtime.
+- **Implications**: Coverage is intentionally not measured. Test files co-located with the code they test.
+
+### PI-009: Dark mode via class strategy with localStorage persistence
+- **Status**: accepted
+- **Date**: 2026-10-08
+- **Source**: `standards/ux-guide.md`
+- **Summary**: Tailwind's `dark:` variant. User preference stored in `localStorage`. Default = system preference (`prefers-color-scheme`).
+- **Read when**: Adding any visual element, modifying color choices, setting up theme toggle.
+- **Implications**: All colors must be defined for both light and dark modes. Use `dark:` prefix in Tailwind classes.
+
+### PI-010: WCAG 2.1 AA accessibility target
+- **Status**: accepted
+- **Date**: 2026-10-08
+- **Source**: `standards/ux-guide.md`
+- **Summary**: Industry-standard accessibility. Semantic HTML, focus states, color contrast, `prefers-reduced-motion` support.
+- **Read when**: Adding any interactive element, choosing colors, adding animations.
+- **Implications**: `eslint-plugin-jsx-a11y` is enabled. Manual a11y check in Chrome DevTools before deploys.
+
+---
+
+## Decisions
+
+<!-- ADRs from Construction bolts are appended below in reverse chronological order (newest first) -->
+<!-- Format for each entry:
+
+### ADR-{n}: {title}
+- **Status**: {proposed|accepted|deprecated|superseded}
+- **Date**: {YYYY-MM-DD}
+- **Bolt**: {bolt-id} ({unit-name})
+- **Path**: `bolts/{bolt-id}/adr-{n}-{slug}.md`
+- **Summary**: {First sentence from Context}. {First sentence from Decision}.
+- **Read when**: {Agent guidance - domain keywords and scenarios when this ADR is relevant}
+
+-->

@@ -1,0 +1,66 @@
+@import 'tailwindcss';
+
+/* Custom design tokens via @theme (Tailwind v4) */
+@theme {
+  --color-accent-50: oklch(0.97 0.014 254);
+  --color-accent-100: oklch(0.93 0.03 254);
+  --color-accent-200: oklch(0.87 0.06 254);
+  --color-accent-300: oklch(0.79 0.1 254);
+  --color-accent-400: oklch(0.7 0.14 254);
+  --color-accent-500: oklch(0.62 0.16 254);
+  --color-accent-600: oklch(0.55 0.16 254);
+  --color-accent-700: oklch(0.48 0.14 254);
+  --color-accent-800: oklch(0.4 0.12 254);
+  --color-accent-900: oklch(0.32 0.1 254);
+  --color-accent-950: oklch(0.24 0.08 254);
+}
+
+@variant dark (&:where(.dark, .dark *));
+
+/* Smooth scroll for in-page nav links */
+@media (prefers-reduced-motion: no-preference) {
+  html {
+    scroll-behavior: smooth;
+  }
+}
+
+/* Base body styles */
+html {
+  -webkit-text-size-adjust: 100%;
+  text-rendering: optimizeLegibility;
+}
+
+body {
+  font-family:
+    var(--font-inter),
+    system-ui,
+    -apple-system,
+    'Segoe UI',
+    sans-serif;
+  background-color: white;
+  color: var(--color-slate-900);
+}
+
+.dark body {
+  background-color: var(--color-slate-950);
+  color: var(--color-slate-100);
+}
+
+/* Respect reduced motion globally */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* Focus ring (consistent across all interactive elements) */
+:focus-visible {
+  outline: 2px solid var(--color-accent-500);
+  outline-offset: 2px;
+  border-radius: 4px;
+}

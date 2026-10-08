@@ -1,0 +1,150 @@
+{
+  "personal_information": {
+    "name": "Sanjit Majumdar",
+    "current_title": "Senior Software Engineer II",
+    "headline": "Full-Stack .NET & Angular | Performance-Focused, Scalable Product Development",
+    "location": "Dhaka, Bangladesh",
+    "phone": "01927025242",
+    "email": "sanjit.majumdar.201312@gmail.com",
+    "address": "House 263, Chunkhola, Mollahat, Bagerhat",
+    "linkedin": "www.linkedin.com/in/sanjitmajumdar",
+    "website": "sanjit-majumdar.xyz"
+  },
+  "summary": "I design and deliver clean, scalable software with a strong focus on production stability and long-term maintainability. Senior Software Engineer with 7+ years of experience building systems used by global customers. Currently at Brain Station 23, working with .NET Core, Angular, TypeScript, and SQL Server. Strong in backend architecture, API design, and taking features from concept to production. Certified nopCommerce developer with hands-on experience in eCommerce and ERP platforms. Focused on writing readable, testable code that performs well under real-world load. Regularly collaborate with distributed teams across time zones. Comfortable working in remote-first, async environments with international stakeholders.",
+  "top_skills": ["Team Collaboration", "Subject Indexing", "Optimization"],
+  "languages": [
+    {
+      "language": "Bengali",
+      "proficiency": "Native or Bilingual"
+    },
+    {
+      "language": "English",
+      "proficiency": "Professional Working"
+    },
+    {
+      "language": "Hindi",
+      "proficiency": "Native or Bilingual"
+    },
+    {
+      "language": "Japanese",
+      "proficiency": "Elementary"
+    }
+  ],
+  "certifications": [
+    "LICT_Top-Up_JAVA Training Certificate of Achievement",
+    "Leadership Excellence",
+    "EF SET English Certificate 78/100 (C2 Proficient)",
+    "Advance Certificate For Management Professionals (ACMP 4.0)",
+    "NopCommerce Certified Developer"
+  ],
+  "honors_awards": ["Best Desktop Application"],
+  "experience": [
+    {
+      "company": "Brain Station 23",
+      "title": "Senior Software Engineer II",
+      "start_date": "January 2026",
+      "end_date": "Present",
+      "duration": "10 months",
+      "location": "Dhaka, Bangladesh",
+      "responsibilities": [
+        "Designed and implemented reliable backend systems using C# .NET Core with SQL Server, focusing on performance, scalability, and clean architecture.",
+        "Built and optimized REST APIs that are simple to consume, efficient in handling requests, and secure for production environments.",
+        "Developed responsive and user-friendly applications with Angular, TypeScript, and JavaScript, ensuring smooth interaction between backend and frontend.",
+        "Took projects from concept to production—covering requirement analysis, coding, testing, deployment, and ongoing support.",
+        "Broke down complex requirements into workable solutions and improve existing systems for speed, maintainability, and long-term stability.",
+        "Guided junior developers through code reviews, pair programming, and knowledge sharing, while working closely with cross-functional teams.",
+        "Delivered enterprise web apps, Android applications, and client-specific integrations—adapting to different industries and use cases."
+      ]
+    },
+    {
+      "company": "Brain Station 23",
+      "title": "Senior Software Engineer I",
+      "start_date": "July 2022",
+      "end_date": "February 2026",
+      "duration": "3 years 8 months",
+      "location": "Dhaka, Bangladesh",
+      "responsibilities": [
+        "Designed and implemented reliable backend systems using C# .NET Core with SQL Server, focusing on performance, scalability, and clean architecture.",
+        "Built and optimized REST APIs that are simple to consume, efficient in handling requests, and secure for production environments.",
+        "Developed responsive and user-friendly applications with Angular, TypeScript, and JavaScript, ensuring smooth interaction between backend and frontend.",
+        "Took projects from concept to production—covering requirement analysis, coding, testing, deployment, and ongoing support.",
+        "Broke down complex requirements into workable solutions and improve existing systems for speed, maintainability, and long-term stability.",
+        "Guided junior developers through code reviews, pair programming, and knowledge sharing, while working closely with cross-functional teams.",
+        "Delivered enterprise web apps, Android applications, and client-specific integrations—adapting to different industries and use cases."
+      ]
+    },
+    {
+      "company": "Brain Station 23",
+      "title": "Software Engineer",
+      "start_date": "July 2020",
+      "end_date": "June 2022",
+      "duration": "2 years",
+      "location": "Dhaka, Bangladesh",
+      "responsibilities": [
+        "Worked on building web and mobile applications using C# .NET Core, SQL Server, and Angular, focusing on clean, maintainable code.",
+        "Developed and integrated REST APIs to connect systems and improve data flow between applications.",
+        "Built responsive, user-friendly interfaces with Angular, JavaScript, and TypeScript to improve user experience.",
+        "Contributed to debugging, performance tuning, and enhancing features to ensure smooth and reliable applications.",
+        "Worked closely with senior engineers, QA, and project managers to deliver projects on time and meet client needs.",
+        "Picked up new frameworks, libraries, and coding practices to stay current and bring better solutions to the team."
+      ]
+    },
+    {
+      "company": "Brain Station 23",
+      "title": "Associate Software Engineer",
+      "start_date": "November 2018",
+      "end_date": "June 2020",
+      "duration": "1 year 8 months",
+      "location": "Bangladesh",
+      "responsibilities": [
+        "Took part in building both web and mobile apps with C# .NET Core, SQL Server, and Angular, making sure the code stayed clear and easy to maintain.",
+        "Supported the development and testing of REST APIs that handled system integration and smooth data flow.",
+        "Contributed to the frontend by working on UI pieces and smaller features with JavaScript, TypeScript, and Angular, helping polish the overall user experience.",
+        "Got involved in debugging, troubleshooting, and writing unit tests, which played a role in keeping projects reliable.",
+        "Learned directly from senior engineers through code reviews, sprint discussions, and day-to-day guidance, while also adding value where I could.",
+        "Kept up with new tools and frameworks, gradually applying that knowledge to real projects and improving my technical skill set along the way."
+      ]
+    },
+    {
+      "company": "2BitTechnology Ltd.",
+      "title": "Project Manager",
+      "start_date": "December 2017",
+      "end_date": "Present",
+      "duration": "8 years 11 months",
+      "location": "Dhaka, Bangladesh",
+      "responsibilities": [
+        "Led multiple client projects from planning to delivery, making sure deadlines, budgets, and quality standards were consistently met.",
+        "Acted as the bridge between clients, developers, and stakeholders—turning business needs into clear technical tasks.",
+        "Coordinated sprint planning, daily stand-ups, and review meetings to keep teams aligned and productive.",
+        "Tracked progress with project management tools, flagged risks early, and adjusted timelines when needed.",
+        "Encouraged collaboration across teams and created a work environment where challenges were openly discussed and solved quickly.",
+        "Reported on project milestones, performance, and outcomes to leadership while ensuring client expectations stayed front and center."
+      ]
+    }
+  ],
+  "education": [
+    {
+      "institution": "Gopalganj Science and Technology University",
+      "degree": "Bachelor of Science (B.Sc.)",
+      "field_of_study": "Computer Science and Engineering",
+      "start_date": "January 2014",
+      "end_date": "December 2017"
+    },
+    {
+      "institution": "University of Dhaka",
+      "program": "ACMP 4.0",
+      "field_of_study": "Business Administration, Management and Operations",
+      "start_date": "July 2023",
+      "end_date": "September 2023"
+    }
+  ],
+  "additional_education_entry": {
+    "institution": "GSTU",
+    "degree": "Bachelor of Science",
+    "field_of_study": "Computer Engineering"
+  },
+  "source": {
+    "file": "LinkedIn_CV.pdf",
+    "pages": 4
+  }
+}
