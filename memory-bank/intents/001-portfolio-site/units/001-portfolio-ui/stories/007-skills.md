@@ -2,11 +2,11 @@
 id: 007-skills
 unit: 001-portfolio-ui
 intent: 001-portfolio-site
-status: ready
+status: complete
 priority: must
-created: 2026-10-08T20:52:00Z
+created: '2026-10-08T20:52:00Z'
 assigned_bolt: 001-portfolio-ui-sections
-implemented: false
+implemented: true
 ---
 
 # Story: 007-skills

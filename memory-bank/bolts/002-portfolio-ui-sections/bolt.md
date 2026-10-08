@@ -3,7 +3,7 @@ id: 002-portfolio-ui-sections
 unit: 001-portfolio-ui
 intent: 001-portfolio-site
 type: simple-construction-bolt
-status: planned
+status: complete
 stories:
   - 004-hero
   - 005-about
@@ -14,28 +14,26 @@ stories:
   - 010-languages
   - 011-honors
   - 012-contact
-created: 2026-10-08T20:55:00Z
-started: 2026-10-08T21:15:00Z
-completed: null
-current_stage: test
+created: '2026-10-08T20:55:00Z'
+started: '2026-10-08T21:15:00Z'
+completed: '2026-10-08T15:28:00Z'
+current_stage: null
 stages_completed:
   - name: plan
-    completed: 2026-10-08T21:15:00Z
+    completed: '2026-10-08T21:15:00Z'
     artifact: implementation-plan.md
   - name: implement
-    completed: 2026-10-08T21:20:00Z
+    completed: '2026-10-08T21:20:00Z'
     artifact: implementation-walkthrough.md
   - name: test
-    completed: 2026-10-08T21:25:00Z
+    completed: '2026-10-08T21:25:00Z'
     artifact: test-walkthrough.md
-
 requires_bolts:
   - 001-portfolio-ui-foundation
 enables_bolts:
   - 003-portfolio-ui-polish
 requires_units: []
 blocks: false
-
 complexity:
   avg_complexity: 1
   avg_uncertainty: 1
