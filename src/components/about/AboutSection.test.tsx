@@ -3,10 +3,10 @@ import { render, screen } from '@testing-library/react';
 import { AboutSection } from './AboutSection';
 
 describe('AboutSection', () => {
-  it('renders the section heading as "Profile" and the section eyebrow as "01 — Profile"', () => {
+  it('renders the section heading as "Profile" and the section eyebrow as "Profile"', () => {
     render(<AboutSection summary="I design scalable software." />);
     expect(screen.getByRole('heading', { name: 'Profile', level: 2 })).toBeInTheDocument();
-    expect(screen.getByText('01 — Profile')).toBeInTheDocument();
+    expect(screen.getByText('Profile', { selector: 'p' })).toBeInTheDocument();
   });
 
   it('renders the full summary text', () => {

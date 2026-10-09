@@ -61,7 +61,7 @@ export function SkillsSection({ cv }: { cv: CvData }) {
   return (
     <Section id="skills" ariaLabelledBy="skills-heading">
       <Container>
-        <SectionEyebrow>03 — Skills</SectionEyebrow>
+        <SectionEyebrow>Skills</SectionEyebrow>
         <Heading as="h2" id="skills-heading">
           Skills
         </Heading>

@@ -63,7 +63,7 @@ export function ContactSection({ contact }: ContactSectionProps) {
   return (
     <Section id="contact" ariaLabelledBy="contact-heading" divided>
       <Container>
-        <SectionEyebrow>08 — Get in touch</SectionEyebrow>
+        <SectionEyebrow>Get in touch</SectionEyebrow>
         <Heading as="h2" id="contact-heading">
           Contact
         </Heading>

@@ -64,7 +64,7 @@ export function HonorsSection({ awards }: HonorsSectionProps) {
   return (
     <Section id="honors" ariaLabelledBy="honors-heading">
       <Container>
-        <SectionEyebrow>07 — Honors &amp; Awards</SectionEyebrow>
+        <SectionEyebrow>Honors &amp; Awards</SectionEyebrow>
         <Heading as="h2" id="honors-heading">
           Honors &amp; Awards
         </Heading>

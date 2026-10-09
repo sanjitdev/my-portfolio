@@ -96,7 +96,7 @@ export function LanguagesSection({ languages }: LanguagesSectionProps) {
   return (
     <Section id="languages" ariaLabelledBy="languages-heading">
       <Container>
-        <SectionEyebrow>06 — Languages</SectionEyebrow>
+        <SectionEyebrow>Languages</SectionEyebrow>
         <Heading as="h2" id="languages-heading">
           Languages
         </Heading>

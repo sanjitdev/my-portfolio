@@ -1,7 +1,7 @@
 import { clsx } from 'clsx';
 
 interface SectionEyebrowProps {
-  /** The label (e.g., "01 — About"). */
+  /** The label (e.g., "Profile" or "Experience"). */
   children: React.ReactNode;
   className?: string;
 }
