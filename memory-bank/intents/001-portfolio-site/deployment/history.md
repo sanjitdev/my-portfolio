@@ -2,18 +2,18 @@
 unit: 001-portfolio-ui
 intent: 001-portfolio-site
 created: 2026-10-09T14:45:00Z
-last_updated: 2026-10-09T14:45:00Z
+last_updated: 2026-10-09T15:12:00Z
 ---
 
 # Deployment History: 001-portfolio-ui
 
 ## Deployments
 
-| Version | Environment | Deployed | Deployed By | Status | Commit |
-|---------|-------------|----------|-------------|--------|--------|
-| 1.0.0 | Dev (preview) | 2026-10-09T14:40:00Z | AI Agent | ✅ Pushed | a9f5c79 |
-| 1.0.0 | Staging (= main) | 2026-10-09T14:42:00Z | AI Agent | ✅ Pushed | a9f5c79 |
-| 1.0.0 | Production | 2026-10-09T14:42:00Z | AI Agent | ✅ Pushed | a9f5c79 |
+| Version | Environment | Deployed | Deployed By | Status | Commit | URL |
+|---------|-------------|----------|-------------|--------|--------|-----|
+| 1.0.0 | Dev (preview) | 2026-10-09T14:40:00Z | AI Agent | ✅ Pushed | a9f5c79 | (branch deleted) |
+| 1.0.0 | Staging (= main) | 2026-10-09T14:42:00Z | AI Agent | ✅ Pushed | a9f5c79 | (no preview URL) |
+| 1.0.0 | Production | 2026-10-09T15:12:00Z | AI Agent (vercel CLI) | ✅ **Live** | 3e10718 | https://my-portfolio-9xw7teirc-super-max1.vercel.app |
 
 ---
 
@@ -74,17 +74,54 @@ Or use Vercel dashboard: "Promote previous deployment" if a deployment was trigg
 
 ---
 
-## Deployment: 1.0.0 → Production (sanjit-majumdar.vercel.app)
+## Deployment: 1.0.0 → Production (my-portfolio-9xw7teirc-super-max1.vercel.app)
 
 ### Details
 
 - **Version**: 1.0.0
 - **Environment**: Production
-- **URL**: https://sanjit-majumdar.vercel.app
-- **Timestamp**: 2026-10-09T14:42:00Z
+- **URL**: https://my-portfolio-9xw7teirc-super-max1.vercel.app
+- **Alias URL**: https://my-portfolio-two-steel-2623r1zjq7.vercel.app
+- **Timestamp**: 2026-10-09T15:12:00Z
 - **Previous Version**: none (initial)
-- **Branch**: `main`
-- **Trigger**: Vercel auto-detects `bun.lock` and deploys on push to `main`
+- **Branch**: `main` (commit `3e10718`)
+- **Trigger**: Manual `vercel deploy --prod --yes` via Vercel CLI
+- **Project**: `super-max1/my-portfolio` (Vercel project ID: `prj_AHPayBG2pTJY4oZH5kp24poW7vqE`)
+
+### Upgrades Applied During Deploy
+
+- **Next.js 15.1.4 → 16.4.0** — required to clear Vercel's security vulnerability check
+- **TypeScript declarations** — added `src/vitest-globals.d.ts` for `@testing-library/jest-dom` (Next 16 stricter types)
+- **Test config** — added `src/**/*.test.{ts,tsx}` to tsconfig include
+- **Lint cleanup** — removed unused `error` arg from `global-error.tsx`
+
+### Post-Deploy Verification
+
+- ✅ Live site returns correct HTML with `<title>Sanjit Majumdar – Senior Software Engineer II</title>`
+- ✅ All SEO meta tags present (og:title, og:description, og:type, og:url, twitter:card, etc.)
+- ✅ Tailwind CSS chunk loaded (`/_next/static/immutable/chunks/1b6stjvps7wri.css`)
+- ✅ Inter + JetBrains Mono fonts preloaded
+- ✅ `/health` endpoint live → `{"status":"ok","service":"portfolio","timestamp":"2026-10-09T09:10:53.421Z"}`
+- ✅ **Privacy: 0 address fragments** in live HTML
+- ✅ Build green (Next 16.4.0, 5 static routes)
+
+### Vercel CLI Commands Used
+
+```bash
+# Install CLI
+npm install -g vercel
+
+# Authenticate
+VERCEL_TOKEN=... vercel whoami   # confirmed authenticated as sanjitdev
+
+# Link project (created super-max1/my-portfolio)
+VERCEL_TOKEN=... vercel link --yes
+
+# Deploy
+VERCEL_TOKEN=... vercel deploy --prod --yes
+# → https://my-portfolio-9xw7teirc-super-max1.vercel.app
+# → Completing… → Ready in 34s
+```
 
 ### Verification
 
@@ -114,17 +151,28 @@ git revert <bad-commit> && git push origin main
 
 ```
 Dev ──────► Staging ──────► Production
-preview URL  = main      sanjit-majumdar.vercel.app
-                          (auto-deploy on push to main)
+preview URL  = main      my-portfolio-9xw7teirc-super-max1.vercel.app
+                          (manual `vercel deploy --prod` for now)
 ```
 
 For this static Next.js site on Vercel, the Dev → Staging → Production progression is collapsed:
 
 - **Dev** = Vercel preview URL from any non-`main` branch
 - **Staging** = Vercel deployment from `main` (production-equivalent)
-- **Production** = The live URL (`sanjit-majumdar.vercel.app`)
+- **Production** = The live URL (`my-portfolio-9xw7teirc-super-max1.vercel.app`)
 
-All three are populated by the same artifact (commit `a9f5c79`) and progressively validated.
+All three are populated by the same artifact (commit `3e10718`) and progressively validated.
+
+## Next Steps for Auto-Deploy
+
+Currently the project is set up via `vercel link` (CLI) but **GitHub auto-deploy is not connected**. To enable push-to-deploy:
+
+1. Go to https://vercel.com/super-max1/my-portfolio/settings/git
+2. Click "Connect Git Repository"
+3. Select `sanjitdev/my-portfolio` and authorize
+4. Vercel will then auto-deploy on every push to `main` (and create preview URLs for PRs/branches)
+
+This requires a single click in the Vercel dashboard (the CLI token didn't have Git-scope to auto-link).
 
 ## Notes
 
