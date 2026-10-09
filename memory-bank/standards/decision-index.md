@@ -1,7 +1,7 @@
 ---
-last_updated: 2026-10-08T20:42:00Z
-total_decisions: 0
-adr_count: 0
+last_updated: 2026-10-09T17:30:00Z
+total_decisions: 10
+adr_count: 3
 ---
 
 # Decision Index
@@ -106,6 +106,33 @@ These are the foundational choices made when the project was initialized. They e
 ---
 
 ## Decisions
+
+### ADR-001: Editorial redesign with Playfair Display + Inter typography and monogram branding
+- **Status**: accepted
+- **Date**: 2026-10-09
+- **Bolt**: post-bolt-evolution (free-form, outside original 3-bolt plan)
+- **Path**: `decisions/adr-001-editorial-redesign.md`
+- **Commit**: `832cc82`
+- **Summary**: After the planned 3 bolts shipped a working but plain portfolio, the user requested a more professional look. Adopted a Minimalism & Swiss Style redesign with Playfair Display headings, Inter body, a custom SM SVG monogram, and a client-side print-to-PDF resume download (no new deps).
+- **Read when**: Adding new typography, choosing visual style, considering PDF libraries, designing a brand identity, working on the favicon.
+
+### ADR-002: Experience section as an editorial vertical timeline with collapsible responsibilities
+- **Status**: accepted
+- **Date**: 2026-10-09
+- **Bolt**: post-bolt-evolution (free-form, outside original 3-bolt plan)
+- **Path**: `decisions/adr-002-experience-timeline.md`
+- **Commit**: `c7ad81a`
+- **Summary**: The original experience list was a wall of text (5 jobs × 7 responsibilities). Restructured it as a vertical timeline rail with a date column on desktop, plus a progressive-disclosure toggle that hides responsibilities by default — only the most recent role is open initially.
+- **Read when**: Working on the experience section, considering collapsible UI patterns, designing lists with many items, implementing `aria-expanded` widgets.
+
+### ADR-003: Add real profile photo to the hero with next/image and editorial backdrop ring
+- **Status**: accepted
+- **Date**: 2026-10-09
+- **Bolt**: post-bolt-evolution (free-form, outside original 3-bolt plan)
+- **Path**: `decisions/adr-003-profile-photo.md`
+- **Commit**: `6f67a8b`
+- **Summary**: Replaced the hero monogram with the real profile picture, served as responsive WebP via `next/image` with `priority`. Added an accent-tinted backdrop ring for visual lift. The monogram remains in TopNav, Footer, and the favicon.
+- **Read when**: Adding or optimizing images, designing the hero, working on branding consistency, considering `next/image` vs `<img>`.
 
 <!-- ADRs from Construction bolts are appended below in reverse chronological order (newest first) -->
 <!-- Format for each entry:
