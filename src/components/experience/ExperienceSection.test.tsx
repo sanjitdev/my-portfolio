@@ -31,7 +31,7 @@ describe('ExperienceSection', () => {
     expect(screen.getByRole('heading', { name: 'Senior Engineer', level: 3 })).toBeInTheDocument();
   });
 
-  it('shows "Present" for ongoing roles', () => {
+  it('shows the date range for ongoing roles', () => {
     render(<ExperienceSection experiences={experiences} />);
     expect(screen.getByText('January 2025 – Present')).toBeInTheDocument();
   });

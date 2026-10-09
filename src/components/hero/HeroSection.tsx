@@ -41,7 +41,7 @@ export function HeroSection({ contact, cv }: HeroSectionProps) {
             </p>
             <h1
               id="hero-name"
-              className="font-heading text-4xl font-bold tracking-tight text-slate-900 sm:text-5xl md:text-6xl dark:text-slate-100"
+              className="font-heading text-4xl font-bold tracking-tight text-slate-900 text-balance sm:text-5xl md:text-6xl dark:text-slate-100"
             >
               {contact.name}
             </h1>
