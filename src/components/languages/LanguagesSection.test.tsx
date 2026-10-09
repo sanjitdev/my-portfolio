@@ -3,11 +3,12 @@ import { render, screen, within } from '@testing-library/react';
 import { LanguagesSection } from './LanguagesSection';
 import type { Language } from '@/lib/cv-types';
 
+// Mirrors the current `docs/LinkedIn_CV.json` `languages[]` array.
 const fixtureLanguages: Language[] = [
   { language: 'Bengali', proficiency: 'Native or Bilingual' },
-  { language: 'English', proficiency: 'Professional Working' },
+  { language: 'English', proficiency: 'EF SET English Certificate 78/100 (C2 Proficient)' },
   { language: 'Hindi', proficiency: 'Native or Bilingual' },
-  { language: 'Japanese', proficiency: 'Elementary' },
+  { language: 'Japanese', proficiency: 'Elementary (close to JLPT N4)' },
 ];
 
 describe('LanguagesSection', () => {
@@ -20,8 +21,8 @@ describe('LanguagesSection', () => {
     expect(screen.getByRole('heading', { name: 'Japanese', level: 3 })).toBeInTheDocument();
     // "Native or Bilingual" appears twice (Bengali + Hindi), so use getAllByText.
     expect(screen.getAllByText('Native or Bilingual').length).toBeGreaterThanOrEqual(2);
-    expect(screen.getByText('Professional Working')).toBeInTheDocument();
-    expect(screen.getByText('Elementary')).toBeInTheDocument();
+    expect(screen.getByText(/EF SET English Certificate 78\/100/)).toBeInTheDocument();
+    expect(screen.getByText(/Elementary \(close to JLPT N4\)/)).toBeInTheDocument();
   });
 
   it('renders a flag emoji for each known language', () => {
@@ -37,15 +38,29 @@ describe('LanguagesSection', () => {
     expect(container.textContent).toContain('🇯🇵');
   });
 
-  it('renders a CEFR badge inferred from proficiency', () => {
+  it('infers C2 from the EF SET proficiency string for English', () => {
     render(<LanguagesSection languages={fixtureLanguages} />);
-    // Bengali (Native or Bilingual) → C2
-    // English (Professional Working) → B2
-    // Hindi (Native or Bilingual) → C2 (matches Bengali, so 2 in DOM)
-    // Japanese (Elementary) → A1
-    expect(screen.getAllByText('C2').length).toBeGreaterThanOrEqual(2);
-    expect(screen.getByText('B2')).toBeInTheDocument();
-    expect(screen.getByText('A1')).toBeInTheDocument();
+    // English (EF SET ... C2 Proficient) → C2 badge
+    // Bengali + Hindi (Native or Bilingual) → C2 each (3 total in DOM)
+    const c2s = screen.getAllByText('C2');
+    expect(c2s.length).toBeGreaterThanOrEqual(3);
+  });
+
+  it('infers N4 from a JLPT code for Japanese', () => {
+    render(<LanguagesSection languages={fixtureLanguages} />);
+    // The proficiency string "Elementary (close to JLPT N4)" contains "N4"
+    // and parseCEFR picks it up as the badge.
+    expect(screen.getByText('N4')).toBeInTheDocument();
+  });
+
+  it('prefers an explicit CEFR code over a JLPT code when both are present', () => {
+    render(
+      <LanguagesSection
+        languages={[{ language: 'Test', proficiency: 'C1 (between N3 and N2)' }]}
+      />,
+    );
+    // CEFR regex matches first.
+    expect(screen.getByText('C1')).toBeInTheDocument();
   });
 
   it('uses an explicit CEFR code when present in the proficiency string', () => {
@@ -63,17 +78,19 @@ describe('LanguagesSection', () => {
     expect(container.textContent).toContain('🌐');
   });
 
-  it('omits the CEFR badge when proficiency does not match any known level', () => {
+  it('omits the CEFR/JLPT badge when proficiency does not match any known level', () => {
     const { container } = render(
       <LanguagesSection
         languages={[{ language: 'Esperanto', proficiency: 'Conversational only' }]}
       />,
     );
-    // "Conversational only" doesn't match any CEFR keyword → no badge.
-    // We check that no A1/A2/B1/B2/C1/C2 text appears within the row.
+    // "Conversational only" doesn't match any keyword → no badge.
+    // We check that no A1/A2/B1/B2/C1/C2 or N1–N5 text appears as a badge.
+    // The fallback cell renders a placeholder span.
     const list = screen.getByRole('list');
     const row = within(list).getByRole('listitem');
     expect(row.textContent).not.toMatch(/\b[ABC][12]\b/);
+    expect(row.textContent).not.toMatch(/\bN[1-5]\b/);
     // Sanity-check we did render the language at all.
     expect(container.textContent).toContain('Esperanto');
   });

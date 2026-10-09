@@ -37,12 +37,20 @@ function proficiencyToDots(proficiency: string): number {
  */
 function parseCEFR(proficiency: string): string | null {
   // 1. Look for an explicit CEFR code first (highest signal).
-  const codeMatch = /\b([abc][12])\b/i.exec(proficiency);
-  if (codeMatch) {
-    return codeMatch[1]!.toUpperCase();
+  const cefrMatch = /\b([abc][12])\b/i.exec(proficiency);
+  if (cefrMatch) {
+    return cefrMatch[1]!.toUpperCase();
   }
 
-  // 2. Otherwise infer from the proficiency keyword.
+  // 2. Look for a JLPT level (Japanese Language Proficiency Test).
+  //    Scale: N5 (easiest) → N1 (hardest). The user can be "close to N4"
+  //    without being certified — we still show the N4 badge as a target.
+  const jlptMatch = /\b(n[1-5])\b/i.exec(proficiency);
+  if (jlptMatch) {
+    return jlptMatch[1]!.toUpperCase();
+  }
+
+  // 3. Otherwise infer from the proficiency keyword.
   const p = proficiency.toLowerCase();
   if (p.includes('native') || p.includes('bilingual') || p.includes('fluent')) return 'C2';
   if (p.includes('advanced') || p.includes('proficient')) return 'C1';
