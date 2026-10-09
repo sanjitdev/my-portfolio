@@ -46,6 +46,8 @@
 | `6a41cf3` | 2026-10-08 | Fix analytics import path | bolt-003 |
 | `657c605` | 2026-10-08 | Record domain switch in deployment history | bolt-003 |
 | `e845b84` | 2026-10-08 | Switch production domain to sanjit-dev.vercel.app | bolt-003 |
+| `ca1f295` | 2026-10-09 | Backfill memory bank: 16 stories implemented, 3 ADRs, ops context | infra |
+| `cb9d219` | 2026-10-09 | Redesign skills section: curated manifest, two-zone layout, depth signals | ADR-004 |
 | `0b1d365` | 2026-10-08 | Update README with actual Vercel deployment URL | bolt-003 |
 | `3e10718` | 2026-10-08 | Upgrade to Next.js 16 (security fix) | bolt-003 |
 
@@ -80,11 +82,57 @@ grep -c "Chunkhola\|House 263" .next/server/app/index.html  # → 0
 
 | Variable | Purpose | Where set |
 |----------|---------|-----------|
-| `VERCEL_TOKEN` | Vercel CLI auth (deploy + curl) | `.env.local` (gitignored; never committed) |
+| `VERCEL_OIDC_TOKEN` | Vercel OIDC federation credential (for runtime access to your own backend — AWS/GCP/Azure). **Not a CLI deploy token.** | `.env.local` (gitignored; never committed). Placed by `vercel env pull`. |
+| `VERCEL_TOKEN` | Classic API token (`vcp_…`) used by `vercel deploy --prod` and other CLI commands. **Not currently stored anywhere in the repo.** | Must be supplied fresh from https://vercel.com/account/tokens. |
 | `NEXT_PUBLIC_SITE_URL` | Base URL for metadata (OG tags) | not currently set; defaults to `https://sanjit-majumdar.vercel.app` |
 | Vercel auto-injected | `VERCEL_ENV`, `VERCEL_URL`, etc. | Vercel dashboard |
 
 `.env.local` is committed to git history's `.gitignore` (per `chore: ignore .puku-cli` commit) but should NEVER be pushed. Confirmed: the file is not in the repo.
+
+> **WARNING — token-type confusion**: the Vercel CLI `--token` flag accepts
+> classic API tokens (`vcp_…` format — no hyphens or dots) only. JWT-style
+> OIDC tokens (which contain `.` characters) are rejected with
+> `Error: You defined "--token", but its contents are invalid. Must not
+> contain: "-", "."`. The OIDC token in `.env.local` is from
+> `vercel env pull` and serves a different purpose (runtime federation to
+> your own backend) — it is not interchangeable with a deploy token.
+
+---
+
+## Deployment Gap (2026-10-09)
+
+**Status**: The Vercel project (`super-max1/my-portfolio`) is **NOT connected
+to the GitHub repository** (`sanjitdev/my-portfolio`). Pushes to `main` do not
+trigger Vercel builds.
+
+**Symptom observed**: Commit `cb9d219` (skills section redesign) was pushed to
+`origin/main` successfully, but no Vercel deployment was created. The
+README's claim that "Vercel auto-deploys" is currently false.
+
+**Root cause**: The Vercel GitHub App has not been installed on the
+`sanjitdev/my-portfolio` repo. The project is configured for manual deploys
+only (via `vercel deploy --prod`).
+
+**Fix (one-time, in browser)**: Go to
+https://vercel.com/super-max1/my-portfolio/settings/git → click "Connect Git
+Repository" → select `sanjitdev/my-portfolio` → click "Deploy" on the
+latest commit to ship the change. After this, future pushes to `main`
+auto-deploy.
+
+**Token-related context (from same incident)**:
+- The previously-leaked classic `VERCEL_TOKEN` (`vcp_3udrWees10HDxgsR…`)
+  was rotated by the user as a security precaution.
+- The user created a new (non-expiring) classic token but chose not to
+  share it; the project will rely on the Git-based deploy flow going
+  forward.
+
+**Why this wasn't caught earlier**: The memory bank's deployment history
+table shows successful deploys through `e845b84` (2026-10-08), but those
+were triggered manually by the user via `vercel deploy --prod` with the
+(now-rotated) classic token. The README always advertised auto-deploy as
+"to be enabled" (Section "Deployment" line 130) — the
+"auto-deploy on push" line in the memory bank was an overstatement of the
+actual state.
 
 ---
 
@@ -93,11 +141,18 @@ grep -c "Chunkhola\|House 263" .next/server/app/index.html  # → 0
 ### Deploy to production
 
 ```bash
-# Requires VERCEL_TOKEN in environment (stored in .env.local, not committed)
+# Requires a classic VERCEL_TOKEN (vcp_…) in environment.
+# The VERCEL_OIDC_TOKEN in .env.local is a federation credential, not a
+# deploy token — it CANNOT be used with `vercel deploy --prod`. See
+# "Deployment gap (2026-10-09)" below.
 vercel deploy --prod --yes
 ```
 
-Or simply push to `main` — Vercel auto-deploys.
+**Git-based auto-deploy is NOT currently connected.** Pushes to `main` do not
+trigger Vercel builds. To enable auto-deploy, go to
+https://vercel.com/super-max1/my-portfolio/settings/git and click
+"Connect Git Repository" → select `sanjitdev/my-portfolio`. The README's claim
+that "push to main → production" is misleading until this is done.
 
 ### Update the CV
 

@@ -6,13 +6,13 @@ A clean, accessible single-page portfolio website for Sanjit Majumdar (Senior So
 
 ## Stack
 
-- **Framework**: Next.js 15 (App Router)
+- **Framework**: Next.js 16 (App Router, static export)
 - **Language**: TypeScript (strict mode, `noUncheckedIndexedAccess`)
 - **Styling**: Tailwind CSS v4 (CSS-first config via `@theme`)
 - **Validation**: Zod (build-time data validation; build fails on bad CV JSON)
 - **Package manager**: bun
 - **Hosting**: Vercel (auto-detected via `bun.lock`)
-- **Testing**: Vitest + Testing Library + jsdom (87 tests across 17 files)
+- **Testing**: Vitest + Testing Library + jsdom (115 tests across 18 files)
 
 ## Features
 
@@ -99,7 +99,10 @@ The `@/*` path alias maps to `./src/*`. The `docs/` folder lives outside `src/` 
 
 1. Edit `docs/LinkedIn_CV.json` (the source of truth)
 2. Commit and push to `main`
-3. Vercel auto-deploys; the new "Last updated" timestamp appears in the footer
+3. **If Git auto-deploy is connected (see [Deployment](#deployment))**, Vercel
+   rebuilds automatically. Otherwise, run `vercel deploy --prod --yes` from
+   the project root. The "Last updated" timestamp in the footer reflects the
+   build time.
 
 If the JSON is malformed (missing field, wrong type), the build fails with a clear Zod error. Fix the JSON and re-deploy.
 
@@ -116,23 +119,41 @@ The home address is present in `docs/LinkedIn_CV.json` for record-keeping, but t
 
 The site is deployed to Vercel at **https://sanjit-dev.vercel.app**.
 
-Current deployment flow (manual via Vercel CLI):
+> **Status (2026-10-09)**: Git-based auto-deploy is **not yet connected**.
+> The Vercel project exists but the GitHub App has not been installed on
+> `sanjitdev/my-portfolio`. Pushes to `main` do not trigger a Vercel
+> build — you must deploy manually (option A) or connect Git first (option B).
+
+### Option A — Manual deploy via Vercel CLI
 
 ```bash
-# One-time setup
+# One-time setup (creates .vercel/project.json + links the project)
 npm install -g vercel
-VERCEL_TOKEN=<your-token> vercel link --yes
+vercel link --yes
 
-# Deploy to production
-VERCEL_TOKEN=<your-token> vercel deploy --prod --yes
+# Each deploy
+VERCEL_TOKEN=<classic-token-from-vercel.com/account/tokens> \
+  vercel deploy --prod --yes
 ```
 
-**To enable auto-deploy on push:**
+> **Important — token type**: the Vercel CLI requires a **classic API
+> token** (`vcp_…`, no hyphens or dots). The OIDC token produced by
+> `vercel env pull` (stored in `.env.local` as `VERCEL_OIDC_TOKEN`) is a
+> **federation credential** for runtime access to your own backend
+> (AWS/GCP/Azure). It is rejected by `vercel deploy` with
+> `Error: ... Must not contain: "-", "."` because JWTs contain those
+> characters. Create a classic token at
+> https://vercel.com/account/tokens.
+
+### Option B — Enable Git auto-deploy (recommended)
 
 1. Go to https://vercel.com/super-max1/my-portfolio/settings/git
 2. Click "Connect Git Repository"
-3. Authorize and select `sanjitdev/my-portfolio`
-4. Future pushes to `main` will auto-deploy; PRs get preview URLs
+3. Authorize GitHub and select `sanjitdev/my-portfolio`
+4. Vercel will deploy the latest commit on `main` automatically
+5. Future pushes to `main` will auto-deploy; PRs get preview URLs
+
+Once Option B is done, no further CLI work is needed for normal development.
 
 No `vercel.json` is needed. Vercel auto-detects Next.js + bun (via the committed `bun.lock`). For a custom domain, set `NEXT_PUBLIC_SITE_URL` in the Vercel project settings (it defaults to `https://sanjit-dev.vercel.app`).
 
