@@ -22,6 +22,7 @@ function makeCv(overrides: Partial<CvData> = {}): CvData {
     certifications: [],
     languages: [],
     honors_awards: [],
+    recommendations: [],
     ...overrides,
   } as CvData;
 }
@@ -37,13 +38,14 @@ describe('getNavLinks', () => {
     expect(ids).toContain('contact');
   });
 
-  it('does NOT include Education, Certifications, Languages, or Honors when their data is empty', () => {
+  it('does NOT include Education, Certifications, Languages, Honors, or Recommendations when their data is empty', () => {
     const links = getNavLinks(makeCv());
     const ids = links.map(l => l.id);
     expect(ids).not.toContain('education');
     expect(ids).not.toContain('certifications');
     expect(ids).not.toContain('languages');
     expect(ids).not.toContain('honors');
+    expect(ids).not.toContain('recommendations');
   });
 
   it('includes Education when education has at least one entry', () => {
@@ -66,6 +68,22 @@ describe('getNavLinks', () => {
   it('includes Honors when honors_awards has at least one entry', () => {
     const links = getNavLinks(makeCv({ honors_awards: ['Best Engineer'] }));
     expect(links.find(l => l.id === 'honors')).toBeDefined();
+  });
+
+  it('includes Recommendations when recommendations has at least one entry', () => {
+    const links = getNavLinks(
+      makeCv({
+        recommendations: [
+          {
+            name: 'X',
+            relationship: 'Y',
+            date: '2025-01-01',
+            body: ['Z'],
+          },
+        ],
+      }),
+    );
+    expect(links.find(l => l.id === 'recommendations')).toBeDefined();
   });
 
   it('places Contact last', () => {

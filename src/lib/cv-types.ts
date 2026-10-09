@@ -62,6 +62,27 @@ export const LanguageSchema = z.object({
 export type Language = z.infer<typeof LanguageSchema>;
 
 /**
+ * A LinkedIn-style recommendation. Each field corresponds to what shows in
+ * a real recommendation card: who wrote it, the relationship (worked
+ * together / managed / etc.), the date posted, the recommender's stack
+ * tags, and the body. The body is an array of paragraphs so long quotes
+ * render with proper paragraph breaks instead of one long string.
+ */
+export const RecommendationSchema = z.object({
+  name: z.string().min(1),
+  /** Free-form relationship text, e.g. "worked with Sanjit on the same team". */
+  relationship: z.string().min(1),
+  /** ISO date or human-readable, e.g. "August 12, 2025". */
+  date: z.string().min(1),
+  /** Optional stack tags shown next to the name, e.g. "JS | Angular | AWS". */
+  stack: z.string().optional(),
+  /** One or more paragraphs of the recommendation body. */
+  body: z.array(z.string().min(1)).min(1),
+});
+
+export type Recommendation = z.infer<typeof RecommendationSchema>;
+
+/**
  * Top-level CV schema. Validates every required field. Optional fields use
  * `.optional()` so the CV can grow without breaking the build.
  */
@@ -74,6 +95,7 @@ export const CvDataSchema = z.object({
   honors_awards: z.array(z.string().min(1)),
   experience: z.array(ExperienceSchema),
   education: z.array(EducationSchema),
+  recommendations: z.array(RecommendationSchema),
 });
 
 export type CvData = z.infer<typeof CvDataSchema>;

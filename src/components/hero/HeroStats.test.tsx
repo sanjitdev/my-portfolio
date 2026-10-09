@@ -20,6 +20,7 @@ const cvFixture: CvData = {
   languages: [{ language: 'English', proficiency: 'Native' }],
   certifications: ['AWS', 'CKA', 'Terraform', 'NopCommerce', 'EF SET'],
   honors_awards: [],
+  recommendations: [],
   experience: [
     {
       company: 'Acme',

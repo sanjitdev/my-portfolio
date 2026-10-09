@@ -22,7 +22,7 @@ describe('Home page — end-to-end privacy', () => {
     }
   });
 
-  it('all 9 section ids are present (or the conditional ones are hidden by data)', () => {
+  it('all 10 section ids are present (or the conditional ones are hidden by data)', () => {
     const html = renderToString(<Home />);
     // Always-rendered sections:
     expect(html).toContain('id="top"');
@@ -31,13 +31,14 @@ describe('Home page — end-to-end privacy', () => {
     expect(html).toContain('id="skills"');
     expect(html).toContain('id="contact"');
     // Conditional sections (data-dependent): with this CV they all have entries,
-    // so all 4 conditional ids should be present too. If the data changes,
+    // so all 5 conditional ids should be present too. If the data changes,
     // the conditional sections will return null and these will fail — that
     // is correct behavior, the test will remind us to update the nav too.
     expect(html).toContain('id="education"');
     expect(html).toContain('id="certifications"');
     expect(html).toContain('id="languages"');
     expect(html).toContain('id="honors"');
+    expect(html).toContain('id="recommendations"');
   });
 
   it('the rendered HTML contains the candidate name', () => {

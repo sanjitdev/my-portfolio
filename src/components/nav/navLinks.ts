@@ -33,6 +33,9 @@ export function getNavLinks(cv: CvData): NavLink[] {
   if (cv.honors_awards.length > 0) {
     links.push({ id: 'honors', label: 'Honors' });
   }
+  if (cv.recommendations.length > 0) {
+    links.push({ id: 'recommendations', label: 'Recommendations' });
+  }
   links.push({ id: 'contact', label: 'Contact' });
   return links;
 }

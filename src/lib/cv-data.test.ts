@@ -23,6 +23,7 @@ describe('cv-data', () => {
       expect(Array.isArray(cv.certifications)).toBe(true);
       expect(Array.isArray(cv.languages)).toBe(true);
       expect(Array.isArray(cv.honors_awards)).toBe(true);
+      expect(Array.isArray(cv.recommendations)).toBe(true);
     });
 
     it('matches the source JSON via Zod validation', () => {

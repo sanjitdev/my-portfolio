@@ -148,6 +148,18 @@
     "degree": "Bachelor of Science",
     "field_of_study": "Computer Engineering"
   },
+  "recommendations": [
+    {
+      "name": "Utpaul Sarkar",
+      "relationship": "Utpaul worked with Sanjit on the same team",
+      "date": "August 12, 2025",
+      "stack": "Javascript | Angular | ExpressJS | VueJS | AWS | AZURE",
+      "body": [
+        "I highly recommend Sanjit as an exceptional full-stack developer and team member. Throughout our time working together, Sanjit has consistently demonstrated remarkable passion and dedication to delivering high-quality solutions.",
+        "What sets Sanjit apart is his unique combination of technical expertise and outstanding client communication skills. He has a natural ability to understand complex requirements, translate them into effective technical solutions, and explain technical concepts clearly to both technical and non-technical stakeholders."
+      ]
+    }
+  ],
   "source": {
     "file": "LinkedIn_CV.pdf",
     "pages": 4

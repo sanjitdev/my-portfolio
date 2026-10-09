@@ -24,6 +24,7 @@ const cv: CvData = {
   languages: [{ language: 'English', proficiency: 'Native' }],
   certifications: ['AWS Solutions Architect'],
   honors_awards: ['Best Engineer 2024'],
+  recommendations: [],
   experience: [
     {
       company: 'Acme',

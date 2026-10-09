@@ -20,6 +20,7 @@ const cvFixture: CvData = {
   languages: [],
   certifications: [],
   honors_awards: [],
+  recommendations: [],
   experience: [
     {
       company: 'Brain Station 23',
