@@ -29,7 +29,7 @@ export function CertificationsSection({ certifications }: CertificationsSectionP
   return (
     <Section id="certifications" ariaLabelledBy="certifications-heading">
       <Container>
-        <SectionEyebrow>Certifications</SectionEyebrow>
+        <SectionEyebrow>What I've earned</SectionEyebrow>
         <Heading as="h2" id="certifications-heading">
           Certifications
         </Heading>

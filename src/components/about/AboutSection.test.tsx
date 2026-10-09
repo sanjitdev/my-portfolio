@@ -3,10 +3,12 @@ import { render, screen } from '@testing-library/react';
 import { AboutSection } from './AboutSection';
 
 describe('AboutSection', () => {
-  it('renders the section heading as "Profile" and the section eyebrow as "Profile"', () => {
+  it('renders the section heading as "Profile" and the eyebrow tagline "Who I am"', () => {
     render(<AboutSection summary="I design scalable software." />);
     expect(screen.getByRole('heading', { name: 'Profile', level: 2 })).toBeInTheDocument();
-    expect(screen.getByText('Profile', { selector: 'p' })).toBeInTheDocument();
+    // The eyebrow sits in a <p> and carries a tagline distinct from the
+    // heading, so the two aren't visually redundant.
+    expect(screen.getByText('Who I am', { selector: 'p' })).toBeInTheDocument();
   });
 
   it('renders the full summary text', () => {

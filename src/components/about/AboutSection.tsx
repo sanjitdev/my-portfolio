@@ -27,7 +27,7 @@ export function AboutSection({ summary }: AboutSectionProps) {
   return (
     <Section id="about" ariaLabelledBy="profile-heading" divided>
       <Container>
-        <SectionEyebrow>Profile</SectionEyebrow>
+        <SectionEyebrow>Who I am</SectionEyebrow>
         <Heading as="h2" id="profile-heading">
           Profile
         </Heading>

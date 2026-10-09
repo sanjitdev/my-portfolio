@@ -25,7 +25,7 @@ export function EducationSection({ education }: EducationSectionProps) {
   return (
     <Section id="education" ariaLabelledBy="education-heading">
       <Container>
-        <SectionEyebrow>Education</SectionEyebrow>
+        <SectionEyebrow>Where I studied</SectionEyebrow>
         <Heading as="h2" id="education-heading">
           Education
         </Heading>

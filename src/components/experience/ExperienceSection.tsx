@@ -24,7 +24,7 @@ export function ExperienceSection({ experiences }: ExperienceSectionProps) {
   return (
     <Section id="experience" ariaLabelledBy="experience-heading" divided>
       <Container>
-        <SectionEyebrow>Experience</SectionEyebrow>
+        <SectionEyebrow>Where I've worked</SectionEyebrow>
         <Heading as="h2" id="experience-heading">
           Experience
         </Heading>
