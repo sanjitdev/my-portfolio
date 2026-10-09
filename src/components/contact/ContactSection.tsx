@@ -1,4 +1,4 @@
-import { Download, Globe, Linkedin, Mail, MapPin, Phone } from 'lucide-react';
+import { Download, Globe, Linkedin, Mail, Phone } from 'lucide-react';
 import type { LucideIcon } from 'lucide-react';
 import type { PublicContact } from '@/lib/cv-types';
 import { Section } from '@/components/shared/Section';
@@ -11,39 +11,36 @@ interface ContactSectionProps {
   contact: PublicContact;
 }
 
-interface ContactRowSpec {
+interface ChannelSpec {
   /** Channel name shown in the accent mono-caps tag (e.g. "EMAIL"). */
   kind: string;
-  /** Visual identifier — used for the a11y label and icon lookup. */
-  channel: 'email' | 'phone' | 'linkedin' | 'website' | 'location';
-  /** User-facing label, e.g. "Email" or "Location". */
-  label: string;
-  /** The value to display, e.g. the email address or phone number. */
-  value: string;
-  /** Click target. `null` renders a non-interactive row (e.g. location). */
+  /** The destination the link goes to, or `null` for non-link rows. */
   href: string | null;
+  /** The user-facing value (email, phone, URL — the thing the user copies). */
+  value: string;
   /** Whether the link opens in a new tab. */
   external: boolean;
-  /** Lucide icon for the row. */
+  /** Lucide icon for the row (also drives the a11y label). */
   icon: LucideIcon;
 }
 
-const ICON_CLASS = 'h-5 w-5';
-
-function rowAriaLabel(spec: Pick<ContactRowSpec, 'kind' | 'label' | 'value'>): string {
-  return `${spec.kind} — ${spec.label} (${spec.value})`;
+/**
+ * Build the accessible name for a channel row from its kind and value, e.g.
+ * `"Email — sanjit@example.com"`.
+ */
+function rowAriaLabel(spec: Pick<ChannelSpec, 'kind' | 'value'>): string {
+  return `${spec.kind.charAt(0)}${spec.kind.slice(1).toLowerCase()} — ${spec.value}`;
 }
 
 /**
- * Contact section — single-column editorial list of full-width rows.
- * Mirrors the Honors / Languages / Certifications pattern: each row is a
- * horizontal flex with an icon, the channel value as the primary text, a
- * small accent mono-caps tag naming the kind (EMAIL / PHONE / …) on the
- * right, and a final resume callout row.
+ * Contact section — a compact single-column list of channel rows inside a
+ * bordered panel. Each row is one line: an accent mono-caps kind tag on
+ * the left (EMAIL / PHONE / LINKEDIN / WEBSITE) and the destination as
+ * the link on the right. Below the channels sits a single resume row
+ * with a print-PDF button.
  *
- * The home address is intentionally absent — the prop type is
- * `PublicContact`, which omits the `address` field at the type level. We
- * additionally surface `location` (city / country) as a non-link row.
+ * Privacy: the prop type is `PublicContact`, which omits `address` at the
+ * type level. No rendering path ever touches a home address.
  */
 export function ContactSection({ contact }: ContactSectionProps) {
   const websiteHref = contact.website
@@ -58,51 +55,34 @@ export function ContactSection({ contact }: ContactSectionProps) {
       : `https://${contact.linkedin}`
     : null;
 
-  const rows: ContactRowSpec[] = [
+  const channels: ChannelSpec[] = [
     {
       kind: 'EMAIL',
-      channel: 'email',
-      label: 'Email',
-      value: contact.email,
       href: `mailto:${contact.email}`,
+      value: contact.email,
       external: false,
       icon: Mail,
     },
     {
       kind: 'PHONE',
-      channel: 'phone',
-      label: 'Phone',
-      value: contact.phone,
       href: `tel:${contact.phone.replace(/\s+/g, '')}`,
+      value: contact.phone,
       external: false,
       icon: Phone,
     },
     {
       kind: 'LINKEDIN',
-      channel: 'linkedin',
-      label: 'LinkedIn',
-      value: contact.linkedin,
       href: linkedinHref,
+      value: contact.linkedin,
       external: true,
       icon: Linkedin,
     },
     {
       kind: 'WEBSITE',
-      channel: 'website',
-      label: 'Website',
-      value: contact.website,
       href: websiteHref,
+      value: contact.website,
       external: true,
       icon: Globe,
-    },
-    {
-      kind: 'LOCATION',
-      channel: 'location',
-      label: 'Location',
-      value: contact.location,
-      href: null,
-      external: false,
-      icon: MapPin,
     },
   ];
 
@@ -118,94 +98,60 @@ export function ContactSection({ contact }: ContactSectionProps) {
           channel below — I usually respond within a day.
         </p>
 
-        <ul className="mt-10 divide-y divide-slate-200 border-t border-slate-200 dark:divide-slate-800 dark:border-slate-800">
-          {rows.map(spec => {
-            const Icon = spec.icon;
-            // The middle column is either a focusable link (email / phone /
-            // linkedin / website) or a plain block (location). The icon and
-            // kind tag stay outside the anchor so they don't pull a tabular
-            // layout into the link's hit area.
-            const value = (
-              <div className="min-w-0">
-                <p className="font-heading text-lg font-semibold text-slate-900 sm:text-xl dark:text-slate-100">
-                  {spec.label}
-                </p>
-                <p className="mt-0.5 break-all text-sm text-slate-600 dark:text-slate-400">
-                  {spec.value}
-                </p>
-              </div>
-            );
-            return (
-              <li
-                key={spec.channel}
-                data-print="card"
-                data-contact-channel={spec.channel}
-                className="grid grid-cols-[auto_1fr_auto] items-center gap-4 py-5 sm:gap-6 sm:py-6"
-              >
-                {/* Icon tile — same chip treatment as the Honors trophy */}
-                <span
-                  aria-hidden="true"
-                  className="flex h-9 w-9 shrink-0 items-center justify-center rounded-md bg-accent-50 text-accent-600 dark:bg-accent-900/30 dark:text-accent-400"
+        <div className="mt-8 overflow-hidden rounded-lg border border-slate-200 bg-white dark:border-slate-800 dark:bg-slate-900">
+          <ul role="list" className="divide-y divide-slate-200 dark:divide-slate-800">
+            {channels.map(spec => {
+              const Icon = spec.icon;
+              return (
+                <li
+                  key={spec.kind}
+                  data-print="card"
+                  data-contact-channel={spec.kind.toLowerCase()}
+                  className="flex items-center gap-3 px-4 py-2.5 sm:gap-4 sm:px-5 sm:py-3"
                 >
-                  <Icon className={ICON_CLASS} />
-                </span>
+                  {/* Kind tag — names the channel, mono-caps accent chip. */}
+                  <span className="inline-flex shrink-0 items-center gap-1.5 rounded-full bg-accent-50 px-2.5 py-0.5 font-mono text-[10px] font-semibold uppercase tracking-wider text-accent-700 dark:bg-accent-900/30 dark:text-accent-400">
+                    <Icon aria-hidden="true" className="h-3 w-3" />
+                    {spec.kind}
+                  </span>
 
-                {/* Label + value — wrapped in <a> when clickable */}
-                {spec.href !== null ? (
-                  <a
-                    href={spec.href}
-                    target={spec.external ? '_blank' : undefined}
-                    rel={spec.external ? 'noopener noreferrer' : undefined}
-                    aria-label={rowAriaLabel(spec)}
-                    className="-m-2 block min-w-0 rounded-md p-2 transition-colors hover:bg-slate-100 focus-visible:bg-slate-100 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent-500 dark:hover:bg-slate-800 dark:focus-visible:bg-slate-800"
-                  >
-                    {value}
-                  </a>
-                ) : (
-                  value
-                )}
+                  {/* Destination — linkable when href is set. */}
+                  {spec.href !== null ? (
+                    <a
+                      href={spec.href}
+                      target={spec.external ? '_blank' : undefined}
+                      rel={spec.external ? 'noopener noreferrer' : undefined}
+                      aria-label={rowAriaLabel(spec)}
+                      className="min-w-0 truncate text-sm text-slate-700 transition-colors hover:text-accent-700 focus-visible:text-accent-700 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent-500 dark:text-slate-300 dark:hover:text-accent-300 dark:focus-visible:text-accent-300"
+                    >
+                      {spec.value}
+                    </a>
+                  ) : (
+                    <span className="min-w-0 truncate text-sm text-slate-700 dark:text-slate-300">
+                      {spec.value}
+                    </span>
+                  )}
+                </li>
+              );
+            })}
 
-                {/* Channel kind tag (EMAIL / PHONE / …) */}
-                <span
-                  aria-hidden="true"
-                  className="inline-flex shrink-0 items-center rounded-full bg-accent-50 px-2.5 py-1 font-mono text-[11px] font-semibold uppercase tracking-wider text-accent-700 dark:bg-accent-900/30 dark:text-accent-400"
-                >
-                  {spec.kind}
-                </span>
-              </li>
-            );
-          })}
-
-          {/* Resume row — visually the same as a channel row, but the right
-              column is a print-PDF button instead of a kind tag. */}
-          <li
-            data-print="card"
-            className="grid grid-cols-[auto_1fr_auto] items-center gap-4 py-5 sm:gap-6 sm:py-6"
-          >
-            <span
-              aria-hidden="true"
-              className="flex h-9 w-9 shrink-0 items-center justify-center rounded-md bg-accent-50 text-accent-600 dark:bg-accent-900/30 dark:text-accent-400"
+            {/* Resume row — same panel, last entry, with the print button. */}
+            <li
+              data-print="card"
+              className="flex items-center gap-3 bg-slate-50 px-4 py-3 sm:gap-4 sm:px-5 sm:py-3 dark:bg-slate-800/50"
             >
-              <Download className={ICON_CLASS} />
-            </span>
-            <div className="min-w-0">
-              <p className="font-heading text-lg font-semibold text-slate-900 sm:text-xl dark:text-slate-100">
-                Take my resume with you
-              </p>
-              <p className="mt-0.5 text-sm text-slate-600 dark:text-slate-400">
+              <span className="inline-flex shrink-0 items-center gap-1.5 rounded-full bg-accent-50 px-2.5 py-0.5 font-mono text-[10px] font-semibold uppercase tracking-wider text-accent-700 dark:bg-accent-900/30 dark:text-accent-400">
+                <Download aria-hidden="true" className="h-3 w-3" />
+                RESUME
+              </span>
+              <span className="min-w-0 flex-1 truncate text-sm text-slate-700 dark:text-slate-300">
                 Print or save the page as PDF — formatted for a clean A4 resume.
-              </p>
-            </div>
-            <div className="shrink-0">
-              <ResumeButton />
-            </div>
-          </li>
-        </ul>
+              </span>
+              <ResumeButton className="shrink-0 rounded-md bg-accent-600 px-3 py-1.5 text-xs font-semibold text-white shadow-sm transition-colors hover:bg-accent-700 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent-500" />
+            </li>
+          </ul>
+        </div>
       </Container>
     </Section>
   );
 }
-
-// Re-export the row-a11y helper so tests can assert the same accessible
-// labels that the rendered anchors use.
-export { rowAriaLabel };

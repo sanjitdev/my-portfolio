@@ -43,39 +43,32 @@ describe('ContactSection', () => {
     expect(website.getAttribute('rel')).toBe('noopener noreferrer');
   });
 
-  it('renders a non-link Location row showing city and country', () => {
-    render(<ContactSection contact={contact} />);
-    // The location row is a plain block — no role="link" wrapping it.
-    const locationLabel = screen.getByText('Location');
-    expect(locationLabel).toBeInTheDocument();
-    expect(screen.getByText('Dhaka, Bangladesh')).toBeInTheDocument();
-    // No <a> element should wrap the location label.
+  it('does NOT render a Location row (it was removed in this revision)', () => {
+    const { container } = render(<ContactSection contact={contact} />);
+    // No data-channel attribute for "location".
+    expect(container.querySelector('[data-contact-channel="location"]')).toBeNull();
+    // And no link for it either.
     expect(screen.queryByRole('link', { name: /location/i })).toBeNull();
   });
 
-  it('shows an accent kind tag for each channel (EMAIL, PHONE, …, LOCATION)', () => {
+  it('shows an accent kind tag for each channel (EMAIL, PHONE, LINKEDIN, WEBSITE)', () => {
     const { container } = render(<ContactSection contact={contact} />);
     const text = container.textContent ?? '';
     expect(text).toContain('EMAIL');
     expect(text).toContain('PHONE');
     expect(text).toContain('LINKEDIN');
     expect(text).toContain('WEBSITE');
-    expect(text).toContain('LOCATION');
   });
 
   it('renders the resume callout as the final row, with a print-PDF button', () => {
     render(<ContactSection contact={contact} />);
+    expect(screen.getByText(/print or save the page as pdf/i)).toBeInTheDocument();
     const button = screen.getByRole('button', { name: /save resume as pdf/i });
     expect(button).toBeInTheDocument();
-    // And the resume copy is present.
-    expect(screen.getByText(/take my resume with you/i)).toBeInTheDocument();
-    expect(screen.getByText(/print or save the page as pdf/i)).toBeInTheDocument();
   });
 
   it('does NOT render an address (privacy guarantee)', () => {
     const { container } = render(<ContactSection contact={contact} />);
-    // The home address string from the source JSON (and any fragments of it)
-    // must never appear in the contact section.
     const fullText = container.textContent ?? '';
     expect(fullText).not.toContain('Chunkhola');
     expect(fullText).not.toContain('Mollahat');
