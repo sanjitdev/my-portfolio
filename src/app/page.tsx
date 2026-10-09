@@ -24,7 +24,7 @@ export default function Home() {
         <HeroSection contact={contact} cv={cv} />
         <AboutSection summary={cv.summary} />
         <ExperienceSection experiences={cv.experience} />
-        <SkillsSection skills={cv.top_skills} />
+        <SkillsSection cv={cv} />
         <EducationSection education={cv.education} />
         <CertificationsSection certifications={cv.certifications} />
         <LanguagesSection languages={cv.languages} />

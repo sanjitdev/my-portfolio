@@ -1,7 +1,7 @@
 ---
-last_updated: 2026-10-09T17:30:00Z
+last_updated: 2026-10-09T19:00:00Z
 total_decisions: 10
-adr_count: 3
+adr_count: 4
 ---
 
 # Decision Index
@@ -133,6 +133,15 @@ These are the foundational choices made when the project was initialized. They e
 - **Commit**: `6f67a8b`
 - **Summary**: Replaced the hero monogram with the real profile picture, served as responsive WebP via `next/image` with `priority`. Added an accent-tinted backdrop ring for visual lift. The monogram remains in TopNav, Footer, and the favicon.
 - **Read when**: Adding or optimizing images, designing the hero, working on branding consistency, considering `next/image` vs `<img>`.
+
+### ADR-004: Recruiter-grade Skills section with curated manifest, two-zone layout, proficiency dots, and years-of-use hints
+- **Status**: accepted
+- **Date**: 2026-10-09
+- **Bolt**: post-bolt-evolution (free-form, outside original 3-bolt plan)
+- **Path**: `decisions/adr-004-skills-section-pro.md`
+- **Commit**: pending
+- **Summary**: Replaced the LinkedIn-auto-suggested `cv.top_skills` (3 weak labels) with a curated manifest in `src/lib/skill-profile.ts`. Two-zone layout: 7 technical categories (chip + proficiency dot + years-of-use hint) and a "How I Work" zone (icon + context cards). Years hints computed from a custom `Month YYYY` date parser and category-level keyword anchors in `experience[]`.
+- **Read when**: Working on the skills section, considering skill manifests, computing years-of-experience, designing chip-style UI, adding "How I work" / soft-skill content.
 
 <!-- ADRs from Construction bolts are appended below in reverse chronological order (newest first) -->
 <!-- Format for each entry:
