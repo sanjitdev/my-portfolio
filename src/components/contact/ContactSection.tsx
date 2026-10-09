@@ -1,4 +1,4 @@
-import { ArrowRight, Download, Globe, Linkedin, Mail, Phone } from 'lucide-react';
+import { ArrowRight, Globe, Linkedin, Mail, Phone } from 'lucide-react';
 import type { PublicContact } from '@/lib/cv-types';
 import { Section } from '@/components/shared/Section';
 import { Container } from '@/components/shared/Container';
@@ -78,23 +78,23 @@ export function ContactSection({ contact }: ContactSectionProps) {
             href={`mailto:${contact.email}`}
             data-print="card"
             data-contact-channel="email"
-            className="group flex flex-col items-stretch justify-between gap-6 rounded-2xl border border-accent-200 bg-accent-50 p-6 transition-all hover:border-accent-300 hover:bg-accent-100/70 sm:flex-row sm:items-center dark:border-accent-800/60 dark:bg-accent-900/20 dark:hover:border-accent-700 dark:hover:bg-accent-900/30"
+            className="group flex flex-col gap-5 rounded-2xl border border-accent-200 bg-accent-50 p-6 transition-all hover:border-accent-300 hover:bg-accent-100/70 dark:border-accent-800/60 dark:bg-accent-900/20 dark:hover:border-accent-700 dark:hover:bg-accent-900/30"
           >
-            <div className="min-w-0 flex-1">
-              <p className="font-mono text-[11px] font-medium uppercase tracking-[0.18em] text-accent-700 dark:text-accent-300">
-                Primary — Email
-              </p>
-              <p className="mt-2 truncate font-heading text-xl font-semibold text-slate-900 sm:text-2xl dark:text-slate-100">
-                {contact.email}
-              </p>
-              <p className="mt-1 text-sm text-slate-600 dark:text-slate-400">
+            <p className="font-mono text-[11px] font-medium uppercase tracking-[0.18em] text-accent-700 dark:text-accent-300">
+              Primary — Email
+            </p>
+            <p className="break-all font-heading text-xl font-semibold text-slate-900 sm:text-2xl dark:text-slate-100">
+              {contact.email}
+            </p>
+            <div className="flex flex-col items-start justify-between gap-3 sm:flex-row sm:items-center">
+              <p className="text-sm text-slate-600 dark:text-slate-400">
                 Best for new opportunities, contract work, and detailed questions.
               </p>
+              <span className="inline-flex shrink-0 items-center justify-center gap-2 rounded-md bg-accent-600 px-4 py-2.5 text-sm font-semibold text-white shadow-sm transition-colors group-hover:bg-accent-700">
+                Send email
+                <ArrowRight aria-hidden="true" className="h-4 w-4" />
+              </span>
             </div>
-            <span className="inline-flex shrink-0 items-center justify-center gap-2 rounded-md bg-accent-600 px-4 py-2.5 text-sm font-semibold text-white shadow-sm transition-colors group-hover:bg-accent-700">
-              Send email
-              <ArrowRight aria-hidden="true" className="h-4 w-4" />
-            </span>
           </a>
 
           {/* Secondary 3-up grid: phone, LinkedIn, website */}
@@ -144,10 +144,7 @@ export function ContactSection({ contact }: ContactSectionProps) {
             </p>
           </div>
           <ResumeButton className="inline-flex shrink-0 items-center gap-2 rounded-md border border-slate-300 bg-white px-4 py-2 text-sm font-semibold text-slate-700 transition-colors hover:bg-slate-50 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-200 dark:hover:bg-slate-700">
-            <>
-              <Download aria-hidden="true" className="h-4 w-4" />
-              Download Resume
-            </>
+            Download Resume
           </ResumeButton>
         </div>
       </Container>

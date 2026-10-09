@@ -27,6 +27,10 @@ describe('ContactSection', () => {
     expect(email.getAttribute('href')).toBe('mailto:sanjit@example.com');
     // The CTA button-style label is inside the same anchor.
     expect(screen.getByText(/send email/i)).toBeInTheDocument();
+    // And the email text itself is fully visible (no truncate).
+    const emailText = screen.getByText(contact.email);
+    expect(emailText).toBeVisible();
+    expect(emailText.textContent).toBe(contact.email);
   });
 
   it('renders the three secondary channels with correct hrefs and external-link attributes', () => {
@@ -48,10 +52,21 @@ describe('ContactSection', () => {
   });
 
   it('renders the resume callout as a separate row with a print-PDF button', () => {
-    render(<ContactSection contact={contact} />);
+    const { container } = render(<ContactSection contact={contact} />);
     expect(screen.getByText(/print or save the page as pdf/i)).toBeInTheDocument();
     const button = screen.getByRole('button', { name: /save resume as pdf/i });
     expect(button).toBeInTheDocument();
+    // Exactly ONE download icon in the rendered output — ResumeButton already
+    // renders its own; the section must not add a second one.
+    const svgs = container.querySelectorAll('svg');
+    const downloadIconCount = Array.from(svgs).filter(svg => {
+      // Lucide download icons render a path containing "M21 15v4" (the box)
+      // or a polyline ("7 10 12 15 17 10"). Match either to avoid coupling
+      // to the exact path data.
+      const inner = svg.innerHTML;
+      return /M21 15v4/.test(inner) || /7 10 12 15 17 10/.test(inner);
+    }).length;
+    expect(downloadIconCount).toBe(1);
   });
 
   it('does NOT render an address (privacy guarantee)', () => {
