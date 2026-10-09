@@ -47,6 +47,9 @@ yarn-error.log*
 .vscode/
 .idea/
 
+# Puku CLI (AI assistant session data — local tool state, not project source)
+.puku-cli/
+
 # Memory Bank (project-internal, but tracked for specsmd auditability — keep checked in)
 # memory-bank/ is intentionally NOT ignored
 .vercel
