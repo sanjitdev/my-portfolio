@@ -1,4 +1,6 @@
-import { loadCvData, getDisplayContact } from '@/lib/cv-data';
+import { loadCvData, getDisplayContact, computeBuildTimestamp } from '@/lib/cv-data';
+import { TopNav } from '@/components/nav/TopNav';
+import { getNavLinks } from '@/components/nav/navLinks';
 import { HeroSection } from '@/components/hero/HeroSection';
 import { AboutSection } from '@/components/about/AboutSection';
 import { ExperienceSection } from '@/components/experience/ExperienceSection';
@@ -8,22 +10,28 @@ import { CertificationsSection } from '@/components/certifications/Certification
 import { LanguagesSection } from '@/components/languages/LanguagesSection';
 import { HonorsSection } from '@/components/honors/HonorsSection';
 import { ContactSection } from '@/components/contact/ContactSection';
+import { Footer } from '@/components/layout/Footer';
 
 export default function Home() {
   const cv = loadCvData();
   const contact = getDisplayContact(cv);
+  const navLinks = getNavLinks(cv);
 
   return (
-    <main>
-      <HeroSection contact={contact} />
-      <AboutSection summary={cv.summary} />
-      <ExperienceSection experiences={cv.experience} />
-      <SkillsSection skills={cv.top_skills} />
-      <EducationSection education={cv.education} />
-      <CertificationsSection certifications={cv.certifications} />
-      <LanguagesSection languages={cv.languages} />
-      <HonorsSection awards={cv.honors_awards} />
-      <ContactSection contact={contact} />
-    </main>
+    <>
+      <TopNav links={navLinks} />
+      <main>
+        <HeroSection contact={contact} />
+        <AboutSection summary={cv.summary} />
+        <ExperienceSection experiences={cv.experience} />
+        <SkillsSection skills={cv.top_skills} />
+        <EducationSection education={cv.education} />
+        <CertificationsSection certifications={cv.certifications} />
+        <LanguagesSection languages={cv.languages} />
+        <HonorsSection awards={cv.honors_awards} />
+        <ContactSection contact={contact} />
+      </main>
+      <Footer name={contact.name} lastUpdated={computeBuildTimestamp()} />
+    </>
   );
 }

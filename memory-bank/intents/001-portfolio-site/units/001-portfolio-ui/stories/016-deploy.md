@@ -2,11 +2,11 @@
 id: 016-deploy
 unit: 001-portfolio-ui
 intent: 001-portfolio-site
-status: ready
+status: complete
 priority: must
-created: 2026-10-08T20:52:00Z
+created: '2026-10-08T20:52:00Z'
 assigned_bolt: 001-portfolio-ui-polish
-implemented: false
+implemented: true
 ---
 
 # Story: 016-deploy

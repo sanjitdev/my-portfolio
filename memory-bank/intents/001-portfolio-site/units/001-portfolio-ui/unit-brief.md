@@ -4,9 +4,9 @@ intent: 001-portfolio-site
 unit_type: frontend
 default_bolt_type: simple-construction-bolt
 phase: inception
-status: ready
-created: 2026-10-08T20:46:00Z
-updated: 2026-10-08T20:52:00Z
+status: complete
+created: '2026-10-08T20:46:00Z'
+updated: '2026-10-08T20:52:00Z'
 ---
 
 # Unit Brief: 001-portfolio-ui (Portfolio Frontend)

@@ -3,25 +3,32 @@ id: 003-portfolio-ui-polish
 unit: 001-portfolio-ui
 intent: 001-portfolio-site
 type: simple-construction-bolt
-status: planned
+status: complete
 stories:
   - 013-nav
   - 014-theme
   - 015-seo
   - 016-deploy
-created: 2026-10-08T20:55:00Z
-started: null
-completed: null
+created: '2026-10-08T20:55:00Z'
+started: '2026-10-08T21:30:00Z'
+completed: '2026-10-09T07:42:15Z'
 current_stage: null
-stages_completed: []
-
+stages_completed:
+  - name: plan
+    completed: '2026-10-08T21:30:00Z'
+    artifact: implementation-plan.md
+  - name: implement
+    completed: '2026-10-08T21:40:00Z'
+    artifact: implementation-walkthrough.md
+  - name: test
+    completed: '2026-10-09T13:25:00Z'
+    artifact: test-walkthrough.md
 requires_bolts:
   - 001-portfolio-ui-foundation
   - 002-portfolio-ui-sections
 enables_bolts: []
 requires_units: []
 blocks: false
-
 complexity:
   avg_complexity: 2
   avg_uncertainty: 2

@@ -29,8 +29,8 @@ last_updated: 2026-10-08T21:15:00Z
 | Bolt ID | Stories | Status | Changed |
 |---------|---------|--------|---------|
 | 001-portfolio-ui-foundation | 001, 002, 003 | ✅ complete | test added |
-| 002-portfolio-ui-sections | 004-012 | ⏳ in-progress | plan+implement+test complete |
-| 003-portfolio-ui-polish | 013-016 | [ ] planned | - |
+| 002-portfolio-ui-sections | 004-012 | ✅ complete | bolt complete |
+| 003-portfolio-ui-polish | 013-016 | ✅ complete | bolt + unit + intent complete |
 
 ## Execution History
 
@@ -45,6 +45,14 @@ last_updated: 2026-10-08T21:15:00Z
 | 2026-10-08T21:15:30Z | 002-portfolio-ui-sections | stage-complete | plan → implement (9 section components + page composition + privacy test) |
 | 2026-10-08T21:20:00Z | 002-portfolio-ui-sections | stage-complete | implement → test (12 components + 11 new test files written) |
 | 2026-10-08T21:25:00Z | 002-portfolio-ui-sections | test-complete | 64/64 tests passing; awaiting bolt completion |
+| 2026-10-08T21:28:00Z | 002-portfolio-ui-sections | bolt-complete | 9 stories marked complete via bolt-complete.cjs |
+| 2026-10-08T21:30:00Z | 003-portfolio-ui-polish | started | Stage 1: Plan (4 stories: nav, theme, SEO, deploy) |
+| 2026-10-08T21:35:00Z | 003-portfolio-ui-polish | stage-complete | plan → implement |
+| 2026-10-08T21:40:00Z | 003-portfolio-ui-polish | stage-complete | implement → test (8 new files, 23 new tests) |
+| 2026-10-09T13:25:00Z | 003-portfolio-ui-polish | test-complete | 87/87 tests passing; awaiting bolt completion |
+| 2026-10-09T13:30:00Z | 003-portfolio-ui-polish | bolt-complete | 4 stories + unit + intent all marked complete via bolt-complete.cjs |
+| 2026-10-09T13:30:00Z | 001-portfolio-ui | unit-complete | All 3 bolts done — unit 001-portfolio-ui complete |
+| 2026-10-09T13:30:00Z | 001-portfolio-site | intent-complete | All 16 stories done — intent 001-portfolio-site complete; ready for Operations |
 
 ## Execution Summary
 
