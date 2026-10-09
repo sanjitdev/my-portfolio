@@ -62,20 +62,24 @@ describe('HeroStats', () => {
     expect(screen.getByText('Certifications')).toBeInTheDocument();
   });
 
-  it('renders years with a "+" suffix', () => {
+  it('renders years with a "+" suffix (derived from CV)', () => {
     render(<HeroStats cv={cvFixture} />);
     expect(screen.getByText('8+')).toBeInTheDocument();
   });
 
-  it('renders companies count without a "+" suffix', () => {
+  it('renders the curated companies value (4)', () => {
     render(<HeroStats cv={cvFixture} />);
-    expect(screen.getByText('2')).toBeInTheDocument();
+    expect(screen.getByText('4')).toBeInTheDocument();
   });
 
-  it('renders technologies and certifications counts', () => {
+  it('renders the curated technologies value (5+)', () => {
     render(<HeroStats cv={cvFixture} />);
-    expect(screen.getByText('3+')).toBeInTheDocument(); // top_skills count
-    expect(screen.getByText('5')).toBeInTheDocument(); // certifications count
+    expect(screen.getByText('5+')).toBeInTheDocument();
+  });
+
+  it('renders the curated certifications value (6)', () => {
+    render(<HeroStats cv={cvFixture} />);
+    expect(screen.getByText('6')).toBeInTheDocument();
   });
 
   it('does NOT render the home address anywhere', () => {

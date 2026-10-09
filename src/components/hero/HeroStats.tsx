@@ -1,4 +1,4 @@
-import { getCvStats } from '@/lib/cv-stats';
+import { getHeroStatValues } from '@/lib/hero-stats';
 import type { CvData } from '@/lib/cv-types';
 
 interface HeroStatsProps {
@@ -21,15 +21,19 @@ interface HeroStatsProps {
  *     name in mono caps + secondary descriptor in light text).
  *   - 4-up on desktop, 2x2 on mobile. No boxes, no grid borders — just
  *     spacing and a hairline rule between the row and the eyebrow.
+ *
+ * Number sources come from `getHeroStatValues(cv)` — years is derived
+ * from CV dates; the other three are curated values (see
+ * `src/lib/hero-stats.ts`).
  */
 export function HeroStats({ cv }: HeroStatsProps) {
-  const stats = getCvStats(cv);
+  const stats = getHeroStatValues(cv);
 
   const items = [
     { value: `${stats.yearsExperience}+`, label: 'Years', descriptor: 'experience' },
-    { value: `${stats.companiesCount}`, label: 'Companies', descriptor: 'worked at' },
-    { value: `${stats.skillsCount}+`, label: 'Technologies', descriptor: 'in toolkit' },
-    { value: `${stats.certificationsCount}`, label: 'Certifications', descriptor: 'earned' },
+    { value: `${stats.companies}`, label: 'Companies', descriptor: 'worked at' },
+    { value: `${stats.technologies}+`, label: 'Technologies', descriptor: 'in toolkit' },
+    { value: `${stats.certifications}`, label: 'Certifications', descriptor: 'earned' },
   ];
 
   return (
