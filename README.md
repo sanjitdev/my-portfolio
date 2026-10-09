@@ -2,7 +2,7 @@
 
 A clean, accessible single-page portfolio website for Sanjit Majumdar (Senior Software Engineer II), built from `docs/LinkedIn_CV.json` and deployed to Vercel.
 
-**Live**: [my-portfolio-9xw7teirc-super-max1.vercel.app](https://my-portfolio-9xw7teirc-super-max1.vercel.app)
+**Live**: [sanjit-dev.vercel.app](https://sanjit-dev.vercel.app)
 
 ## Stack
 
@@ -114,7 +114,7 @@ The home address is present in `docs/LinkedIn_CV.json` for record-keeping, but t
 
 ## Deployment
 
-The site is deployed to Vercel at **https://my-portfolio-9xw7teirc-super-max1.vercel.app**.
+The site is deployed to Vercel at **https://sanjit-dev.vercel.app**.
 
 Current deployment flow (manual via Vercel CLI):
 
@@ -134,7 +134,7 @@ VERCEL_TOKEN=<your-token> vercel deploy --prod --yes
 3. Authorize and select `sanjitdev/my-portfolio`
 4. Future pushes to `main` will auto-deploy; PRs get preview URLs
 
-No `vercel.json` is needed. Vercel auto-detects Next.js + bun (via the committed `bun.lock`). For a custom domain, set `NEXT_PUBLIC_SITE_URL` in the Vercel project settings (it defaults to `https://sanjit-majumdar.vercel.app`).
+No `vercel.json` is needed. Vercel auto-detects Next.js + bun (via the committed `bun.lock`). For a custom domain, set `NEXT_PUBLIC_SITE_URL` in the Vercel project settings (it defaults to `https://sanjit-dev.vercel.app`).
 
 ## Accessibility
 

@@ -17,7 +17,7 @@ const jetbrainsMono = JetBrains_Mono({
   variable: '--font-jetbrains-mono',
 });
 
-const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://sanjit-majumdar.vercel.app';
+const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://sanjit-dev.vercel.app';
 
 // loadCvData() runs at build time, baking the metadata into the static HTML.
 const cv = loadCvData();

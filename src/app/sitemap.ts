@@ -1,7 +1,7 @@
 import type { MetadataRoute } from 'next';
 import { computeBuildTimestamp } from '@/lib/cv-data';
 
-const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://sanjit-majumdar.vercel.app';
+const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://sanjit-dev.vercel.app';
 
 export default function sitemap(): MetadataRoute.Sitemap {
   return [
