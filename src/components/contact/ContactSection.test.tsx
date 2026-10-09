@@ -7,7 +7,7 @@ const contact: PublicContact = {
   name: 'Sanjit Majumdar',
   current_title: 'Senior Engineer',
   headline: 'Building cool things',
-  location: 'Dhaka',
+  location: 'Dhaka, Bangladesh',
   phone: '01927025242',
   email: 'sanjit@example.com',
   linkedin: 'www.linkedin.com/in/sanjitmajumdar',
@@ -15,15 +15,22 @@ const contact: PublicContact = {
 };
 
 describe('ContactSection', () => {
-  it('renders all 4 contact channels with correct hrefs', () => {
+  it('renders the section heading and intro copy', () => {
     render(<ContactSection contact={contact} />);
     expect(screen.getByRole('heading', { name: 'Contact', level: 2 })).toBeInTheDocument();
+    expect(screen.getByText(/open to new opportunities/i)).toBeInTheDocument();
+  });
 
-    const mailto = screen.getByRole('link', { name: /email/i });
-    expect(mailto.getAttribute('href')).toBe('mailto:sanjit@example.com');
+  it('renders the four linkable channels with correct hrefs and external-link attributes', () => {
+    render(<ContactSection contact={contact} />);
 
-    const tel = screen.getByRole('link', { name: /phone/i });
-    expect(tel.getAttribute('href')).toBe('tel:01927025242');
+    const email = screen.getByRole('link', { name: /email/i });
+    expect(email.getAttribute('href')).toBe('mailto:sanjit@example.com');
+    expect(email.getAttribute('target')).toBeNull();
+
+    const phone = screen.getByRole('link', { name: /phone/i });
+    expect(phone.getAttribute('href')).toBe('tel:01927025242');
+    expect(phone.getAttribute('target')).toBeNull();
 
     const linkedin = screen.getByRole('link', { name: /linkedin/i });
     expect(linkedin.getAttribute('href')).toBe('https://www.linkedin.com/in/sanjitmajumdar');
@@ -34,6 +41,35 @@ describe('ContactSection', () => {
     expect(website.getAttribute('href')).toBe('https://sanjit-majumdar.xyz');
     expect(website.getAttribute('target')).toBe('_blank');
     expect(website.getAttribute('rel')).toBe('noopener noreferrer');
+  });
+
+  it('renders a non-link Location row showing city and country', () => {
+    render(<ContactSection contact={contact} />);
+    // The location row is a plain block — no role="link" wrapping it.
+    const locationLabel = screen.getByText('Location');
+    expect(locationLabel).toBeInTheDocument();
+    expect(screen.getByText('Dhaka, Bangladesh')).toBeInTheDocument();
+    // No <a> element should wrap the location label.
+    expect(screen.queryByRole('link', { name: /location/i })).toBeNull();
+  });
+
+  it('shows an accent kind tag for each channel (EMAIL, PHONE, …, LOCATION)', () => {
+    const { container } = render(<ContactSection contact={contact} />);
+    const text = container.textContent ?? '';
+    expect(text).toContain('EMAIL');
+    expect(text).toContain('PHONE');
+    expect(text).toContain('LINKEDIN');
+    expect(text).toContain('WEBSITE');
+    expect(text).toContain('LOCATION');
+  });
+
+  it('renders the resume callout as the final row, with a print-PDF button', () => {
+    render(<ContactSection contact={contact} />);
+    const button = screen.getByRole('button', { name: /save resume as pdf/i });
+    expect(button).toBeInTheDocument();
+    // And the resume copy is present.
+    expect(screen.getByText(/take my resume with you/i)).toBeInTheDocument();
+    expect(screen.getByText(/print or save the page as pdf/i)).toBeInTheDocument();
   });
 
   it('does NOT render an address (privacy guarantee)', () => {
