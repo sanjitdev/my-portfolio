@@ -6,6 +6,8 @@ interface SectionProps {
   ariaLabelledBy?: string;
   children: ReactNode;
   className?: string;
+  /** When true, applies a top border separator (subtle horizontal rule). */
+  divided?: boolean;
 }
 
 /**
@@ -15,12 +17,18 @@ interface SectionProps {
  * Every content section MUST have an `id` so the TopNav can scroll-spy to it.
  * Pass `ariaLabelledBy` to link to the heading's id for screen readers.
  */
-export function Section({ id, ariaLabelledBy, children, className }: SectionProps) {
+export function Section({
+  id,
+  ariaLabelledBy,
+  children,
+  className,
+  divided = false,
+}: SectionProps) {
   return (
     <section
       id={id}
       aria-labelledby={ariaLabelledBy}
-      className={clsx('py-16 sm:py-20 scroll-mt-20', className)}
+      className={clsx('py-16 sm:py-20 scroll-mt-20', divided && 'section-divider', className)}
     >
       {children}
     </section>

@@ -2,6 +2,7 @@ import type { Education } from '@/lib/cv-types';
 import { Section } from '@/components/shared/Section';
 import { Container } from '@/components/shared/Container';
 import { Heading } from '@/components/shared/Heading';
+import { SectionEyebrow } from '@/components/sections/SectionEyebrow';
 import { EducationCard } from './EducationCard';
 
 interface EducationSectionProps {
@@ -10,7 +11,7 @@ interface EducationSectionProps {
 
 /**
  * Education section — hidden entirely when the education list is empty so
- * the nav scroll-spy (added in Bolt 003) does not target a phantom section.
+ * the nav scroll-spy does not target a phantom section.
  */
 export function EducationSection({ education }: EducationSectionProps) {
   if (education.length === 0) {
@@ -20,6 +21,7 @@ export function EducationSection({ education }: EducationSectionProps) {
   return (
     <Section id="education" ariaLabelledBy="education-heading">
       <Container>
+        <SectionEyebrow>04 — Education</SectionEyebrow>
         <Heading as="h2" id="education-heading">
           Education
         </Heading>

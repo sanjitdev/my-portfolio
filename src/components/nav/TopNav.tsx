@@ -5,6 +5,7 @@ import { Menu, X } from 'lucide-react';
 import { clsx } from 'clsx';
 import type { NavLink } from './navLinks';
 import { ThemeToggle } from '@/components/theme/ThemeToggle';
+import { Monogram } from '@/components/branding/Monogram';
 
 interface TopNavProps {
   links: NavLink[];
@@ -79,9 +80,10 @@ export function TopNav({ links }: TopNavProps) {
         <a
           href="#top"
           onClick={e => handleLinkClick(e, 'top')}
-          className="text-sm font-semibold text-slate-900 dark:text-slate-100"
+          className="flex items-center gap-2 text-slate-900 dark:text-slate-100"
         >
-          Sanjit Majumdar
+          <Monogram size="sm" className="hidden sm:block" />
+          <span className="text-sm font-semibold tracking-tight">Sanjit Majumdar</span>
         </a>
 
         {/* Desktop links */}

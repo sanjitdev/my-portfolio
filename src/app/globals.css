@@ -2,6 +2,7 @@
 
 /* Custom design tokens via @theme (Tailwind v4) */
 @theme {
+  /* Accent (blue) scale */
   --color-accent-50: oklch(0.97 0.014 254);
   --color-accent-100: oklch(0.93 0.03 254);
   --color-accent-200: oklch(0.87 0.06 254);
@@ -13,6 +14,28 @@
   --color-accent-800: oklch(0.4 0.12 254);
   --color-accent-900: oklch(0.32 0.1 254);
   --color-accent-950: oklch(0.24 0.08 254);
+
+  /* Status (success) scale — for "Open to opportunities" dot, etc. */
+  --color-success-50: oklch(0.97 0.02 145);
+  --color-success-100: oklch(0.93 0.05 145);
+  --color-success-400: oklch(0.74 0.16 145);
+  --color-success-500: oklch(0.66 0.18 145);
+  --color-success-600: oklch(0.56 0.16 145);
+  --color-success-700: oklch(0.46 0.13 145);
+
+  /* Font family tokens (referenced by next/font CSS variables) */
+  --font-heading: var(--font-playfair), Georgia, 'Times New Roman', serif;
+  --font-body: var(--font-inter), system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --font-mono: var(--font-jetbrains-mono), ui-monospace, SFMono-Regular, monospace;
+
+  /* Refined radius scale */
+  --radius-xs: 0.25rem;
+  --radius-sm: 0.375rem;
+  --radius-md: 0.5rem;
+  --radius-lg: 0.75rem;
+  --radius-xl: 1rem;
+  --radius-2xl: 1.5rem;
+  --radius-full: 9999px;
 }
 
 @variant dark (&:where(.dark, .dark *));
@@ -31,12 +54,7 @@ html {
 }
 
 body {
-  font-family:
-    var(--font-inter),
-    system-ui,
-    -apple-system,
-    'Segoe UI',
-    sans-serif;
+  font-family: var(--font-body);
   background-color: white;
   color: var(--color-slate-900);
 }
@@ -44,6 +62,34 @@ body {
 .dark body {
   background-color: var(--color-slate-950);
   color: var(--color-slate-100);
+}
+
+/* Headings use the editorial Playfair Display */
+h1,
+h2 {
+  font-family: var(--font-heading);
+  letter-spacing: -0.01em;
+}
+
+/* Hero radial-gradient backdrop (subtle warm accent) */
+.hero-backdrop {
+  background:
+    radial-gradient(ellipse 80% 60% at 50% 0%, oklch(0.97 0.014 254 / 0.4) 0%, transparent 70%),
+    linear-gradient(180deg, var(--color-white) 0%, var(--color-slate-50) 100%);
+}
+
+.dark .hero-backdrop {
+  background:
+    radial-gradient(ellipse 80% 60% at 50% 0%, oklch(0.24 0.08 254 / 0.25) 0%, transparent 70%),
+    linear-gradient(180deg, var(--color-slate-950) 0%, var(--color-slate-900) 100%);
+}
+
+/* Subtle section separator between major regions */
+.section-divider {
+  border-top: 1px solid var(--color-slate-200);
+}
+.dark .section-divider {
+  border-top-color: var(--color-slate-800);
 }
 
 /* Respect reduced motion globally */
@@ -63,4 +109,101 @@ body {
   outline: 2px solid var(--color-accent-500);
   outline-offset: 2px;
   border-radius: 4px;
+}
+
+/* Pulsing dot animation for "Open to opportunities" badge */
+@keyframes availability-pulse {
+  0%,
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.6;
+    transform: scale(1.15);
+  }
+}
+
+.availability-dot {
+  animation: availability-pulse 2s ease-in-out infinite;
+}
+
+/* =========================
+   PRINT STYLES (Resume)
+   ========================= */
+@media print {
+  /* Hide chrome */
+  nav,
+  footer,
+  .print-hidden,
+  [data-print='hidden'] {
+    display: none !important;
+  }
+
+  /* Reset colors for paper */
+  html,
+  body {
+    background: white !important;
+    color: black !important;
+    font-size: 11pt;
+  }
+
+  .dark body,
+  .dark {
+    background: white !important;
+    color: black !important;
+  }
+
+  /* Force single column */
+  main,
+  section {
+    page-break-inside: avoid;
+    padding: 0 !important;
+    margin: 0 !important;
+  }
+
+  /* Page setup */
+  @page {
+    size: A4;
+    margin: 18mm 16mm;
+  }
+
+  /* Keep cards whole */
+  [data-print='card'] {
+    page-break-inside: avoid;
+  }
+
+  /* Section spacing */
+  section {
+    margin-bottom: 1.5rem !important;
+  }
+
+  /* Make sure text is black on white */
+  *,
+  *::before,
+  *::after {
+    color: black !important;
+    background: transparent !important;
+  }
+
+  /* Make sure headings stay bold */
+  h1,
+  h2,
+  h3 {
+    font-family: var(--font-heading), Georgia, serif;
+    color: black !important;
+    page-break-after: avoid;
+  }
+
+  /* Links — show URL after the text */
+  a[href^='http']::after {
+    content: ' (' attr(href) ')';
+    font-size: 0.85em;
+    color: #555 !important;
+  }
+
+  /* Print the contact info compactly */
+  [data-print='contact-row'] {
+    page-break-inside: avoid;
+  }
 }

@@ -17,6 +17,9 @@ const sizeClasses: Record<'h1' | 'h2' | 'h3', string> = {
 /**
  * Renders an h1/h2/h3 with consistent typography. Default is h2 (for section
  * headings). Use h1 only once per page (in the hero).
+ *
+ * Editorial Playfair Display is applied via global `h1, h2 { font-family }` rule
+ * in globals.css, so we don't need to repeat it here.
  */
 export function Heading({ as = 'h2', id, children, className }: HeadingProps) {
   const Tag = as as ElementType;

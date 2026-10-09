@@ -5,7 +5,9 @@ import { Footer } from './Footer';
 describe('Footer', () => {
   it('renders the name', () => {
     render(<Footer name="Sanjit Majumdar" lastUpdated="2026-10-08T15:30:00.000Z" />);
-    expect(screen.getByText(/Sanjit Majumdar/)).toBeInTheDocument();
+    // The Monogram's aria-label also includes the name, so we look only for
+    // the visible name in the copyright paragraph.
+    expect(screen.getByText('Sanjit Majumdar', { selector: 'p span' })).toBeInTheDocument();
   });
 
   it('formats the ISO date as a human-readable date', () => {

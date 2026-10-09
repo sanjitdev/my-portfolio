@@ -21,7 +21,7 @@ export default function Home() {
     <>
       <TopNav links={navLinks} />
       <main>
-        <HeroSection contact={contact} />
+        <HeroSection contact={contact} cv={cv} />
         <AboutSection summary={cv.summary} />
         <ExperienceSection experiences={cv.experience} />
         <SkillsSection skills={cv.top_skills} />

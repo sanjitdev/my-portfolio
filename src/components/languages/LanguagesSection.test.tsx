@@ -13,8 +13,8 @@ describe('LanguagesSection', () => {
     expect(screen.getByRole('heading', { name: 'Languages', level: 2 })).toBeInTheDocument();
     expect(screen.getByText('English')).toBeInTheDocument();
     expect(screen.getByText('Spanish')).toBeInTheDocument();
-    expect(screen.getByText(/— Native/)).toBeInTheDocument();
-    expect(screen.getByText(/— B2/)).toBeInTheDocument();
+    expect(screen.getByText('Native')).toBeInTheDocument();
+    expect(screen.getByText('B2')).toBeInTheDocument();
   });
 
   it('returns null when empty', () => {

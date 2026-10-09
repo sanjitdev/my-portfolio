@@ -1,6 +1,7 @@
 import { Section } from '@/components/shared/Section';
 import { Container } from '@/components/shared/Container';
 import { Heading } from '@/components/shared/Heading';
+import { SectionEyebrow } from '@/components/sections/SectionEyebrow';
 import type { Experience } from '@/lib/cv-types';
 import { ExperienceCard } from './ExperienceCard';
 
@@ -17,8 +18,9 @@ interface ExperienceSectionProps {
  */
 export function ExperienceSection({ experiences }: ExperienceSectionProps) {
   return (
-    <Section id="experience" ariaLabelledBy="experience-heading">
+    <Section id="experience" ariaLabelledBy="experience-heading" divided>
       <Container>
+        <SectionEyebrow>02 — Experience</SectionEyebrow>
         <Heading as="h2" id="experience-heading">
           Experience
         </Heading>
@@ -29,7 +31,7 @@ export function ExperienceSection({ experiences }: ExperienceSectionProps) {
             ))}
           </div>
         ) : (
-          <p className="text-slate-500 dark:text-slate-400 italic">No experience listed.</p>
+          <p className="text-slate-500 italic dark:text-slate-400">No experience listed.</p>
         )}
       </Container>
     </Section>

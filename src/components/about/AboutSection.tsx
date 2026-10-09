@@ -1,6 +1,7 @@
 import { Section } from '@/components/shared/Section';
 import { Container } from '@/components/shared/Container';
 import { Heading } from '@/components/shared/Heading';
+import { SectionEyebrow } from '@/components/sections/SectionEyebrow';
 
 interface AboutSectionProps {
   summary: string;
@@ -15,6 +16,7 @@ export function AboutSection({ summary }: AboutSectionProps) {
   return (
     <Section id="about" ariaLabelledBy="about-heading">
       <Container>
+        <SectionEyebrow>01 — About</SectionEyebrow>
         <Heading as="h2" id="about-heading">
           About
         </Heading>
@@ -23,7 +25,7 @@ export function AboutSection({ summary }: AboutSectionProps) {
             {summary}
           </p>
         ) : (
-          <p className="text-slate-500 dark:text-slate-400 italic">Summary not provided.</p>
+          <p className="text-slate-500 italic dark:text-slate-400">Summary not provided.</p>
         )}
       </Container>
     </Section>
