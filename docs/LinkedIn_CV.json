@@ -37,7 +37,12 @@
     "Advance Certificate For Management Professionals (ACMP 4.0)",
     "NopCommerce Certified Developer"
   ],
-  "honors_awards": ["Best Desktop Application"],
+  "honors_awards": [
+    "Best Desktop Application",
+    "Best Performer 2022 — Brain Station 23",
+    "Spot Award — Client Delivery Excellence",
+    "Innovation Award — NopCommerce Migration"
+  ],
   "experience": [
     {
       "company": "Brain Station 23",
