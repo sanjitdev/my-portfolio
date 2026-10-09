@@ -6,55 +6,57 @@ import {
   getSkillProfile,
   computeYearsOfUse,
   TECHNICAL_SKILLS,
-  type TechnicalCategory,
-  type TechnicalCategoryDef,
+  TOP_SKILLS,
 } from '@/lib/skill-profile';
 import type { CvData } from '@/lib/cv-types';
-import { SkillChip } from './SkillChip';
-import { HowIWorkCard } from './HowIWorkCard';
-
-interface SkillsSectionProps {
-  cv: CvData;
-}
+import { SkillsSectionClient, type SkillsViewModel } from './SkillsSectionClient';
 
 /**
- * Skills section — two-zone layout.
+ * Server component — does the years-of-use computation against the CV
+ * (which must never be sent to the client because of the address privacy
+ * invariant) and hands the client component only a plain view model.
  *
- *   Zone 1: "Technical Stack" — 7 category cards, each with SkillChips
- *           (proficiency dot + name + years-of-use hint).
- *   Zone 2: "How I Work"       — 6 professional-skill cards with lucide
- *           icons and 1-line context, anchored to career length.
- *
- * The section id stays "skills" so the TopNav scroll-spy keeps working.
- * Data is sourced from `src/lib/skill-profile.ts` (curated manifest), not
- * from `cv.top_skills` (which LinkedIn auto-suggests as weak soft labels).
+ * Splitting this way keeps the `cv` prop server-side. The client subtree
+ * only sees pre-computed year numbers and the static skill manifest —
+ * no contact data, no address, no personal_information object.
  */
-export function SkillsSection({ cv }: SkillsSectionProps) {
+export function SkillsSection({ cv }: { cv: CvData }) {
   const profile = getSkillProfile();
 
-  // Pre-compute years of use per technical category once at render time
-  // (this is a server component — runs at build, cached).
-  const categoryYears = new Map<string, number | null>();
+  // Pre-compute years of use per technical category (server-side, build time).
+  const categoryYears: Record<string, number | null> = {};
   for (const cat of profile.technical) {
-    categoryYears.set(cat.label, computeYearsOfUse(cv, cat.yearsAnchor));
+    categoryYears[cat.label] = computeYearsOfUse(cv, cat.yearsAnchor);
   }
   const professionalYears = computeYearsOfUse(cv, { kind: 'all' });
 
-  const totalTechnical = Object.values(TECHNICAL_SKILLS).reduce((n, list) => n + list.length, 0);
+  // Build the headline row data (top N skills, with proficiency) for the client.
+  const headline = TOP_SKILLS.flatMap(name => {
+    for (const list of Object.values(TECHNICAL_SKILLS)) {
+      const found = list.find(s => s.name === name);
+      if (found) return [{ name: found.name, proficiency: found.proficiency }];
+    }
+    return [];
+  });
 
-  if (totalTechnical === 0) {
-    return (
-      <Section id="skills" ariaLabelledBy="skills-heading">
-        <Container>
-          <SectionEyebrow>03 — Skills</SectionEyebrow>
-          <Heading as="h2" id="skills-heading">
-            Skills
-          </Heading>
-          <p className="text-slate-500 italic dark:text-slate-400">No skills listed.</p>
-        </Container>
-      </Section>
-    );
-  }
+  // Flatten technical categories into plain-data rows (icon names are strings
+  // resolved on the client by SkillsSectionClient).
+  const technical = profile.technical.map(cat => ({
+    label: cat.label,
+    iconName: cat.label, // resolve via map on the client
+    years: categoryYears[cat.label] ?? null,
+  }));
+
+  const vm: SkillsViewModel = {
+    headline,
+    technical,
+    professional: profile.professional.map(p => ({
+      name: p.name,
+      iconKey: p.name, // resolve via map on the client
+      context: p.context,
+    })),
+    professionalYears,
+  };
 
   return (
     <Section id="skills" ariaLabelledBy="skills-heading">
@@ -63,84 +65,23 @@ export function SkillsSection({ cv }: SkillsSectionProps) {
         <Heading as="h2" id="skills-heading">
           Skills
         </Heading>
+
+        {professionalYears !== null && professionalYears > 0 && (
+          <p className="mt-3 font-mono text-[11px] uppercase tracking-[0.18em] text-accent-600 dark:text-accent-400">
+            · {professionalYears}+ years professional experience
+          </p>
+        )}
+
         <p className="mt-3 max-w-2xl text-base leading-relaxed text-slate-600 dark:text-slate-400">
-          A snapshot of the stack I ship with and how I work. The numbers are years of use, derived
-          from the experience timeline above.
+          A snapshot of the stack I ship with and how I work. Scan the headline, or open the
+          breakdown for the full picture.
         </p>
 
-        {/* Zone 1: Technical Stack */}
-        <div className="mt-10">
-          <h3 className="mb-5 font-mono text-[11px] font-medium uppercase tracking-[0.18em] text-slate-500 dark:text-slate-400">
-            Technical Stack · {totalTechnical} skills
-          </h3>
-          <div className="grid gap-6 sm:grid-cols-2">
-            {profile.technical.map(cat => (
-              <CategoryCard
-                key={cat.label}
-                category={cat}
-                years={categoryYears.get(cat.label) ?? null}
-              />
-            ))}
-          </div>
-        </div>
-
-        {/* Zone 2: How I Work */}
-        <div className="mt-14">
-          <h3 className="mb-5 flex items-baseline gap-3 font-mono text-[11px] font-medium uppercase tracking-[0.18em] text-slate-500 dark:text-slate-400">
-            <span>How I Work</span>
-            {professionalYears !== null && professionalYears > 0 && (
-              <span className="text-[10px] text-slate-400 dark:text-slate-500">
-                · {professionalYears}+ years
-              </span>
-            )}
-          </h3>
-          <div className="grid gap-4 sm:grid-cols-2">
-            {profile.professional.map(skill => (
-              <HowIWorkCard key={skill.name} skill={skill} />
-            ))}
-          </div>
-        </div>
+        <SkillsSectionClient vm={vm} />
       </Container>
     </Section>
   );
 }
 
-function CategoryCard({
-  category,
-  years,
-}: {
-  category: TechnicalCategoryDef;
-  years: number | null;
-}) {
-  const Icon = category.icon;
-  const skills = TECHNICAL_SKILLS[category.label as TechnicalCategory] ?? [];
-
-  return (
-    <div className="rounded-lg border border-slate-200 bg-white p-5 dark:border-slate-800 dark:bg-slate-900">
-      <div className="mb-3 flex items-center justify-between gap-3">
-        <h4 className="flex items-center gap-2 text-sm font-semibold uppercase tracking-wider text-slate-700 dark:text-slate-300">
-          <Icon aria-hidden="true" className="h-4 w-4 text-accent-500" />
-          {category.label}
-        </h4>
-        {years !== null && years > 0 && (
-          <span
-            className="font-mono text-[10px] tracking-wide text-slate-500 dark:text-slate-400"
-            aria-label={`${years} year${years === 1 ? '' : 's'} of use`}
-          >
-            {years}y
-          </span>
-        )}
-      </div>
-      <div className="flex flex-wrap gap-2">
-        {skills.map(skill => (
-          <SkillChip
-            key={skill.name}
-            name={skill.name}
-            proficiency={skill.proficiency}
-            years={years}
-          />
-        ))}
-      </div>
-    </div>
-  );
-}
+// Re-export for tests that import the type.
+export type { SkillsViewModel } from './SkillsSectionClient';

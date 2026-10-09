@@ -4,6 +4,7 @@ import {
   computeYearsOfUse,
   getSkillProfile,
   TECHNICAL_SKILLS,
+  TOP_SKILLS,
   PROFICIENCY_LABELS,
 } from './skill-profile';
 import type { CvData } from './cv-types';
@@ -176,5 +177,19 @@ describe('PROFICIENCY_LABELS', () => {
     expect(PROFICIENCY_LABELS.expert).toBeDefined();
     expect(PROFICIENCY_LABELS.proficient).toBeDefined();
     expect(PROFICIENCY_LABELS.working).toBeDefined();
+  });
+});
+
+describe('TOP_SKILLS', () => {
+  it('is a non-empty curated list', () => {
+    expect(TOP_SKILLS.length).toBeGreaterThan(0);
+    expect(TOP_SKILLS.length).toBeLessThanOrEqual(10);
+  });
+
+  it('every entry resolves to a technical skill in the manifest', () => {
+    for (const name of TOP_SKILLS) {
+      const found = Object.values(TECHNICAL_SKILLS).some(list => list.some(s => s.name === name));
+      expect(found, `TOP_SKILLS entry "${name}" not found in TECHNICAL_SKILLS`).toBe(true);
+    }
   });
 });

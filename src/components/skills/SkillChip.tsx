@@ -4,53 +4,43 @@ import type { Proficiency } from '@/lib/skill-profile';
 interface SkillChipProps {
   name: string;
   proficiency: Proficiency;
-  /** Years of use. `null` means "no anchor matched" — UI renders no hint. */
-  years: number | null;
 }
 
 /**
- * Skill chip — a Tag-style pill with a proficiency dot and (optionally) a
- * monospace years-of-use hint. Used in the Technical Stack grid of the
- * Skills section.
+ * Skill chip — minimal, name-first pill. The proficiency is shown as a
+ * short uppercase text label (Expert / Proficient / Working) so the chip
+ * stays scannable without dots or numbers.
  *
- * Visual signals layered onto each chip (recruiter-focused):
- *  - Proficiency dot (filled / half-tone / outlined) → depth at a glance.
- *  - Years hint (`· 7y`) → concrete experience, not just a label.
+ * Years-of-use is intentionally NOT shown on individual chips — it lives
+ * at the section level (subtitle) to keep the chip quiet.
  */
-export function SkillChip({ name, proficiency, years }: SkillChipProps) {
+export function SkillChip({ name, proficiency }: SkillChipProps) {
   return (
     <span
       className={clsx(
-        'inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-sm font-medium',
+        'inline-flex items-baseline gap-1.5 rounded-full px-3 py-1 text-sm font-medium',
         'bg-slate-100 text-slate-700',
         'dark:bg-slate-800 dark:text-slate-300',
       )}
     >
-      <ProficiencyDot level={proficiency} />
       <span>{name}</span>
-      {years !== null && years > 0 && (
-        <span
-          className="font-mono text-[10px] tracking-wide text-slate-500 dark:text-slate-400"
-          aria-label={`${years} year${years === 1 ? '' : 's'} of use`}
-        >
-          · {years}y
-        </span>
-      )}
+      <span
+        className="text-[10px] font-medium uppercase tracking-wider text-slate-500 dark:text-slate-400"
+        aria-label={proficiencyAriaLabel(proficiency)}
+      >
+        · {proficiency}
+      </span>
     </span>
   );
 }
 
-function ProficiencyDot({ level }: { level: Proficiency }) {
-  return (
-    <span
-      aria-hidden="true"
-      title={level}
-      className={clsx(
-        'inline-block h-1.5 w-1.5 rounded-full',
-        level === 'expert' && 'bg-accent-500',
-        level === 'proficient' && 'bg-accent-300',
-        level === 'working' && 'border border-slate-400 dark:border-slate-500',
-      )}
-    />
-  );
+function proficiencyAriaLabel(p: Proficiency): string {
+  switch (p) {
+    case 'expert':
+      return 'Expert — production-grade primary skill';
+    case 'proficient':
+      return 'Proficient — used in production';
+    case 'working':
+      return 'Working knowledge — applied in projects';
+  }
 }

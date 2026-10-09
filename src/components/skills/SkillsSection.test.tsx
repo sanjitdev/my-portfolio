@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { render, screen, within } from '@testing-library/react';
+import { render, screen, within, fireEvent } from '@testing-library/react';
 import { SkillsSection } from './SkillsSection';
 import type { CvData } from '@/lib/cv-types';
 
@@ -53,50 +53,86 @@ describe('SkillsSection', () => {
     expect(container.querySelector('section#skills')).not.toBeNull();
   });
 
-  it('renders both zones: Technical Stack and How I Work', () => {
+  it('renders the top headline row of curated chips', () => {
     render(<SkillsSection cv={cvFixture} />);
-    // Zone labels are h3 elements; use the role to disambiguate from
-    // professional-skill card titles that contain "How I Work" elsewhere.
-    const technicalHeading = screen.getByRole('heading', { name: /technical stack/i, level: 3 });
-    const howHeading = screen.getByRole('heading', { name: /how i work/i, level: 3 });
-    expect(technicalHeading).toBeInTheDocument();
-    expect(howHeading).toBeInTheDocument();
-  });
-
-  it('renders all curated technical categories', () => {
-    render(<SkillsSection cv={cvFixture} />);
-    expect(screen.getByText('Languages & Runtimes')).toBeInTheDocument();
-    expect(screen.getByText('Backend & APIs')).toBeInTheDocument();
-    expect(screen.getByText('Frontend')).toBeInTheDocument();
-    expect(screen.getByText('Databases & Data')).toBeInTheDocument();
-    expect(screen.getByText('Mobile')).toBeInTheDocument();
-    expect(screen.getByText('Cloud & DevOps')).toBeInTheDocument();
-    expect(screen.getByText('Architecture & Practices')).toBeInTheDocument();
-  });
-
-  it('renders curated technical skills as chips', () => {
-    render(<SkillsSection cv={cvFixture} />);
-    // C# appears in Languages & Runtimes
+    // C#, .NET Core, Angular, TypeScript, SQL Server, REST API design, nopCommerce, Android
+    // Use getAllByText because each chip also appears (collapsed) in the full grid.
     expect(screen.getAllByText('C#').length).toBeGreaterThanOrEqual(1);
+    expect(screen.getAllByText('.NET Core').length).toBeGreaterThanOrEqual(1);
     expect(screen.getAllByText('Angular').length).toBeGreaterThanOrEqual(1);
+    expect(screen.getAllByText('TypeScript').length).toBeGreaterThanOrEqual(1);
     expect(screen.getAllByText('SQL Server').length).toBeGreaterThanOrEqual(1);
+    expect(screen.getAllByText('REST API design').length).toBeGreaterThanOrEqual(1);
+    expect(screen.getAllByText('nopCommerce').length).toBeGreaterThanOrEqual(1);
+    expect(screen.getAllByText('Android').length).toBeGreaterThanOrEqual(1);
   });
 
-  it('renders years-of-use hints derived from CV dates', () => {
-    const { container } = render(<SkillsSection cv={cvFixture} />);
-    // Should find at least one "· 7y" or "· 8y" pattern (from Nov 2018 / Dec 2017)
-    const yearsLabels = container.querySelectorAll(
-      '[aria-label*="years of use"], [aria-label*="year of use"]',
-    );
-    expect(yearsLabels.length).toBeGreaterThan(0);
-    const hasNumericYears = Array.from(yearsLabels).some(el =>
-      /\d+\s*year/i.test(el.getAttribute('aria-label') ?? ''),
-    );
-    expect(hasNumericYears).toBe(true);
-  });
-
-  it('renders professional skills with icons and context', () => {
+  it('shows the "Show full breakdown" toggle, collapsed by default', () => {
     render(<SkillsSection cv={cvFixture} />);
+    const button = screen.getByRole('button', { name: /show full breakdown/i });
+    expect(button).toBeInTheDocument();
+    expect(button).toHaveAttribute('aria-expanded', 'false');
+  });
+
+  it('keeps the full category breakdown collapsed until the toggle is clicked', () => {
+    render(<SkillsSection cv={cvFixture} />);
+    // The full grid is rendered (DOM-present for SEO/print) but the toggle
+    // button is the source of truth for visibility — aria-expanded="false".
+    const button = screen.getByRole('button', { name: /show full breakdown/i });
+    expect(button).toHaveAttribute('aria-expanded', 'false');
+    // The h4 headings are in the DOM (good for screen-reader / print) but
+    // visually collapsed via grid-rows-[0fr] + overflow-hidden.
+    expect(screen.getByRole('heading', { name: 'Backend & APIs', level: 4 })).toBeInTheDocument();
+  });
+
+  it('expands the full breakdown when the toggle is clicked', () => {
+    render(<SkillsSection cv={cvFixture} />);
+
+    const button = screen.getByRole('button', { name: /show full breakdown/i });
+    fireEvent.click(button);
+
+    expect(button).toHaveAttribute('aria-expanded', 'true');
+    expect(button).toHaveTextContent(/hide full breakdown/i);
+    // Zone labels (h3) are now rendered
+    expect(screen.getByRole('heading', { name: /technical stack/i, level: 3 })).toBeInTheDocument();
+    expect(screen.getByRole('heading', { name: /how i work/i, level: 3 })).toBeInTheDocument();
+    // Full category grid is rendered
+    expect(screen.getByRole('heading', { name: 'Backend & APIs', level: 4 })).toBeInTheDocument();
+  });
+
+  it('collapses the breakdown when the toggle is clicked again', () => {
+    render(<SkillsSection cv={cvFixture} />);
+
+    const button = screen.getByRole('button', { name: /show full breakdown/i });
+    fireEvent.click(button);
+    expect(button).toHaveTextContent(/hide full breakdown/i);
+    expect(button).toHaveAttribute('aria-expanded', 'true');
+
+    fireEvent.click(button);
+    expect(button).toHaveTextContent(/show full breakdown/i);
+    expect(button).toHaveAttribute('aria-expanded', 'false');
+  });
+
+  it('renders proficiency as text on every chip (no decorative dot)', () => {
+    const { container } = render(<SkillsSection cv={cvFixture} />);
+    // Each chip has a proficiency label (· expert / · proficient / · working)
+    const expertChips = container.querySelectorAll('[aria-label*="Expert"]');
+    const proficientChips = container.querySelectorAll('[aria-label*="Proficient"]');
+    expect(expertChips.length + proficientChips.length).toBeGreaterThan(0);
+    // No old dot pattern: title="expert"/"proficient"/"working" should be gone
+    const oldDots = container.querySelectorAll('span[aria-hidden="true"][title]');
+    expect(oldDots.length).toBe(0);
+  });
+
+  it('shows the section-level years hint in the subtitle', () => {
+    render(<SkillsSection cv={cvFixture} />);
+    expect(screen.getByText(/years professional experience/i)).toBeInTheDocument();
+  });
+
+  it('renders professional skills with icons and context after expansion', () => {
+    render(<SkillsSection cv={cvFixture} />);
+
+    fireEvent.click(screen.getByRole('button', { name: /show full breakdown/i }));
     expect(screen.getByText('Mentoring & code review')).toBeInTheDocument();
     expect(screen.getByText('Async collaboration')).toBeInTheDocument();
     expect(screen.getByText(/translating business needs/i)).toBeInTheDocument();
@@ -109,27 +145,17 @@ describe('SkillsSection', () => {
     expect(screen.queryByText('Subject Indexing')).not.toBeInTheDocument();
   });
 
-  it('renders proficiency dots as decorative (aria-hidden)', () => {
-    const { container } = render(<SkillsSection cv={cvFixture} />);
-    const dots = container.querySelectorAll('span[aria-hidden="true"][title]');
-    expect(dots.length).toBeGreaterThan(0);
-    // Each dot has a title attribute for the proficiency level
-    const titles = new Set(Array.from(dots).map(d => d.getAttribute('title')));
-    expect([...titles].some(t => t === 'expert' || t === 'proficient' || t === 'working')).toBe(
-      true,
-    );
-  });
-
-  it('falls back gracefully when all categories have no skills', () => {
-    // We can't easily empty the static manifest, so we test the empty-state
-    // message text directly by checking it's NOT present in the normal render.
+  it('falls back gracefully when the manifest has no skills', () => {
+    // We can't easily empty the static manifest, so confirm the empty-state
+    // message is NOT present in the normal render.
     render(<SkillsSection cv={cvFixture} />);
     expect(screen.queryByText(/no skills listed/i)).not.toBeInTheDocument();
   });
 
-  it('renders a skill count in the Technical Stack header', () => {
-    const { container } = render(<SkillsSection cv={cvFixture} />);
-    // Header text is e.g. "Technical Stack · 41 skills"
+  it('renders a skill count in the Technical Stack header after expansion', () => {
+    render(<SkillsSection cv={cvFixture} />);
+    fireEvent.click(screen.getByRole('button', { name: /show full breakdown/i }));
+
     const technicalZone = screen.getByText(/technical stack/i).closest('h3');
     expect(technicalZone).not.toBeNull();
     expect(within(technicalZone!).getByText(/skills/)).toBeInTheDocument();

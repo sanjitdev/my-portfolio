@@ -333,6 +333,29 @@ export const PROFESSIONAL_SKILLS: ProfessionalSkill[] = [
 ];
 
 // ---------------------------------------------------------------------------
+// Headline / "Top skills" — the curated 8 always visible above the toggle
+// ---------------------------------------------------------------------------
+
+/**
+ * The 8 chips shown in the top headline row of the Skills section, before
+ * the user clicks "Show full breakdown". Ordered by recruiter impact.
+ *
+ * Names must match entries in `TECHNICAL_SKILLS` (we look them up there to
+ * get their proficiency). This list is the recruiter's "30-second scan"
+ * version of the full manifest.
+ */
+export const TOP_SKILLS: ReadonlyArray<string> = [
+  'C#',
+  '.NET Core',
+  'Angular',
+  'TypeScript',
+  'SQL Server',
+  'REST API design',
+  'nopCommerce',
+  'Android',
+];
+
+// ---------------------------------------------------------------------------
 // Public accessor
 // ---------------------------------------------------------------------------
 
