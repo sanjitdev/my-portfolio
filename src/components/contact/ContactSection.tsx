@@ -143,9 +143,7 @@ export function ContactSection({ contact }: ContactSectionProps) {
               Print or save the page as PDF — formatted for a clean A4 resume.
             </p>
           </div>
-          <ResumeButton className="inline-flex shrink-0 items-center gap-2 rounded-md border border-slate-300 bg-white px-4 py-2 text-sm font-semibold text-slate-700 transition-colors hover:bg-slate-50 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-200 dark:hover:bg-slate-700">
-            Download Resume
-          </ResumeButton>
+          <ResumeButton variant="secondary">Download Resume</ResumeButton>
         </div>
       </Container>
     </Section>
