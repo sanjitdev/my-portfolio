@@ -2,7 +2,7 @@ import { MapPin } from 'lucide-react';
 import type { CvData, PublicContact } from '@/lib/cv-types';
 import { Section } from '@/components/shared/Section';
 import { Container } from '@/components/shared/Container';
-import { Monogram } from '@/components/branding/Monogram';
+import { ProfilePhoto } from '@/components/branding/ProfilePhoto';
 import { AvailabilityBadge } from '@/components/branding/AvailabilityBadge';
 import { HeroQuickActions } from './HeroQuickActions';
 import { HeroStats } from './HeroStats';
@@ -14,8 +14,8 @@ interface HeroSectionProps {
 }
 
 /**
- * Hero section — the first thing visitors see. Editorial spread:
- *   - Large monogram (left on desktop, top on mobile)
+ * Hero section — the first thing visitors see. Editorial portrait spread:
+ *   - Profile photo with a soft accent backdrop ring (left on desktop, top on mobile)
  *   - Location eyebrow, name (h1, Playfair), title (h2), headline
  *   - "Open to opportunities" availability badge
  *   - Quick action row (Resume / Email / LinkedIn / Contact)
@@ -28,9 +28,9 @@ export function HeroSection({ contact, cv }: HeroSectionProps) {
     <Section id="top" ariaLabelledBy="hero-name" className="hero-backdrop pt-20 sm:pt-24">
       <Container>
         <div className="grid items-start gap-10 sm:grid-cols-[auto_1fr] sm:gap-12">
-          {/* Monogram */}
+          {/* Profile portrait — the visual anchor */}
           <div className="flex justify-center sm:justify-start">
-            <Monogram size="lg" />
+            <ProfilePhoto priority />
           </div>
 
           {/* Copy column */}
