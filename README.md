@@ -2,7 +2,7 @@
 
 A clean, accessible single-page portfolio website for Sanjit Majumdar (Senior Software Engineer II), built from `docs/LinkedIn_CV.json` and deployed to Vercel.
 
-**Live**: [sanjit-majumdar.vercel.app](https://sanjit-majumdar.vercel.app)
+**Live**: [my-portfolio-9xw7teirc-super-max1.vercel.app](https://my-portfolio-9xw7teirc-super-max1.vercel.app)
 
 ## Stack
 
@@ -114,10 +114,25 @@ The home address is present in `docs/LinkedIn_CV.json` for record-keeping, but t
 
 ## Deployment
 
-The site deploys to Vercel automatically:
+The site is deployed to Vercel at **https://my-portfolio-9xw7teirc-super-max1.vercel.app**.
 
-1. Push to a branch → preview URL generated
-2. Merge to `main` → production deploy
+Current deployment flow (manual via Vercel CLI):
+
+```bash
+# One-time setup
+npm install -g vercel
+VERCEL_TOKEN=<your-token> vercel link --yes
+
+# Deploy to production
+VERCEL_TOKEN=<your-token> vercel deploy --prod --yes
+```
+
+**To enable auto-deploy on push:**
+
+1. Go to https://vercel.com/super-max1/my-portfolio/settings/git
+2. Click "Connect Git Repository"
+3. Authorize and select `sanjitdev/my-portfolio`
+4. Future pushes to `main` will auto-deploy; PRs get preview URLs
 
 No `vercel.json` is needed. Vercel auto-detects Next.js + bun (via the committed `bun.lock`). For a custom domain, set `NEXT_PUBLIC_SITE_URL` in the Vercel project settings (it defaults to `https://sanjit-majumdar.vercel.app`).
 
