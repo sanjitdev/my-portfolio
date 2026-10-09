@@ -1,6 +1,6 @@
 'use client';
 
-import { Download } from 'lucide-react';
+import { Hand } from 'lucide-react';
 
 interface ResumeButtonProps {
   className?: string;
@@ -26,7 +26,7 @@ export function ResumeButton({ className, children }: ResumeButtonProps) {
       }
       aria-label="Open print dialog to save resume as PDF"
     >
-      <Download aria-hidden="true" className="h-4 w-4" />
+      <Hand aria-hidden="true" className="h-4 w-4" />
       {children ?? 'Download Resume'}
     </button>
   );
