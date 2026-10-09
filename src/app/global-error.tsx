@@ -4,7 +4,6 @@
 // graceful fallback. Vercel Analytics will report the pageview so we can
 // monitor error occurrences over time.
 export default function GlobalError({
-  error,
   reset,
 }: {
   error: Error & { digest?: string };

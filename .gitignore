@@ -49,3 +49,5 @@ yarn-error.log*
 
 # Memory Bank (project-internal, but tracked for specsmd auditability — keep checked in)
 # memory-bank/ is intentionally NOT ignored
+.vercel
+.env*
