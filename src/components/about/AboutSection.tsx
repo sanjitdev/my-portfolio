@@ -8,10 +8,14 @@ interface AboutSectionProps {
 }
 
 /**
- * About section — renders the candidate's professional summary as a single
- * readable paragraph, capped to ~75 characters for an editorial measure.
- * The first sentence is treated as a pull-quote (slightly larger, italic)
- * to draw readers in before the body text.
+ * Profile section — renders the candidate's professional summary as a
+ * single editorial block. The first sentence is lifted out as a pull-quote
+ * (larger, italic Playfair, accented left border, decorative opening
+ * quote glyph) so the section reads as a magazine spread, not a
+ * single-page CV. The remainder of the summary follows as body prose.
+ *
+ * The section id is kept as `about` so the TopNav scroll-spy continues
+ * to resolve — only the visible label has been renamed to "Profile".
  */
 export function AboutSection({ summary }: AboutSectionProps) {
   // Split on the first period so the first sentence can be styled as a
@@ -21,19 +25,32 @@ export function AboutSection({ summary }: AboutSectionProps) {
   const body = rest.join(' ');
 
   return (
-    <Section id="about" ariaLabelledBy="about-heading" divided>
+    <Section id="about" ariaLabelledBy="profile-heading" divided>
       <Container>
-        <SectionEyebrow>01 — About</SectionEyebrow>
-        <Heading as="h2" id="about-heading">
-          About
+        <SectionEyebrow>01 — Profile</SectionEyebrow>
+        <Heading as="h2" id="profile-heading">
+          Profile
         </Heading>
+
         {summary ? (
-          <div className="max-w-3xl">
-            <p className="text-pretty text-xl font-heading italic leading-relaxed text-slate-700 dark:text-slate-300">
-              {lead}
-            </p>
+          <div className="mt-2 max-w-3xl">
+            {/* Pull-quote: first sentence, large Playfair, accent left rule,
+                decorative opening quote glyph. */}
+            <figure className="relative border-l-2 border-accent-500 pl-6 sm:pl-8">
+              <span
+                aria-hidden="true"
+                className="absolute -left-1 -top-3 select-none font-heading text-6xl leading-none text-accent-500/40 sm:-left-2 sm:-top-4 sm:text-7xl"
+              >
+                &ldquo;
+              </span>
+              <blockquote className="text-pretty font-heading text-2xl italic leading-snug text-slate-900 sm:text-3xl dark:text-slate-100">
+                {lead}
+              </blockquote>
+            </figure>
+
+            {/* Body prose: the rest of the summary. */}
             {body && (
-              <p className="mt-5 text-pretty text-[1.05rem] leading-relaxed text-slate-600 dark:text-slate-400">
+              <p className="mt-6 text-pretty text-[1.05rem] leading-relaxed text-slate-600 dark:text-slate-400">
                 {body}
               </p>
             )}

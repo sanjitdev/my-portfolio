@@ -4,7 +4,7 @@ import { TopNav } from './TopNav';
 
 const links = [
   { id: 'top', label: 'Home' },
-  { id: 'about', label: 'About' },
+  { id: 'about', label: 'Profile' },
   { id: 'contact', label: 'Contact' },
 ];
 
@@ -58,7 +58,7 @@ describe('TopNav', () => {
   it('renders one link per entry', () => {
     render(<TopNav links={links} />);
     expect(screen.getByRole('link', { name: 'Home' })).toBeInTheDocument();
-    expect(screen.getByRole('link', { name: 'About' })).toBeInTheDocument();
+    expect(screen.getByRole('link', { name: 'Profile' })).toBeInTheDocument();
     expect(screen.getByRole('link', { name: 'Contact' })).toBeInTheDocument();
   });
 
@@ -79,11 +79,11 @@ describe('TopNav', () => {
 
   it('clicking a link calls scrollIntoView on the target section', () => {
     render(<TopNav links={links} />);
-    const aboutLink = screen.getByRole('link', { name: 'About' });
-    fireEvent.click(aboutLink);
-    const aboutSection = document.getElementById('about');
-    expect(aboutSection).not.toBeNull();
-    expect(aboutSection?.scrollIntoView).toHaveBeenCalled();
+    const profileLink = screen.getByRole('link', { name: 'Profile' });
+    fireEvent.click(profileLink);
+    const profileSection = document.getElementById('about');
+    expect(profileSection).not.toBeNull();
+    expect(profileSection?.scrollIntoView).toHaveBeenCalled();
   });
 
   it('renders a mobile menu toggle button with aria-expanded=false initially', async () => {

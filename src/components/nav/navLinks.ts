@@ -17,7 +17,7 @@ export interface NavLink {
 export function getNavLinks(cv: CvData): NavLink[] {
   const links: NavLink[] = [
     { id: 'top', label: 'Home' },
-    { id: 'about', label: 'About' },
+    { id: 'about', label: 'Profile' },
     { id: 'experience', label: 'Experience' },
     { id: 'skills', label: 'Skills' },
   ];

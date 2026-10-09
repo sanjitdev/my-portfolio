@@ -27,7 +27,7 @@ function makeCv(overrides: Partial<CvData> = {}): CvData {
 }
 
 describe('getNavLinks', () => {
-  it('always includes Home, About, Experience, Skills, and Contact', () => {
+  it('always includes Home, Profile, Experience, Skills, and Contact', () => {
     const links = getNavLinks(makeCv());
     const ids = links.map(l => l.id);
     expect(ids).toContain('top');
