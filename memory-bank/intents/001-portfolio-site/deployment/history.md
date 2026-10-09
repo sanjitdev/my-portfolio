@@ -14,6 +14,7 @@ last_updated: 2026-10-09T15:12:00Z
 | 1.0.0 | Dev (preview) | 2026-10-09T14:40:00Z | AI Agent | ✅ Pushed | a9f5c79 | (branch deleted) |
 | 1.0.0 | Staging (= main) | 2026-10-09T14:42:00Z | AI Agent | ✅ Pushed | a9f5c79 | (no preview URL) |
 | 1.0.0 | Production | 2026-10-09T15:12:00Z | AI Agent (vercel CLI) | ✅ **Live** | 3e10718 | https://my-portfolio-9xw7teirc-super-max1.vercel.app |
+| 1.0.1 | Production (new domain) | 2026-10-09T15:15:00Z | AI Agent (vercel CLI) | ✅ **Live** | e845b84 | https://sanjit-dev.vercel.app |
 
 ---
 
@@ -151,7 +152,7 @@ git revert <bad-commit> && git push origin main
 
 ```
 Dev ──────► Staging ──────► Production
-preview URL  = main      my-portfolio-9xw7teirc-super-max1.vercel.app
+preview URL  = main      sanjit-dev.vercel.app
                           (manual `vercel deploy --prod` for now)
 ```
 
@@ -159,9 +160,9 @@ For this static Next.js site on Vercel, the Dev → Staging → Production progr
 
 - **Dev** = Vercel preview URL from any non-`main` branch
 - **Staging** = Vercel deployment from `main` (production-equivalent)
-- **Production** = The live URL (`my-portfolio-9xw7teirc-super-max1.vercel.app`)
+- **Production** = The live URL (`sanjit-dev.vercel.app`)
 
-All three are populated by the same artifact (commit `3e10718`) and progressively validated.
+All three are populated by the same artifact (commit `e845b84`) and progressively validated.
 
 ## Next Steps for Auto-Deploy
 
