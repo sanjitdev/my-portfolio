@@ -21,12 +21,16 @@ describe('ContactSection', () => {
     expect(screen.getByText(/open to new opportunities/i)).toBeInTheDocument();
   });
 
-  it('renders the four linkable channels with correct hrefs and external-link attributes', () => {
+  it('renders the email as a primary CTA card with a mailto href and "Send email" affordance', () => {
     render(<ContactSection contact={contact} />);
-
-    const email = screen.getByRole('link', { name: /email/i });
+    const email = screen.getByRole('link', { name: /sanjit@example\.com/i });
     expect(email.getAttribute('href')).toBe('mailto:sanjit@example.com');
-    expect(email.getAttribute('target')).toBeNull();
+    // The CTA button-style label is inside the same anchor.
+    expect(screen.getByText(/send email/i)).toBeInTheDocument();
+  });
+
+  it('renders the three secondary channels with correct hrefs and external-link attributes', () => {
+    render(<ContactSection contact={contact} />);
 
     const phone = screen.getByRole('link', { name: /phone/i });
     expect(phone.getAttribute('href')).toBe('tel:01927025242');
@@ -43,24 +47,7 @@ describe('ContactSection', () => {
     expect(website.getAttribute('rel')).toBe('noopener noreferrer');
   });
 
-  it('does NOT render a Location row (it was removed in this revision)', () => {
-    const { container } = render(<ContactSection contact={contact} />);
-    // No data-channel attribute for "location".
-    expect(container.querySelector('[data-contact-channel="location"]')).toBeNull();
-    // And no link for it either.
-    expect(screen.queryByRole('link', { name: /location/i })).toBeNull();
-  });
-
-  it('shows an accent kind tag for each channel (EMAIL, PHONE, LINKEDIN, WEBSITE)', () => {
-    const { container } = render(<ContactSection contact={contact} />);
-    const text = container.textContent ?? '';
-    expect(text).toContain('EMAIL');
-    expect(text).toContain('PHONE');
-    expect(text).toContain('LINKEDIN');
-    expect(text).toContain('WEBSITE');
-  });
-
-  it('renders the resume callout as the final row, with a print-PDF button', () => {
+  it('renders the resume callout as a separate row with a print-PDF button', () => {
     render(<ContactSection contact={contact} />);
     expect(screen.getByText(/print or save the page as pdf/i)).toBeInTheDocument();
     const button = screen.getByRole('button', { name: /save resume as pdf/i });

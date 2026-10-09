@@ -1,0 +1,320 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Contact section — 3 redesign options</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&family=Playfair+Display:wght@500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      tailwind.config = {
+        darkMode: 'class',
+        theme: {
+          fontFamily: {
+            sans: ['Inter', 'system-ui', 'sans-serif'],
+            heading: ['"Playfair Display"', 'Georgia', 'serif'],
+            mono: ['"JetBrains Mono"', 'ui-monospace', 'monospace'],
+          },
+          extend: {
+            colors: {
+              accent: {
+                50: 'oklch(0.97 0.014 254)',
+                100: 'oklch(0.93 0.03 254)',
+                200: 'oklch(0.87 0.06 254)',
+                300: 'oklch(0.79 0.1 254)',
+                400: 'oklch(0.7 0.14 254)',
+                500: 'oklch(0.62 0.16 254)',
+                600: 'oklch(0.55 0.16 254)',
+                700: 'oklch(0.48 0.14 254)',
+              },
+            },
+          },
+        },
+      };
+    </script>
+    <style>
+      body { font-family: 'Inter', system-ui, sans-serif; }
+      .font-heading { font-family: 'Playfair Display', Georgia, serif; }
+      .font-mono { font-family: 'JetBrains Mono', ui-monospace, monospace; }
+    </style>
+  </head>
+  <body class="bg-slate-50 text-slate-900 dark:bg-slate-950 dark:text-slate-100 antialiased">
+    <div class="mx-auto max-w-5xl px-6 py-12">
+      <header class="mb-12">
+        <h1 class="font-heading text-3xl font-semibold tracking-tight">Contact section — 3 redesign options</h1>
+        <p class="mt-2 max-w-2xl text-slate-600 dark:text-slate-400">
+          Two attempts so far haven't landed — a busy row list (too tall) and a
+          compact bordered panel (still felt generic). Three new options below
+          take a different shape. Same data: 4 channels (email, phone, LinkedIn,
+          website) + 1 resume CTA. Pick a favorite.
+        </p>
+        <div class="mt-4 inline-flex items-center gap-3 rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm dark:border-slate-800 dark:bg-slate-900">
+          <span class="text-slate-600 dark:text-slate-400">Theme:</span>
+          <button id="theme-light" class="rounded px-2 py-1 hover:bg-slate-100 dark:hover:bg-slate-800">Light</button>
+          <button id="theme-dark" class="rounded px-2 py-1 hover:bg-slate-100 dark:hover:bg-slate-800">Dark</button>
+        </div>
+      </header>
+
+      <div class="space-y-16">
+
+        <!-- ====================== OPTION A: Big primary CTA + secondary channel grid ====================== -->
+        <section class="rounded-2xl border border-slate-200 bg-white p-8 dark:border-slate-800 dark:bg-slate-900">
+          <div class="mb-6 flex items-baseline justify-between gap-4">
+            <h2 class="font-heading text-2xl font-semibold">Option A — Big primary CTA + channel grid <span class="ml-2 rounded-full bg-accent-50 px-2 py-0.5 text-xs font-medium text-accent-700 dark:bg-accent-950 dark:text-accent-300">Recommended</span></h2>
+            <span class="font-mono text-xs uppercase tracking-wider text-slate-500 dark:text-slate-400">most conversion-focused</span>
+          </div>
+          <p class="mb-6 text-sm text-slate-600 dark:text-slate-400">
+            The email is the primary action — a large clickable card on the
+            left with a name, role, and a "Send email" button. The other three
+            channels (phone, LinkedIn, website) sit as a compact 3-up grid
+            beside it. Resume row spans the full width below.
+          </p>
+
+          <div class="border-t border-slate-200 pt-8 dark:border-slate-800">
+            <p class="mb-4 font-mono text-[11px] font-medium uppercase tracking-[0.18em] text-accent-600 dark:text-accent-400">
+              <span class="mr-3 inline-block h-px w-8 bg-accent-400/60 align-middle dark:bg-accent-600/60"></span>
+              08 — Get in touch
+            </p>
+            <h3 class="font-heading text-3xl font-semibold tracking-tight">Contact</h3>
+            <p class="mt-3 max-w-2xl text-base leading-relaxed text-slate-600 dark:text-slate-400">
+              Open to new opportunities, contract work, and interesting conversations. Email is best — I usually respond within a day.
+            </p>
+
+            <div class="mt-10 grid gap-4 lg:grid-cols-[1.4fr_1fr]">
+              <!-- Primary CTA card: email -->
+              <a
+                href="mailto:sanjit.majumdar.201312@gmail.com"
+                data-print="card"
+                class="group flex items-center justify-between gap-6 rounded-2xl border border-accent-200 bg-accent-50 p-6 transition-all hover:border-accent-300 hover:bg-accent-100/70 dark:border-accent-800/60 dark:bg-accent-900/20 dark:hover:border-accent-700 dark:hover:bg-accent-900/30"
+              >
+                <div class="min-w-0">
+                  <p class="font-mono text-[11px] font-medium uppercase tracking-[0.18em] text-accent-700 dark:text-accent-300">
+                    Primary — Email
+                  </p>
+                  <p class="mt-2 font-heading text-xl font-semibold text-slate-900 dark:text-slate-100 sm:text-2xl">
+                    sanjit.majumdar.201312@gmail.com
+                  </p>
+                  <p class="mt-1 text-sm text-slate-600 dark:text-slate-400">
+                    Best for new opportunities, contract work, and detailed questions.
+                  </p>
+                </div>
+                <span class="inline-flex shrink-0 items-center gap-2 rounded-md bg-accent-600 px-4 py-2.5 text-sm font-semibold text-white shadow-sm transition-colors group-hover:bg-accent-700">
+                  Send email
+                  <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"></path></svg>
+                </span>
+              </a>
+
+              <!-- Secondary 3-up grid -->
+              <div class="grid gap-3 sm:grid-cols-3 lg:grid-cols-1">
+                <a
+                  href="tel:01927025242"
+                  data-print="card"
+                  class="group flex items-center gap-3 rounded-xl border border-slate-200 bg-white p-4 transition-colors hover:border-accent-200 hover:bg-slate-50 dark:border-slate-800 dark:bg-slate-900/50 dark:hover:border-slate-700 dark:hover:bg-slate-800/50"
+                >
+                  <span class="flex h-9 w-9 shrink-0 items-center justify-center rounded-md bg-accent-50 text-accent-600 dark:bg-accent-900/30 dark:text-accent-400">
+                    <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path></svg>
+                  </span>
+                  <div class="min-w-0">
+                    <p class="font-mono text-[10px] font-medium uppercase tracking-wider text-slate-500 dark:text-slate-400">Phone</p>
+                    <p class="truncate text-sm font-medium text-slate-900 dark:text-slate-100">01927025242</p>
+                  </div>
+                </a>
+                <a
+                  href="https://www.linkedin.com/in/sanjitmajumdar"
+                  target="_blank" rel="noopener noreferrer"
+                  data-print="card"
+                  class="group flex items-center gap-3 rounded-xl border border-slate-200 bg-white p-4 transition-colors hover:border-accent-200 hover:bg-slate-50 dark:border-slate-800 dark:bg-slate-900/50 dark:hover:border-slate-700 dark:hover:bg-slate-800/50"
+                >
+                  <span class="flex h-9 w-9 shrink-0 items-center justify-center rounded-md bg-accent-50 text-accent-600 dark:bg-accent-900/30 dark:text-accent-400">
+                    <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-4 0v7h-4v-7a6 6 0 0 1 6-6z"></path><rect x="2" y="9" width="4" height="12"></rect><circle cx="4" cy="4" r="2"></circle></svg>
+                  </span>
+                  <div class="min-w-0">
+                    <p class="font-mono text-[10px] font-medium uppercase tracking-wider text-slate-500 dark:text-slate-400">LinkedIn</p>
+                    <p class="truncate text-sm font-medium text-slate-900 dark:text-slate-100">/in/sanjitmajumdar</p>
+                  </div>
+                </a>
+                <a
+                  href="https://sanjit-majumdar.xyz"
+                  target="_blank" rel="noopener noreferrer"
+                  data-print="card"
+                  class="group flex items-center gap-3 rounded-xl border border-slate-200 bg-white p-4 transition-colors hover:border-accent-200 hover:bg-slate-50 dark:border-slate-800 dark:bg-slate-900/50 dark:hover:border-slate-700 dark:hover:bg-slate-800/50"
+                >
+                  <span class="flex h-9 w-9 shrink-0 items-center justify-center rounded-md bg-accent-50 text-accent-600 dark:bg-accent-900/30 dark:text-accent-400">
+                    <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="2" y1="12" x2="22" y2="12"></line><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path></svg>
+                  </span>
+                  <div class="min-w-0">
+                    <p class="font-mono text-[10px] font-medium uppercase tracking-wider text-slate-500 dark:text-slate-400">Website</p>
+                    <p class="truncate text-sm font-medium text-slate-900 dark:text-slate-100">sanjit-majumdar.xyz</p>
+                  </div>
+                </a>
+              </div>
+            </div>
+
+            <!-- Resume row, full width -->
+            <div class="mt-6 flex flex-col items-start justify-between gap-4 rounded-xl border border-dashed border-slate-300 bg-white/50 p-5 sm:flex-row sm:items-center dark:border-slate-700 dark:bg-slate-900/30">
+              <div class="min-w-0">
+                <p class="font-mono text-[10px] font-medium uppercase tracking-wider text-slate-500 dark:text-slate-400">Resume</p>
+                <p class="mt-0.5 text-sm text-slate-600 dark:text-slate-400">Print or save the page as PDF — formatted for a clean A4 resume.</p>
+              </div>
+              <button type="button" class="inline-flex shrink-0 items-center gap-2 rounded-md border border-slate-300 bg-white px-4 py-2 text-sm font-semibold text-slate-700 transition-colors hover:bg-slate-50 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-200 dark:hover:bg-slate-700">
+                <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+                Download Resume
+              </button>
+            </div>
+          </div>
+        </section>
+
+        <!-- ====================== OPTION B: 2x2 channel cards ====================== -->
+        <section class="rounded-2xl border border-slate-200 bg-white p-8 dark:border-slate-800 dark:bg-slate-900">
+          <div class="mb-6 flex items-baseline justify-between gap-4">
+            <h2 class="font-heading text-2xl font-semibold">Option B — 2×2 channel cards</h2>
+            <span class="font-mono text-xs uppercase tracking-wider text-slate-500 dark:text-slate-400">visual balance</span>
+          </div>
+          <p class="mb-6 text-sm text-slate-600 dark:text-slate-400">
+            Four equal-weight channel cards in a 2×2 grid. Each card is one
+            click target with the channel icon, label, and value. Resume row
+            sits below as a full-width callout. Each card is roughly square
+            so the section feels balanced and the channels feel like peers.
+          </p>
+
+          <div class="border-t border-slate-200 pt-8 dark:border-slate-800">
+            <p class="mb-4 font-mono text-[11px] font-medium uppercase tracking-[0.18em] text-accent-600 dark:text-accent-400">
+              <span class="mr-3 inline-block h-px w-8 bg-accent-400/60 align-middle dark:bg-accent-600/60"></span>
+              08 — Get in touch
+            </p>
+            <h3 class="font-heading text-3xl font-semibold tracking-tight">Contact</h3>
+            <p class="mt-3 max-w-2xl text-base leading-relaxed text-slate-600 dark:text-slate-400">
+              Open to new opportunities, contract work, and interesting conversations. Reach out via any channel below — I usually respond within a day.
+            </p>
+
+            <div class="mt-10 grid gap-4 sm:grid-cols-2">
+              <a href="mailto:sanjit.majumdar.201312@gmail.com" data-print="card" class="group flex flex-col justify-between gap-3 rounded-2xl border border-slate-200 bg-white p-6 transition-all hover:-translate-y-0.5 hover:border-accent-200 hover:shadow-md dark:border-slate-800 dark:bg-slate-900/50 dark:hover:border-slate-700 dark:hover:bg-slate-900">
+                <div class="flex items-center justify-between">
+                  <span class="flex h-10 w-10 items-center justify-center rounded-md bg-accent-50 text-accent-600 dark:bg-accent-900/30 dark:text-accent-400">
+                    <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg>
+                  </span>
+                  <svg class="h-4 w-4 text-slate-400 transition-transform group-hover:translate-x-0.5 group-hover:text-accent-600" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17L17 7M17 7H7m10 0v10"></path></svg>
+                </div>
+                <div>
+                  <p class="font-mono text-[10px] font-medium uppercase tracking-wider text-slate-500 dark:text-slate-400">Email</p>
+                  <p class="mt-1 truncate font-heading text-lg font-semibold text-slate-900 dark:text-slate-100">sanjit.majumdar.201312@…</p>
+                </div>
+              </a>
+              <a href="tel:01927025242" data-print="card" class="group flex flex-col justify-between gap-3 rounded-2xl border border-slate-200 bg-white p-6 transition-all hover:-translate-y-0.5 hover:border-accent-200 hover:shadow-md dark:border-slate-800 dark:bg-slate-900/50 dark:hover:border-slate-700 dark:hover:bg-slate-900">
+                <div class="flex items-center justify-between">
+                  <span class="flex h-10 w-10 items-center justify-center rounded-md bg-accent-50 text-accent-600 dark:bg-accent-900/30 dark:text-accent-400">
+                    <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path></svg>
+                  </span>
+                  <svg class="h-4 w-4 text-slate-400 transition-transform group-hover:translate-x-0.5 group-hover:text-accent-600" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17L17 7M17 7H7m10 0v10"></path></svg>
+                </div>
+                <div>
+                  <p class="font-mono text-[10px] font-medium uppercase tracking-wider text-slate-500 dark:text-slate-400">Phone</p>
+                  <p class="mt-1 truncate font-heading text-lg font-semibold text-slate-900 dark:text-slate-100">01927025242</p>
+                </div>
+              </a>
+              <a href="https://www.linkedin.com/in/sanjitmajumdar" target="_blank" rel="noopener noreferrer" data-print="card" class="group flex flex-col justify-between gap-3 rounded-2xl border border-slate-200 bg-white p-6 transition-all hover:-translate-y-0.5 hover:border-accent-200 hover:shadow-md dark:border-slate-800 dark:bg-slate-900/50 dark:hover:border-slate-700 dark:hover:bg-slate-900">
+                <div class="flex items-center justify-between">
+                  <span class="flex h-10 w-10 items-center justify-center rounded-md bg-accent-50 text-accent-600 dark:bg-accent-900/30 dark:text-accent-400">
+                    <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-4 0v7h-4v-7a6 6 0 0 1 6-6z"></path><rect x="2" y="9" width="4" height="12"></rect><circle cx="4" cy="4" r="2"></circle></svg>
+                  </span>
+                  <svg class="h-4 w-4 text-slate-400 transition-transform group-hover:translate-x-0.5 group-hover:text-accent-600" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17L17 7M17 7H7m10 0v10"></path></svg>
+                </div>
+                <div>
+                  <p class="font-mono text-[10px] font-medium uppercase tracking-wider text-slate-500 dark:text-slate-400">LinkedIn</p>
+                  <p class="mt-1 truncate font-heading text-lg font-semibold text-slate-900 dark:text-slate-100">/in/sanjitmajumdar</p>
+                </div>
+              </a>
+              <a href="https://sanjit-majumdar.xyz" target="_blank" rel="noopener noreferrer" data-print="card" class="group flex flex-col justify-between gap-3 rounded-2xl border border-slate-200 bg-white p-6 transition-all hover:-translate-y-0.5 hover:border-accent-200 hover:shadow-md dark:border-slate-800 dark:bg-slate-900/50 dark:hover:border-slate-700 dark:hover:bg-slate-900">
+                <div class="flex items-center justify-between">
+                  <span class="flex h-10 w-10 items-center justify-center rounded-md bg-accent-50 text-accent-600 dark:bg-accent-900/30 dark:text-accent-400">
+                    <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="2" y1="12" x2="22" y2="12"></line><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path></svg>
+                  </span>
+                  <svg class="h-4 w-4 text-slate-400 transition-transform group-hover:translate-x-0.5 group-hover:text-accent-600" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17L17 7M17 7H7m10 0v10"></path></svg>
+                </div>
+                <div>
+                  <p class="font-mono text-[10px] font-medium uppercase tracking-wider text-slate-500 dark:text-slate-400">Website</p>
+                  <p class="mt-1 truncate font-heading text-lg font-semibold text-slate-900 dark:text-slate-100">sanjit-majumdar.xyz</p>
+                </div>
+              </a>
+            </div>
+
+            <!-- Resume row -->
+            <div class="mt-6 flex flex-col items-start justify-between gap-4 rounded-2xl border border-accent-200 bg-accent-50/50 p-6 sm:flex-row sm:items-center dark:border-accent-800/60 dark:bg-accent-900/20">
+              <div class="flex items-start gap-3">
+                <span class="flex h-10 w-10 shrink-0 items-center justify-center rounded-md bg-accent-600 text-white">
+                  <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+                </span>
+                <div class="min-w-0">
+                  <p class="font-mono text-[10px] font-medium uppercase tracking-wider text-accent-700 dark:text-accent-300">Resume</p>
+                  <p class="mt-0.5 text-sm text-slate-600 dark:text-slate-400">Print or save the page as PDF — formatted for a clean A4 resume.</p>
+                </div>
+              </div>
+              <button type="button" class="inline-flex shrink-0 items-center gap-2 rounded-md bg-accent-600 px-4 py-2 text-sm font-semibold text-white transition-colors hover:bg-accent-700">
+                Download Resume
+              </button>
+            </div>
+          </div>
+        </section>
+
+        <!-- ====================== OPTION C: Single horizontally flowing row ====================== -->
+        <section class="rounded-2xl border border-slate-200 bg-white p-8 dark:border-slate-800 dark:bg-slate-900">
+          <div class="mb-6 flex items-baseline justify-between gap-4">
+            <h2 class="font-heading text-2xl font-semibold">Option C — Editorial sentence with channel links inline</h2>
+            <span class="font-mono text-xs uppercase tracking-wider text-slate-500 dark:text-slate-400">narrative-first</span>
+          </div>
+          <p class="mb-6 text-sm text-slate-600 dark:text-slate-400">
+            The contact details read as part of a sentence, not a list. The
+            channels are inline links inside a 2-line bio. A subtle resume
+            line below ties the section together. Minimum vertical space,
+            maximum editorial feel — but the channels are no longer in a grid
+            (less scannable).
+          </p>
+
+          <div class="border-t border-slate-200 pt-8 dark:border-slate-800">
+            <p class="mb-4 font-mono text-[11px] font-medium uppercase tracking-[0.18em] text-accent-600 dark:text-accent-400">
+              <span class="mr-3 inline-block h-px w-8 bg-accent-400/60 align-middle dark:bg-accent-600/60"></span>
+              08 — Get in touch
+            </p>
+            <h3 class="font-heading text-3xl font-semibold tracking-tight">Contact</h3>
+
+            <p class="mt-4 max-w-3xl font-heading text-2xl leading-snug text-slate-900 sm:text-3xl dark:text-slate-100">
+              The fastest way to reach me is
+              <a href="mailto:sanjit.majumdar.201312@gmail.com" class="underline decoration-accent-500 decoration-2 underline-offset-4 transition-colors hover:text-accent-700 dark:hover:text-accent-300">email</a>.
+              For a call,
+              <a href="tel:01927025242" class="underline decoration-accent-500 decoration-2 underline-offset-4 transition-colors hover:text-accent-700 dark:hover:text-accent-300">+8801927025242</a>.
+              Or find me on
+              <a href="https://www.linkedin.com/in/sanjitmajumdar" target="_blank" rel="noopener noreferrer" class="underline decoration-accent-500 decoration-2 underline-offset-4 transition-colors hover:text-accent-700 dark:hover:text-accent-300">LinkedIn</a>
+              and at
+              <a href="https://sanjit-majumdar.xyz" target="_blank" rel="noopener noreferrer" class="underline decoration-accent-500 decoration-2 underline-offset-4 transition-colors hover:text-accent-700 dark:hover:text-accent-300">sanjit-majumdar.xyz</a>.
+            </p>
+
+            <p class="mt-4 max-w-2xl text-sm text-slate-600 dark:text-slate-400">
+              I usually respond within a day. Open to new opportunities, contract work, and interesting conversations.
+            </p>
+
+            <div class="mt-10 flex items-center gap-3 text-sm">
+              <span class="font-mono text-[10px] font-medium uppercase tracking-wider text-slate-500 dark:text-slate-400">Resume</span>
+              <span class="h-px flex-1 bg-slate-200 dark:bg-slate-800"></span>
+              <button type="button" class="inline-flex items-center gap-2 rounded-md border border-slate-300 bg-white px-3 py-1.5 text-sm font-semibold text-slate-700 transition-colors hover:bg-slate-50 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-200 dark:hover:bg-slate-700">
+                <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+                Download Resume
+              </button>
+            </div>
+          </div>
+        </section>
+      </div>
+    </div>
+
+    <script>
+      const html = document.documentElement;
+      document.getElementById('theme-light').addEventListener('click', () => html.classList.remove('dark'));
+      document.getElementById('theme-dark').addEventListener('click', () => html.classList.add('dark'));
+      if (window.matchMedia('(prefers-color-scheme: dark)').matches) html.classList.add('dark');
+    </script>
+  </body>
+</html>

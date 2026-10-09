@@ -1,5 +1,4 @@
-import { Download, Globe, Linkedin, Mail, Phone } from 'lucide-react';
-import type { LucideIcon } from 'lucide-react';
+import { ArrowRight, Download, Globe, Linkedin, Mail, Phone } from 'lucide-react';
 import type { PublicContact } from '@/lib/cv-types';
 import { Section } from '@/components/shared/Section';
 import { Container } from '@/components/shared/Container';
@@ -11,78 +10,53 @@ interface ContactSectionProps {
   contact: PublicContact;
 }
 
-interface ChannelSpec {
-  /** Channel name shown in the accent mono-caps tag (e.g. "EMAIL"). */
-  kind: string;
-  /** The destination the link goes to, or `null` for non-link rows. */
-  href: string | null;
-  /** The user-facing value (email, phone, URL — the thing the user copies). */
+interface SecondaryChannelSpec {
+  /** Channel name shown in the mono-caps label (e.g. "Phone"). */
+  label: string;
+  /** The destination the link goes to. */
+  href: string;
+  /** The user-facing value (phone number, URL, etc.). */
   value: string;
   /** Whether the link opens in a new tab. */
   external: boolean;
-  /** Lucide icon for the row (also drives the a11y label). */
-  icon: LucideIcon;
 }
 
 /**
- * Build the accessible name for a channel row from its kind and value, e.g.
- * `"Email — sanjit@example.com"`.
+ * Build a normalised href for a URL-style field, prepending `https://` when
+ * the value is missing a scheme.
  */
-function rowAriaLabel(spec: Pick<ChannelSpec, 'kind' | 'value'>): string {
-  return `${spec.kind.charAt(0)}${spec.kind.slice(1).toLowerCase()} — ${spec.value}`;
+function withHttps(value: string): string {
+  return value.startsWith('http') ? value : `https://${value}`;
 }
 
 /**
- * Contact section — a compact single-column list of channel rows inside a
- * bordered panel. Each row is one line: an accent mono-caps kind tag on
- * the left (EMAIL / PHONE / LINKEDIN / WEBSITE) and the destination as
- * the link on the right. Below the channels sits a single resume row
- * with a print-PDF button.
+ * Contact section — big primary email CTA on the left, a 3-up grid of
+ * secondary channels (phone, LinkedIn, website) on the right, and a
+ * full-width resume row below. Email is the highest-leverage channel so
+ * it gets the most visual weight.
  *
  * Privacy: the prop type is `PublicContact`, which omits `address` at the
  * type level. No rendering path ever touches a home address.
  */
 export function ContactSection({ contact }: ContactSectionProps) {
-  const websiteHref = contact.website
-    ? contact.website.startsWith('http')
-      ? contact.website
-      : `https://${contact.website}`
-    : null;
-
-  const linkedinHref = contact.linkedin
-    ? contact.linkedin.startsWith('http')
-      ? contact.linkedin
-      : `https://${contact.linkedin}`
-    : null;
-
-  const channels: ChannelSpec[] = [
+  const secondary: SecondaryChannelSpec[] = [
     {
-      kind: 'EMAIL',
-      href: `mailto:${contact.email}`,
-      value: contact.email,
-      external: false,
-      icon: Mail,
-    },
-    {
-      kind: 'PHONE',
+      label: 'Phone',
       href: `tel:${contact.phone.replace(/\s+/g, '')}`,
       value: contact.phone,
       external: false,
-      icon: Phone,
     },
     {
-      kind: 'LINKEDIN',
-      href: linkedinHref,
-      value: contact.linkedin,
+      label: 'LinkedIn',
+      href: withHttps(contact.linkedin),
+      value: `/in/${contact.linkedin.split('/').filter(Boolean).pop() ?? contact.linkedin}`,
       external: true,
-      icon: Linkedin,
     },
     {
-      kind: 'WEBSITE',
-      href: websiteHref,
+      label: 'Website',
+      href: withHttps(contact.website),
       value: contact.website,
       external: true,
-      icon: Globe,
     },
   ];
 
@@ -94,62 +68,87 @@ export function ContactSection({ contact }: ContactSectionProps) {
           Contact
         </Heading>
         <p className="mt-3 max-w-2xl text-base leading-relaxed text-slate-600 dark:text-slate-400">
-          Open to new opportunities, contract work, and interesting conversations. Reach out via any
-          channel below — I usually respond within a day.
+          Open to new opportunities, contract work, and interesting conversations. Email is best — I
+          usually respond within a day.
         </p>
 
-        <div className="mt-8 overflow-hidden rounded-lg border border-slate-200 bg-white dark:border-slate-800 dark:bg-slate-900">
-          <ul role="list" className="divide-y divide-slate-200 dark:divide-slate-800">
-            {channels.map(spec => {
-              const Icon = spec.icon;
-              return (
-                <li
-                  key={spec.kind}
-                  data-print="card"
-                  data-contact-channel={spec.kind.toLowerCase()}
-                  className="flex items-center gap-3 px-4 py-2.5 sm:gap-4 sm:px-5 sm:py-3"
-                >
-                  {/* Kind tag — names the channel, mono-caps accent chip. */}
-                  <span className="inline-flex shrink-0 items-center gap-1.5 rounded-full bg-accent-50 px-2.5 py-0.5 font-mono text-[10px] font-semibold uppercase tracking-wider text-accent-700 dark:bg-accent-900/30 dark:text-accent-400">
-                    <Icon aria-hidden="true" className="h-3 w-3" />
-                    {spec.kind}
-                  </span>
+        <div className="mt-10 grid gap-4 lg:grid-cols-[1.4fr_1fr]">
+          {/* Primary CTA: email */}
+          <a
+            href={`mailto:${contact.email}`}
+            data-print="card"
+            data-contact-channel="email"
+            className="group flex flex-col items-stretch justify-between gap-6 rounded-2xl border border-accent-200 bg-accent-50 p-6 transition-all hover:border-accent-300 hover:bg-accent-100/70 sm:flex-row sm:items-center dark:border-accent-800/60 dark:bg-accent-900/20 dark:hover:border-accent-700 dark:hover:bg-accent-900/30"
+          >
+            <div className="min-w-0 flex-1">
+              <p className="font-mono text-[11px] font-medium uppercase tracking-[0.18em] text-accent-700 dark:text-accent-300">
+                Primary — Email
+              </p>
+              <p className="mt-2 truncate font-heading text-xl font-semibold text-slate-900 sm:text-2xl dark:text-slate-100">
+                {contact.email}
+              </p>
+              <p className="mt-1 text-sm text-slate-600 dark:text-slate-400">
+                Best for new opportunities, contract work, and detailed questions.
+              </p>
+            </div>
+            <span className="inline-flex shrink-0 items-center justify-center gap-2 rounded-md bg-accent-600 px-4 py-2.5 text-sm font-semibold text-white shadow-sm transition-colors group-hover:bg-accent-700">
+              Send email
+              <ArrowRight aria-hidden="true" className="h-4 w-4" />
+            </span>
+          </a>
 
-                  {/* Destination — linkable when href is set. */}
-                  {spec.href !== null ? (
-                    <a
-                      href={spec.href}
-                      target={spec.external ? '_blank' : undefined}
-                      rel={spec.external ? 'noopener noreferrer' : undefined}
-                      aria-label={rowAriaLabel(spec)}
-                      className="min-w-0 truncate text-sm text-slate-700 transition-colors hover:text-accent-700 focus-visible:text-accent-700 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent-500 dark:text-slate-300 dark:hover:text-accent-300 dark:focus-visible:text-accent-300"
-                    >
+          {/* Secondary 3-up grid: phone, LinkedIn, website */}
+          <div className="grid gap-3 sm:grid-cols-3 lg:grid-cols-1">
+            {secondary.map(spec => {
+              const Icon =
+                spec.label === 'Phone' ? Phone : spec.label === 'LinkedIn' ? Linkedin : Globe;
+              return (
+                <a
+                  key={spec.label}
+                  href={spec.href}
+                  target={spec.external ? '_blank' : undefined}
+                  rel={spec.external ? 'noopener noreferrer' : undefined}
+                  aria-label={`${spec.label} — ${spec.value}`}
+                  data-print="card"
+                  data-contact-channel={spec.label.toLowerCase()}
+                  className="group flex items-center gap-3 rounded-xl border border-slate-200 bg-white p-4 transition-colors hover:border-accent-200 hover:bg-slate-50 dark:border-slate-800 dark:bg-slate-900/50 dark:hover:border-slate-700 dark:hover:bg-slate-800/50"
+                >
+                  <span
+                    aria-hidden="true"
+                    className="flex h-9 w-9 shrink-0 items-center justify-center rounded-md bg-accent-50 text-accent-600 dark:bg-accent-900/30 dark:text-accent-400"
+                  >
+                    <Icon className="h-5 w-5" />
+                  </span>
+                  <div className="min-w-0">
+                    <p className="font-mono text-[10px] font-medium uppercase tracking-wider text-slate-500 dark:text-slate-400">
+                      {spec.label}
+                    </p>
+                    <p className="truncate text-sm font-medium text-slate-900 dark:text-slate-100">
                       {spec.value}
-                    </a>
-                  ) : (
-                    <span className="min-w-0 truncate text-sm text-slate-700 dark:text-slate-300">
-                      {spec.value}
-                    </span>
-                  )}
-                </li>
+                    </p>
+                  </div>
+                </a>
               );
             })}
+          </div>
+        </div>
 
-            {/* Resume row — same panel, last entry, with the print button. */}
-            <li
-              data-print="card"
-              className="flex items-center gap-3 bg-slate-50 px-4 py-3 sm:gap-4 sm:px-5 sm:py-3 dark:bg-slate-800/50"
-            >
-              <span className="inline-flex shrink-0 items-center gap-1.5 rounded-full bg-accent-50 px-2.5 py-0.5 font-mono text-[10px] font-semibold uppercase tracking-wider text-accent-700 dark:bg-accent-900/30 dark:text-accent-400">
-                <Download aria-hidden="true" className="h-3 w-3" />
-                RESUME
-              </span>
-              <span className="min-w-0 flex-1 truncate text-sm text-slate-700 dark:text-slate-300">
-                Print or save the page as PDF — formatted for a clean A4 resume.
-              </span>
-              <ResumeButton className="shrink-0 rounded-md bg-accent-600 px-3 py-1.5 text-xs font-semibold text-white shadow-sm transition-colors hover:bg-accent-700 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent-500" />
-            </li>
-          </ul>
+        {/* Resume row — full width, dashed border, no card chrome */}
+        <div className="mt-6 flex flex-col items-start justify-between gap-4 rounded-xl border border-dashed border-slate-300 bg-white/50 p-5 sm:flex-row sm:items-center dark:border-slate-700 dark:bg-slate-900/30">
+          <div className="min-w-0">
+            <p className="font-mono text-[10px] font-medium uppercase tracking-wider text-slate-500 dark:text-slate-400">
+              Resume
+            </p>
+            <p className="mt-0.5 text-sm text-slate-600 dark:text-slate-400">
+              Print or save the page as PDF — formatted for a clean A4 resume.
+            </p>
+          </div>
+          <ResumeButton className="inline-flex shrink-0 items-center gap-2 rounded-md border border-slate-300 bg-white px-4 py-2 text-sm font-semibold text-slate-700 transition-colors hover:bg-slate-50 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-200 dark:hover:bg-slate-700">
+            <>
+              <Download aria-hidden="true" className="h-4 w-4" />
+              Download Resume
+            </>
+          </ResumeButton>
         </div>
       </Container>
     </Section>
