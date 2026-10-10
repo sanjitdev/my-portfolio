@@ -85,6 +85,12 @@ export type Recommendation = z.infer<typeof RecommendationSchema>;
 /**
  * Top-level CV schema. Validates every required field. Optional fields use
  * `.optional()` so the CV can grow without breaking the build.
+ *
+ * Note: the `projects` field that previously lived here was moved to
+ * `docs/projects.md` (parsed by `src/lib/projects-md.ts`). Curating
+ * projects as plain markdown is easier to author than maintaining a
+ * separate JSON object, and the parser normalizes both structured
+ * (`Scope:` / `Impact:` / `Contributions:`) and bullet-only formats.
  */
 export const CvDataSchema = z.object({
   personal_information: PersonalInfoSchema,

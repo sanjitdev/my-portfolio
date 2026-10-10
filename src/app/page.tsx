@@ -1,7 +1,9 @@
 import { loadCvData, getDisplayContact, computeBuildTimestamp } from '@/lib/cv-data';
+import { loadProjectsFromMd } from '@/lib/projects-md';
 import { TopNav } from '@/components/nav/TopNav';
 import { getNavLinks } from '@/components/nav/navLinks';
 import { HeroSection } from '@/components/hero/HeroSection';
+import { ProjectsSection } from '@/components/projects/ProjectsSection';
 import { AboutSection } from '@/components/about/AboutSection';
 import { ExperienceSection } from '@/components/experience/ExperienceSection';
 import { SkillsSection } from '@/components/skills/SkillsSection';
@@ -16,13 +18,15 @@ import { Footer } from '@/components/layout/Footer';
 export default function Home() {
   const cv = loadCvData();
   const contact = getDisplayContact(cv);
-  const navLinks = getNavLinks(cv);
+  const projects = loadProjectsFromMd();
+  const { primary: navLinks, secondary: navSecondary } = getNavLinks(projects, cv);
 
   return (
     <>
-      <TopNav links={navLinks} />
+      <TopNav links={navLinks} secondary={navSecondary} />
       <main>
         <HeroSection contact={contact} cv={cv} />
+        <ProjectsSection projects={projects} />
         <AboutSection summary={cv.summary} />
         <ExperienceSection experiences={cv.experience} />
         <SkillsSection cv={cv} />

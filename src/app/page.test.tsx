@@ -22,11 +22,12 @@ describe('Home page — end-to-end privacy', () => {
     }
   });
 
-  it('all 10 section ids are present (or the conditional ones are hidden by data)', () => {
+  it('all 11 section ids are present (or the conditional ones are hidden by data)', () => {
     const html = renderToString(<Home />);
     // Always-rendered sections:
     expect(html).toContain('id="top"');
     expect(html).toContain('id="about"');
+    expect(html).toContain('id="projects"');
     expect(html).toContain('id="experience"');
     expect(html).toContain('id="skills"');
     expect(html).toContain('id="contact"');

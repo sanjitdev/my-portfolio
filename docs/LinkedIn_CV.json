@@ -11,7 +11,11 @@
     "website": "sanjit-majumdar.xyz"
   },
   "summary": "I design and deliver clean, scalable software with a strong focus on production stability and long-term maintainability. Senior Software Engineer with 7+ years of experience building systems used by global customers. Currently at Brain Station 23, working with .NET Core, Angular, TypeScript, and SQL Server. Strong in backend architecture, API design, and taking features from concept to production. Certified nopCommerce developer with hands-on experience in eCommerce and ERP platforms. Focused on writing readable, testable code that performs well under real-world load. Regularly collaborate with distributed teams across time zones. Comfortable working in remote-first, async environments with international stakeholders.",
-  "top_skills": ["Team Collaboration", "Subject Indexing", "Optimization"],
+  "top_skills": [
+    "Team Collaboration",
+    "Subject Indexing",
+    "Optimization"
+  ],
   "languages": [
     {
       "language": "Bengali",
@@ -39,9 +43,9 @@
   ],
   "honors_awards": [
     "Best Desktop Application",
-    "Best Performer 2022 — Brain Station 23",
-    "Spot Award — Client Delivery Excellence",
-    "Innovation Award — NopCommerce Migration"
+    "Best Performer 2022 â€” Brain Station 23",
+    "Spot Award â€” Client Delivery Excellence",
+    "Innovation Award â€” NopCommerce Migration"
   ],
   "experience": [
     {
@@ -55,10 +59,10 @@
         "Designed and implemented reliable backend systems using C# .NET Core with SQL Server, focusing on performance, scalability, and clean architecture.",
         "Built and optimized REST APIs that are simple to consume, efficient in handling requests, and secure for production environments.",
         "Developed responsive and user-friendly applications with Angular, TypeScript, and JavaScript, ensuring smooth interaction between backend and frontend.",
-        "Took projects from concept to production—covering requirement analysis, coding, testing, deployment, and ongoing support.",
+        "Took projects from concept to productionâ€”covering requirement analysis, coding, testing, deployment, and ongoing support.",
         "Broke down complex requirements into workable solutions and improve existing systems for speed, maintainability, and long-term stability.",
         "Guided junior developers through code reviews, pair programming, and knowledge sharing, while working closely with cross-functional teams.",
-        "Delivered enterprise web apps, Android applications, and client-specific integrations—adapting to different industries and use cases."
+        "Delivered enterprise web apps, Android applications, and client-specific integrationsâ€”adapting to different industries and use cases."
       ]
     },
     {
@@ -72,10 +76,10 @@
         "Designed and implemented reliable backend systems using C# .NET Core with SQL Server, focusing on performance, scalability, and clean architecture.",
         "Built and optimized REST APIs that are simple to consume, efficient in handling requests, and secure for production environments.",
         "Developed responsive and user-friendly applications with Angular, TypeScript, and JavaScript, ensuring smooth interaction between backend and frontend.",
-        "Took projects from concept to production—covering requirement analysis, coding, testing, deployment, and ongoing support.",
+        "Took projects from concept to productionâ€”covering requirement analysis, coding, testing, deployment, and ongoing support.",
         "Broke down complex requirements into workable solutions and improve existing systems for speed, maintainability, and long-term stability.",
         "Guided junior developers through code reviews, pair programming, and knowledge sharing, while working closely with cross-functional teams.",
-        "Delivered enterprise web apps, Android applications, and client-specific integrations—adapting to different industries and use cases."
+        "Delivered enterprise web apps, Android applications, and client-specific integrationsâ€”adapting to different industries and use cases."
       ]
     },
     {
@@ -119,7 +123,7 @@
       "location": "Dhaka, Bangladesh",
       "responsibilities": [
         "Led multiple client projects from planning to delivery, making sure deadlines, budgets, and quality standards were consistently met.",
-        "Acted as the bridge between clients, developers, and stakeholders—turning business needs into clear technical tasks.",
+        "Acted as the bridge between clients, developers, and stakeholdersâ€”turning business needs into clear technical tasks.",
         "Coordinated sprint planning, daily stand-ups, and review meetings to keep teams aligned and productive.",
         "Tracked progress with project management tools, flagged risks early, and adjusted timelines when needed.",
         "Encouraged collaboration across teams and created a work environment where challenges were openly discussed and solved quickly.",
