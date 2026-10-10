@@ -9,7 +9,7 @@ Year: 1-Jan-24 – Present
 * Implementing best practices in API design, security, and UI/UX to meet client requirements.
 * Ensuring code quality through unit testing and continuous integration.
 
-Angular, Syncfusion, .NET
+Angular, Syncfusion, .NET Core, GitHub, Azure DevOps, CosmosDB, Claude Code, Playwright, xUnit, Entity Framework Core, Azure App Service, Application Insights
 
 
 

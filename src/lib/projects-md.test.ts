@@ -83,7 +83,27 @@ describe('loadProjectsFromMd', () => {
     const projects = loadProjectsFromMd();
     const enterprise = projects.find(p => p.name.includes('Enterprise'))!;
     const nop = projects.find(p => p.name.includes('Global Retail Clients'))!;
-    expect(enterprise.stack).toEqual(['Angular', 'Syncfusion', '.NET']);
+    // Enterprise PM stack was expanded (Direction 3) to include
+    // GitHub, Azure DevOps, CosmosDB, Claude Code, Playwright + the
+    // candidate-supplied inferences (xUnit, EF Core, Azure App
+    // Service, Application Insights). Order is intentional: original
+    // 3 first, then the user-supplied + inferred items.
+    expect(enterprise.stack[0]).toBe('Angular');
+    expect(enterprise.stack).toContain('Syncfusion');
+    expect(enterprise.stack).toContain('.NET Core');
+    // User-supplied
+    expect(enterprise.stack).toContain('GitHub');
+    expect(enterprise.stack).toContain('Azure DevOps');
+    expect(enterprise.stack).toContain('CosmosDB');
+    expect(enterprise.stack).toContain('Claude Code');
+    expect(enterprise.stack).toContain('Playwright');
+    // Inferred
+    expect(enterprise.stack).toContain('xUnit');
+    expect(enterprise.stack).toContain('Entity Framework Core');
+    expect(enterprise.stack).toContain('Azure App Service');
+    expect(enterprise.stack).toContain('Application Insights');
+    expect(enterprise.stack.length).toBe(12);
+    // nopCommerce stack is unchanged.
     expect(nop.stack).toEqual(['.NET', 'SQL Server', 'Razor Pages']);
   });
 
