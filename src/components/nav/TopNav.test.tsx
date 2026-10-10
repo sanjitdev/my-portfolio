@@ -4,10 +4,12 @@ import { TopNav } from './TopNav';
 import type { NavLink } from './navLinks';
 
 // Primary row (always shown).
+// Direction 4 (2026-10-10): Experience moved ahead of Projects so the
+// nav mirrors the new page section order (Profile → Experience → Projects).
 const primaryLinks: NavLink[] = [
   { id: 'top', label: 'Home' },
-  { id: 'projects', label: 'Projects' },
   { id: 'experience', label: 'Experience' },
+  { id: 'projects', label: 'Projects' },
   { id: 'contact', label: 'Contact' },
 ];
 
@@ -24,8 +26,8 @@ function seedSections() {
   document.body.innerHTML = `
     <section id="top"></section>
     <section id="about"></section>
-    <section id="projects"></section>
     <section id="experience"></section>
+    <section id="projects"></section>
     <section id="skills"></section>
     <section id="education"></section>
     <section id="honors"></section>

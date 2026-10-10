@@ -40,13 +40,17 @@ const SECONDARY_ORDER: ReadonlyArray<{ id: string; label: string; key: keyof CvD
 /**
  * Derives the navigation groups from CV data and the curated projects.
  *
- * The primary row always shows: Home, Projects (if any), Experience, Contact.
- * "Skills" is demoted to the secondary group so Projects can sit at the
- * top — Projects is the section that most directly answers "what have
- * you actually built?" for recruiters, so it earns a top-row slot.
- * "Profile" (the about/summary section) is also demoted to the
- * secondary group — it is the same content the Hero already previews,
- * so promoting it to the top nav wasted a slot.
+ * The primary row always shows: Home, Experience, Projects (if any),
+ * Contact. The page renders the sections in the same order: Hero →
+ * Experience → Projects → Profile → Skills → ... so the primary nav
+ * mirrors the visual order (Direction 4, 2026-10-10: Profile and
+ * Experience moved ahead of Projects so recruiters see the career
+ * timeline before the project detail).
+ *
+ * "Skills" and "Profile" are demoted to the secondary group — Profile
+ * is the same content the Hero already previews, and Skills is dense
+ * enough to be a "deeper" stop after the recruiter has scanned the
+ * experience and projects.
  *
  * The secondary group is only emitted when at least one of its items has
  * data, so a CV with no languages, honors, or recommendations will not
@@ -57,8 +61,8 @@ export function getNavLinks(projects: ProjectMd[], cv: CvData): NavGroups {
 
   const primary: NavLink[] = [
     { id: 'top', label: 'Home' },
-    ...(hasProjects ? [{ id: 'projects' as const, label: 'Projects' }] : []),
     { id: 'experience', label: 'Experience' },
+    ...(hasProjects ? [{ id: 'projects' as const, label: 'Projects' }] : []),
   ];
 
   const secondary: NavLink[] = [];

@@ -26,9 +26,9 @@ export default function Home() {
       <TopNav links={navLinks} secondary={navSecondary} />
       <main>
         <HeroSection contact={contact} cv={cv} />
+        <ExperienceSection experiences={cv.experience} />
         <ProjectsSection projects={projects} />
         <AboutSection summary={cv.summary} />
-        <ExperienceSection experiences={cv.experience} />
         <SkillsSection cv={cv} />
         <EducationSection education={cv.education} />
         <CertificationsSection certifications={cv.certifications} />

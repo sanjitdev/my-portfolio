@@ -62,11 +62,15 @@ describe('getNavLinks', () => {
     expect(primary.find(l => l.id === 'projects')).toBeDefined();
   });
 
-  it('places Projects between Home and Experience when present', () => {
+  it('places Projects after Experience when present (Direction 4)', () => {
+    // Direction 4 (2026-10-10): the page now renders Hero → Experience
+    // → Projects → Profile, and the primary nav mirrors that. So
+    // Projects now sits after Experience, not between Home and
+    // Experience.
     const { primary } = getNavLinks([project], makeCv());
     const ids = primary.map(l => l.id);
     expect(ids.indexOf('projects')).toBeGreaterThan(ids.indexOf('top'));
-    expect(ids.indexOf('projects')).toBeLessThan(ids.indexOf('experience'));
+    expect(ids.indexOf('projects')).toBeGreaterThan(ids.indexOf('experience'));
   });
 
   it('always includes Profile and Skills in secondary (summary and top_skills are required)', () => {
@@ -167,6 +171,7 @@ describe('getFlatNavLinks', () => {
   });
 
   it('returns primary followed by secondary in display order (with projects)', () => {
+    // Direction 4: Experience before Projects in the primary row.
     const flat = getFlatNavLinks(
       [project],
       makeCv({
@@ -175,8 +180,8 @@ describe('getFlatNavLinks', () => {
     );
     expect(flat.map(l => l.id)).toEqual([
       'top',
-      'projects',
       'experience',
+      'projects',
       'contact',
       'about',
       'skills',

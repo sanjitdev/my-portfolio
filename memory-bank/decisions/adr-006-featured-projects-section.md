@@ -906,3 +906,161 @@ changes were needed.
   Service, Application Insights`. The candidate can edit
   `docs/projects.md` line 12 directly to refine it.
 
+---
+
+# Direction 4 — Reorder sections: Profile → Experience → Projects (2026-10-10)
+
+## Context
+
+After Directions 1-3 shipped the Featured Projects section as
+the first content block after the Hero, the user requested a
+section reorder: **Profile → Experience → Projects**. The new
+order prioritizes the recruiter's reading path:
+
+1. **Profile** (the about/summary section) — the long-form "who
+   you are" copy.
+2. **Experience** — the career timeline.
+3. **Projects** — the section that answers "what have you
+   actually built?", now sitting after the recruiter has seen
+   the who and where.
+
+The prior order (Hero → Projects → Profile → Experience) had
+Projects at the top of the content area, on the theory that
+Projects is the most important section for a senior engineer.
+The new order flips that theory: the user now wants
+recruiters to see the **career timeline first**, then drill
+into the project details.
+
+## Decision
+
+### 1. `src/app/page.tsx` — section order
+
+```tsx
+<HeroSection contact={contact} cv={cv} />
+<ExperienceSection experiences={cv.experience} />
+<ProjectsSection projects={projects} />
+<AboutSection summary={cv.summary} />  // "Profile" — id="about"
+<SkillsSection cv={cv} />
+...
+```
+
+The DOM ids are unchanged (`#experience`, `#projects`,
+`#about`, `#skills`, etc.) — only the render order changes.
+This means:
+
+- **No scroll-spy code changes** — the `TopNav`'s
+  scroll-spy still works because it tracks the section
+  currently in view, not the section order in the nav.
+- **No link updates** — the Projects section still has a
+  tagline that says "for the day-to-day, see the experience
+  timeline" (linking to `#experience`). The link still works;
+  it just now scrolls to a section that comes *before*
+  Projects in the page rather than after.
+
+### 2. `src/components/nav/navLinks.ts` — primary row order
+
+The primary row now mirrors the page order:
+
+```ts
+const primary: NavLink[] = [
+  { id: 'top', label: 'Home' },
+  { id: 'experience', label: 'Experience' },
+  ...(hasProjects ? [{ id: 'projects' as const, label: 'Projects' }] : []),
+];
+// Contact is always appended last.
+```
+
+The previous "Projects before Experience" justification (in
+the function's docstring) is rewritten: Experience is now
+the anchor that earns the top-row slot, and Projects sits
+just below it because that's the visual reading order.
+
+The secondary "More" dropdown is unchanged (Profile → Skills
+→ Education → Certifications → Languages → Honors →
+Recommendations).
+
+### 3. Tests updated
+
+- `src/components/nav/navLinks.test.ts` — the
+  "places Projects between Home and Experience" test is
+  rewritten to "places Projects after Experience", and the
+  `getFlatNavLinks` "with projects" test now expects
+  `[top, experience, projects, contact, about, skills, ...]`.
+- `src/components/nav/TopNav.test.tsx` — the `primaryLinks`
+  fixture and the `seedSections` body are updated to the new
+  order so the scroll-spy tests find the right section ids.
+- `src/app/page.test.tsx` — the section-id presence test
+  doesn't assert order, so no change needed (it still
+  verifies all 11 ids are present).
+
+## Consequences
+
+### Positive
+
+- **The page now leads with the career story** (Profile →
+  Experience), which is the recruiter's first question: "who
+  is this person and where have they worked?". Projects is
+  still prominent — it just sits one section later, where it
+  reinforces the timeline rather than competing with it.
+- **The nav still mirrors the page order** — no surprise
+  scroll targets. Clicking "Experience" in the nav scrolls
+  to the experience section, which is exactly where the
+  recruiter expects to land.
+- **The section's other improvements (Direction 1-3)
+  unchanged** — the carousel, modal, dark-mode, nav
+  controls, and 12-item hero stack all still apply. Only
+  the order changed.
+
+### Negative
+
+- **The "see the experience timeline" link inside the
+  Projects section** now scrolls *up* instead of *down*. A
+  recruiter clicking it from the Projects section will
+  scroll back to the experience section, which comes before
+  Projects in the page. The link's affordance is still
+  valid (it's a "see the related section" link) but the
+  visual direction is now "back" rather than "forward". A
+  future option could rephrase the link to "see the
+  experience timeline above" or just "see the experience
+  timeline" without directional language.
+
+### Neutral
+
+- **DOM ids are stable** — no URL changes, no scroll-spy
+  rewrites, no link-rewriting code.
+- **No new components** — this is purely a reorder. The
+  Projects section component is unchanged.
+
+## Alternatives Considered
+
+- **Keep Projects first, demote Experience to the "More"
+  dropdown.** Rejected — the user explicitly asked for
+  Experience to come before Projects, and demoting
+  Experience to the dropdown would be a separate UI change
+  they didn't request.
+- **Merge Profile into the Hero** (remove the AboutSection).
+  Rejected — the Profile is a long-form prose section, the
+  Hero is a tight summary. Conflating them would force one
+  to compromise (either a wall-of-text Hero or a thin
+  Profile that lost the candidate's voice).
+- **Reorder the primary nav without changing the page
+  order.** Rejected — the nav is supposed to mirror the
+  page. Decoupling them would mean a recruiter clicks
+  "Projects" in the nav and lands below the Projects
+  section, which is a worse UX than the current state.
+
+## Notes
+
+- The page-test privacy invariant still holds: 0 matches for
+  the address fragments in `.next/server/app/index.html`.
+- The full-page render order is now:
+  `top → experience → projects → about → skills → education
+  → certifications → languages → honors → recommendations →
+  contact`.
+- The 237-test count is unchanged — the reorder touches
+  only the test fixtures and assertions, not the count.
+- This is a 4-line code change in `page.tsx` (one section
+  reorder) plus a corresponding tweak in the primary nav
+  builder. Most of the diff is in the test fixtures.
+
+
