@@ -140,6 +140,34 @@ p {
   animation: availability-pulse 2s ease-in-out infinite;
 }
 
+/* Project details dialog — backdrop + open animation.
+   Tailwind v4's `backdrop:` variant isn't always reliable, so we use
+   a dedicated utility class. */
+@keyframes project-dialog-in {
+  from {
+    opacity: 0;
+    transform: translateY(8px) scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+dialog.project-dialog[open] {
+  animation: project-dialog-in 180ms ease-out;
+}
+
+dialog.project-dialog::backdrop {
+  background-color: rgb(15 23 42 / 0.4);
+  -webkit-backdrop-filter: blur(4px);
+  backdrop-filter: blur(4px);
+}
+
+.dark dialog.project-dialog::backdrop {
+  background-color: rgb(2 6 23 / 0.7);
+}
+
 /* =========================
    PRINT STYLES (Resume)
    ========================= */

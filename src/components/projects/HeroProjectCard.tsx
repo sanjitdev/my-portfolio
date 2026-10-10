@@ -48,7 +48,7 @@ export function HeroProjectCard({ project }: HeroProjectCardProps) {
     <article
       data-print="card"
       data-layout="hero"
-      className="relative overflow-hidden rounded-[20px] border border-slate-200 bg-white p-12 shadow-[0_1px_2px_rgba(15,23,42,0.04),0_20px_60px_-20px_rgba(15,23,42,0.08)] sm:p-14 before:pointer-events-none before:absolute before:-right-20 before:-top-20 before:h-80 before:w-80 before:rounded-full before:bg-accent-100 before:blur-3xl after:pointer-events-none after:absolute after:left-0 after:top-12 after:bottom-12 after:w-1 after:rounded-r after:bg-gradient-to-b after:from-accent-400 after:to-accent-200 dark:border-slate-800 dark:bg-slate-900"
+      className="relative overflow-hidden rounded-[20px] border border-slate-200 bg-white p-12 shadow-[0_1px_2px_rgba(15,23,42,0.04),0_20px_60px_-20px_rgba(15,23,42,0.08)] sm:p-14 before:pointer-events-none before:absolute before:-right-20 before:-top-20 before:h-80 before:w-80 before:rounded-full before:bg-accent-100 before:blur-3xl after:pointer-events-none after:absolute after:left-0 after:top-12 after:bottom-12 after:w-1 after:rounded-r after:bg-gradient-to-b after:from-accent-400 after:to-accent-200 dark:border-slate-800 dark:bg-slate-900 dark:shadow-[0_1px_2px_rgba(0,0,0,0.4),0_20px_60px_-20px_rgba(0,0,0,0.6)] dark:before:bg-accent-900/40 dark:after:from-accent-600 dark:after:to-accent-800"
     >
       {/* Eyebrow row */}
       <div className="relative mb-6 flex items-center justify-between gap-4">
@@ -115,7 +115,7 @@ export function HeroProjectCard({ project }: HeroProjectCardProps) {
 
       {/* Impact (accent gradient box) */}
       {hasImpact && (
-        <div className="relative mb-9 rounded-2xl border border-accent-200 bg-gradient-to-br from-accent-100 to-accent-50 p-6 sm:p-7 dark:border-accent-900/40">
+        <div className="relative mb-9 rounded-2xl border border-accent-200 bg-gradient-to-br from-accent-100 to-accent-50 p-6 sm:p-7 dark:border-accent-900/40 dark:bg-gradient-to-br dark:from-accent-900/40 dark:to-accent-950/20">
           <TrendingUp
             aria-hidden="true"
             className="absolute right-6 top-5 h-5 w-5 text-accent-500"
