@@ -145,7 +145,22 @@ function splitIntoBlocks(raw: string): RawProjectBlock[] {
 function isTitleLine(trimmed: string, lines: string[], idx: number): boolean {
   if (trimmed === '') return false;
   if (trimmed.startsWith('* ') || trimmed.startsWith('- ')) return false;
-  if (/^(Scope|Impact|Contributions|Stack|Role|Year)\s*:/i.test(trimmed)) return false;
+  if (
+    /^(Scope|Impact|Contributions|Stack|Role|Year|Description|Responsibilities|Technologies)\s*:/i.test(
+      trimmed,
+    )
+  ) {
+    return false;
+  }
+
+  // Sentence-content filter: real project titles are short noun phrases
+  // and don't contain the conjunctions "and" / "that". Lines like
+  // "Lead Developer and Designer" or "Develop API and integrate that
+  // in UI" are body content of a Responsibilities/Contributions block
+  // — not a project title, even if a label happens to follow them.
+  if (/\s+and\s+/i.test(trimmed) || /\s+that\s+/i.test(trimmed)) {
+    return false;
+  }
 
   // Heuristic A: parenthetical client name
   if (/\(.+\)/.test(trimmed)) return true;
@@ -155,7 +170,13 @@ function isTitleLine(trimmed: string, lines: string[], idx: number): boolean {
     const t = lines[j]!.trim();
     if (t === '') continue;
     if (t.startsWith('* ') || t.startsWith('- ')) return true;
-    if (/^(Scope|Impact|Contributions|Stack|Role|Year)\s*:/i.test(t)) return true;
+    if (
+      /^(Scope|Impact|Contributions|Stack|Role|Year|Description|Responsibilities|Technologies)\s*:/i.test(
+        t,
+      )
+    ) {
+      return true;
+    }
     // If the next non-blank line is just a comma-separated stack list
     // (e.g. ".NET, SQL Server, Razor Pages"), this is also a project
     // title (it's the nopCommerce pattern).
@@ -206,10 +227,10 @@ function parseBlock(block: RawProjectBlock): ProjectMd | null {
       continue;
     }
 
-    // `Scope: ...`
-    const scopeMatch = trimmed.match(/^Scope\s*:\s*(.+)$/i);
+    // `Scope: ...` or `Description: ...`
+    const scopeMatch = trimmed.match(/^(Scope|Description)\s*:\s*(.+)$/i);
     if (scopeMatch) {
-      project.scope = scopeMatch[1]!.trim();
+      project.scope = scopeMatch[2]!.trim();
       i++;
       continue;
     }
@@ -238,8 +259,9 @@ function parseBlock(block: RawProjectBlock): ProjectMd | null {
       continue;
     }
 
-    // `Contributions:` followed by bullets and/or blank-separated paragraphs
-    if (/^Contributions\s*:?\s*$/i.test(trimmed)) {
+    // `Contributions:` or `Responsibilities:` followed by bullets and/or
+    // blank-separated paragraphs
+    if (/^(Contributions|Responsibilities)\s*:?\s*$/i.test(trimmed)) {
       i++;
       while (i < lines.length) {
         const t = lines[i]!.trim();
@@ -250,7 +272,8 @@ function parseBlock(block: RawProjectBlock): ProjectMd | null {
           }
           break;
         }
-        if (/^(Scope|Impact|Stack|Contributions)\s*:/i.test(t)) break;
+        if (/^(Scope|Description|Impact|Stack|Contributions|Responsibilities|Technologies)\s*:/i.test(t))
+          break;
         if (t.startsWith('* ') || t.startsWith('- ')) {
           project.contributions.push(t.replace(/^[*\-]\s+/, '').trim());
         } else {
@@ -264,6 +287,17 @@ function parseBlock(block: RawProjectBlock): ProjectMd | null {
     // `* ...` bullet outside an explicit Contributions block
     if (trimmed.startsWith('* ') || trimmed.startsWith('- ')) {
       project.contributions.push(trimmed.replace(/^[*\-]\s+/, '').trim());
+      i++;
+      continue;
+    }
+
+    // `Technologies: .NET Core, C#, ...` (one-line comma-separated stack)
+    const techMatch = trimmed.match(/^Technologies\s*:\s*(.+)$/i);
+    if (techMatch) {
+      project.stack = techMatch[1]!
+        .split(',')
+        .map(s => s.trim())
+        .filter(Boolean);
       i++;
       continue;
     }
@@ -282,7 +316,14 @@ function parseBlock(block: RawProjectBlock): ProjectMd | null {
     i++;
   }
 
-  if (project.contributions.length === 0 && project.stack.length === 0) {
+  if (
+    project.contributions.length === 0 &&
+    project.stack.length === 0 &&
+    !project.role &&
+    !project.year &&
+    !project.scope &&
+    !project.impact
+  ) {
     return null;
   }
 
