@@ -4,7 +4,7 @@
 - **Total stories**: 16
 - **Generated**: 16
 - **Implemented**: 16
-- **Last updated**: 2026-10-09T17:30:00Z
+- **Last updated**: 2026-10-10T19:00:00Z
 
 ---
 
@@ -57,6 +57,9 @@ The original Inception plan scoped exactly 16 stories across 3 bolts, all of whi
 | Editorial redesign (typography + monogram + resume) | [ADR-001](decisions/adr-001-editorial-redesign.md) | `832cc82` | 2026-10-09 |
 | Experience timeline + collapsible details | [ADR-002](decisions/adr-002-experience-timeline.md) | `c7ad81a` | 2026-10-09 |
 | Real profile photo in hero | [ADR-003](decisions/adr-003-profile-photo.md) | `6f67a8b` | 2026-10-09 |
+| Skills section pro (curated manifest + proficiency dots) | [ADR-004](decisions/adr-004-skills-section-pro.md) | pending | 2026-10-09 |
+| Header menu curated to 4 primary + "More" dropdown (editorial) | [ADR-005](decisions/adr-005-header-menu-redesign.md) | pending | 2026-10-10 |
+| Featured Projects section (markdown source, hero + compact) | [ADR-006](decisions/adr-006-featured-projects-section.md) | pending | 2026-10-10 |
 
 If the project evolves further (e.g., a future "Projects" or "Blog" section), a new Inception cycle should formalize those as new intents + stories rather than continuing as free-form additions.
 
@@ -72,9 +75,9 @@ If the project evolves further (e.g., a future "Projects" or "Blog" section), a 
 
 ### Implementation Evidence
 
-- **Tests**: 90 passing (`bun run test`)
+- **Tests**: 216 passing (`bun run test`)
 - **Build**: clean (`bun run build`)
 - **Privacy**: 0 address fragments in `.next/server/app/index.html`
 - **Live**: https://sanjit-dev.vercel.app
 - **Domain**: aliased from `my-portfolio-*-super-max1.vercel.app` to `sanjit-dev.vercel.app`
-- **Last deployment**: `6f67a8b` (2026-10-09)
+- **Last deployment**: pending (ADR-006 work — featured Projects section)

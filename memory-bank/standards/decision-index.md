@@ -1,7 +1,7 @@
 ---
-last_updated: 2026-10-09T19:00:00Z
+last_updated: 2026-10-10T19:00:00Z
 total_decisions: 10
-adr_count: 4
+adr_count: 6
 ---
 
 # Decision Index
@@ -142,6 +142,24 @@ These are the foundational choices made when the project was initialized. They e
 - **Commit**: pending
 - **Summary**: Replaced the LinkedIn-auto-suggested `cv.top_skills` (3 weak labels) with a curated manifest in `src/lib/skill-profile.ts`. Two-zone layout: 7 technical categories (chip + proficiency dot + years-of-use hint) and a "How I Work" zone (icon + context cards). Years hints computed from a custom `Month YYYY` date parser and category-level keyword anchors in `experience[]`.
 - **Read when**: Working on the skills section, considering skill manifests, computing years-of-experience, designing chip-style UI, adding "How I work" / soft-skill content.
+
+### ADR-005: Curated header menu with "More" dropdown (editorial typography)
+- **Status**: accepted
+- **Date**: 2026-10-10
+- **Bolt**: post-bolt-evolution (free-form, outside original 3-bolt plan)
+- **Path**: `decisions/adr-005-header-menu-redesign.md`
+- **Commit**: pending
+- **Summary**: The desktop TopNav was rendering 10 flat links and looked cluttered. Replaced it with a curated two-tier navigation: a primary row of 4 anchors (Home, Experience, Skills, Contact) and a "More" dropdown that holds Profile, Education, Certifications, Languages, Honors, and Recommendations. Editorial styling (uppercase, 0.14em letter-spacing, scale-in underline, Playfair wordmark) matches the rest of the site after ADR-001. `getNavLinks` now returns `{ primary, secondary }` and `getFlatNavLinks` preserves the old flat shape for the mobile panel.
+- **Read when**: Modifying the TopNav, choosing what to expose in the header, designing dropdown menus, considering nav reorganization, evaluating menu/header layouts.
+
+### ADR-006: Featured Projects section sourced from docs/projects.md with hero + compact layout
+- **Status**: accepted
+- **Date**: 2026-10-10
+- **Bolt**: post-bolt-evolution (free-form, outside original 3-bolt plan)
+- **Path**: `decisions/adr-006-featured-projects-section.md`
+- **Commit**: pending
+- **Summary**: The portfolio had no Projects section — the original Inception plan listed it as out-of-scope ("not in CV data — would require new data source"). For a senior engineer, Projects is the most important section (answers "what have you actually built?"). Source of truth moved from a `projects` field in `docs/LinkedIn_CV.json` (ADR-006 v1) to a dedicated `docs/projects.md` markdown file, parsed by a small custom parser in `src/lib/projects-md.ts` (no marked/unified dependency) and validated by Zod. Layout redesigned as hero + compact: first project renders as a full-width `HeroProjectCard`, the rest as `CompactProjectCard`s in a grid with a `+ N more` truncation. Section is the first content block after the Hero, hidden when empty, and Projects is promoted to the primary nav row (Skills demoted to the "More" dropdown).
+- **Read when**: Adding or editing featured projects, choosing a project data source (markdown vs JSON), designing recruiter-friendly cards, evaluating section order or nav placement, considering a custom markdown parser.
 
 <!-- ADRs from Construction bolts are appended below in reverse chronological order (newest first) -->
 <!-- Format for each entry:

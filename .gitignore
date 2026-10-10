@@ -54,3 +54,8 @@ yarn-error.log*
 # memory-bank/ is intentionally NOT ignored
 .vercel
 .env*
+
+# Local design exploration (HTML mockups + scratch design system notes)
+# Not part of the project source — kept locally for reference only.
+.design-mockups/
+design-system/

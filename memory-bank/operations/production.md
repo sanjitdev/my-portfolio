@@ -1,6 +1,6 @@
 # Operations: Production State
 
-**Last updated**: 2026-10-09T17:30:00Z
+**Last updated**: 2026-10-10T19:00:00Z
 **Maintained by**: Master Agent (routed to Operations when production context changes)
 
 ---
@@ -39,6 +39,8 @@
 
 | Commit | Date | Description | Bolt/ADR |
 |--------|------|-------------|----------|
+| pending | 2026-10-10 | Featured Projects section (markdown source, hero + compact layout) | ADR-006 |
+| pending | 2026-10-10 | Curated header menu with "More" dropdown (editorial) | ADR-005 |
 | `6f67a8b` | 2026-10-09 | Add profile photo to hero with elegant backdrop ring | ADR-003 |
 | `c7ad81a` | 2026-10-09 | Convert experience to editorial timeline with collapsible details | ADR-002 |
 | `832cc82` | 2026-10-09 | Editorial typography + monogram + resume download | ADR-001 |
@@ -58,7 +60,7 @@
 - **Health endpoint**: `/health` returns 200 OK (used by Vercel for uptime monitoring if configured)
 - **Privacy invariant**: Verified on every deploy — `grep` for `Chunkhola` or `House 263` in `.next/server/app/index.html` returns 0 matches. Also enforced at the type level via `PublicContact = PersonalInfo.omit({ address: true })`.
 - **Build status**: All recent builds pass (no failed deploys).
-- **Tests**: 90 passing (`bun run test`) — 17 test files, covers data layer, all 9 sections, shared primitives, hero, nav, footer, theme.
+- **Tests**: 216 passing (`bun run test`) — 25 test files, covers data layer, all 11 sections (incl. Projects), shared primitives, hero, nav, footer, theme, projects parser, hero/compact cards.
 
 ### Smoke test commands (manual)
 
