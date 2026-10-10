@@ -137,19 +137,17 @@ export function HeroProjectCard({ project }: HeroProjectCardProps) {
               <p className="mb-4 font-mono text-[10px] font-semibold uppercase tracking-[0.2em] text-slate-500 dark:text-slate-400">
                 Contributions
               </p>
-              <ol className="flex flex-col gap-2.5 text-[0.95rem] leading-relaxed text-slate-700 dark:text-slate-300">
+              <ul className="flex flex-col gap-2.5 text-[0.95rem] leading-relaxed text-slate-700 dark:text-slate-300">
                 {contributions.map((c, i) => (
                   <li key={i} className="flex gap-3">
                     <span
                       aria-hidden="true"
-                      className="mt-0.5 inline-flex h-5 w-5 flex-shrink-0 items-center justify-center rounded-full bg-accent-100 font-mono text-[10px] font-semibold text-accent-700 dark:bg-accent-900/40 dark:text-accent-300"
-                    >
-                      {i + 1}
-                    </span>
+                      className="mt-2 h-1.5 w-1.5 flex-shrink-0 rounded-full bg-accent-500 dark:bg-accent-400"
+                    />
                     <span>{c}</span>
                   </li>
                 ))}
-              </ol>
+              </ul>
             </div>
           )}
 

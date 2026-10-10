@@ -656,3 +656,253 @@ open animation (a 180ms scale-in via `project-dialog-in`).
   shows-name-and-stack, clicking-opens-showModal, dialog-renders-
   project-details, close-button-calls-close, dark-mode-classes-
   present.
+
+---
+
+# Direction 3 — Nav controls, hero bullets, Enterprise PM stack expansion (2026-10-10)
+
+## Context
+
+Three follow-up requests after the Direction 2 carousel/modal
+shipped:
+
+1. **The CSS scroll-snap carousel wasn't scrollable in practice.**
+   The user reported they couldn't swipe/scroll the rail in the
+   browser. Most likely the negative margin (-mx-6 sm:-mx-8) on
+   the carousel was being clipped by the section's overflow, or
+   the swipe gesture was failing on their device. The user
+   wanted explicit **prev/next buttons + bottom dots** so
+   scrolling is always discoverable — even on devices where the
+   swipe gesture fails (touchscreens inside iframe previews,
+   trackpad-less desktops, accessibility users).
+
+2. **The hero card's contributions should be bullet points, not
+   numbered.** The Direction 1 hero rendered contributions as
+   `<ol>` with circle badges (1, 2, 3 …). The user wanted them
+   to look like bullets (•) — matching the dialog's
+   contributions idiom (which itself was lifted from the older
+   compact card).
+
+3. **The Enterprise PM Platform (the hero project) needed a
+   richer stack.** The user supplied 5 specific tools (GitHub,
+   Azure DevOps, CosmosDB, Claude Code, Playwright automation
+   testing) and asked for "other relevant stack that you think
+   this project needs". Only the hero gets the new stack; the
+   other 8 projects keep their current stacks.
+
+## Decision
+
+### 1. Carousel nav controls — prev/next + bottom dots
+
+The CSS scroll-snap stays; we layer controls on top so scrolling
+is always discoverable. The structure:
+
+```
+[ Also shipped                  ← → ]
+┌─────────────────────────────────────┐
+│  card │ card │ card │ card │ card →│
+└─────────────────────────────────────┘
+              • • ● • • • •
+```
+
+**State added to `ProjectsCarouselClient`:**
+- `useRef<HTMLDivElement>` on the scroll rail
+- `useEffect` listening to `scroll` events + `resize` to keep
+  `scrollLeft / scrollWidth / clientWidth` in sync
+- `isAtStart` / `isAtEnd` derived from those values (with a 4px
+  tolerance for sub-pixel rounding)
+- `pages` derived from `Math.ceil(scrollWidth / stride)` and
+  `activePage` from `Math.round(scrollLeft / stride)`
+
+**Stride math** (must match the Tailwind classes on the rail's
+items — kept in sync via the same source of truth):
+- `< sm`: 260px card + 16px gap = 276px stride
+- `≥ sm`: 300px card + 20px gap = 320px stride
+- Detected via `matchMedia('(min-width: 640px)')` with a
+  guard for test environments that don't ship `matchMedia`
+
+**Prev/Next buttons:**
+- Round 40×40 buttons, `absolute left-0/right-0 top-1/2
+  -translate-y-1/2` over the rail (we use a static top-bar
+  layout instead of absolute positioning for simplicity)
+- `ChevronLeft` / `ChevronRight` lucide icons
+- Disabled at boundaries (reduced opacity + `cursor-not-allowed`)
+- `hidden md:flex` — hidden on mobile, since the swipe gesture
+  is the primary affordance there
+- `aria-label="Previous projects"` / `"Next projects"`
+- `scrollBy({ left: ±stride, behavior })` — page-by-page
+
+**Bottom dots:**
+- Row of 8px circles below the rail
+- One dot per `pages` count (hidden entirely when only 1 page)
+- Active dot: `bg-accent-500 dark:bg-accent-400`
+- Inactive: `bg-slate-300 dark:bg-slate-700`, hover to
+  `bg-slate-400 dark:bg-slate-600`
+- `role="tablist"` / `role="tab"` / `aria-selected` — tablist
+  pattern is the most semantically correct for "one of N
+  positions"
+- Clicking a dot: `scrollTo({ left: stride * dotIndex, behavior })`
+
+**Accessibility:**
+- The rail region now has `aria-live="polite"` so AT users
+  hear position changes as they navigate
+- The dots row is keyboard-navigable (each dot is a button)
+- The buttons and dots both honor
+  `prefers-reduced-motion: reduce` by using `behavior: 'auto'`
+  instead of `'smooth'`
+
+### 2. Hero contributions → bullet dots
+
+`HeroProjectCard.tsx`:
+- Replaced the numbered `<ol>` (1, 2, 3) with a `<ul>` whose
+  items use the same dot idiom as the dialog and the older
+  compact card
+- Bullet visual: `<span className="mt-2 h-1.5 w-1.5
+  flex-shrink-0 rounded-full bg-accent-500 dark:bg-accent-400" />`
+- Dark-mode: `dark:bg-accent-400` (per the codebase convention
+  of stepping one step lighter in dark mode)
+
+### 3. Enterprise PM Platform — richer 12-item stack
+
+Final list (3 original + 5 user-supplied + 4 inferred):
+
+```
+Angular, Syncfusion, .NET Core, GitHub, Azure DevOps, CosmosDB,
+Claude Code, Playwright, xUnit, Entity Framework Core, Azure App
+Service, Application Insights
+```
+
+**Inferences (with reasoning):**
+- `xUnit` — the existing contribution bullet says "Ensuring
+  code quality through unit testing" with no specific framework
+  named; xUnit is the standard for modern .NET projects
+- `Entity Framework Core` — the standard ORM for .NET Core
+  when talking to CosmosDB (and most other Azure data
+  services)
+- `Azure App Service` — the rest of the stack is Azure
+  (CosmosDB, Azure DevOps), so Azure App Service is the
+  natural hosting choice for an ASP.NET Core app
+- `Application Insights` — standard Azure-native APM tool;
+  any production .NET app on Azure uses it for logging +
+  monitoring
+
+`docs/projects.md` line 12 was updated from
+`Angular, Syncfusion, .NET` to the 12-item list. The parser
+already handles comma-separated stack lines, so no parser
+changes were needed.
+
+## Consequences
+
+### Positive
+
+- **The carousel is now always usable.** The prev/next buttons
+  give a discoverable scroll affordance even on devices where
+  swipe fails. Dots give a "you are here" indicator that
+  scrollbars don't.
+- **Bullet-point hero contributions match the rest of the
+  section.** The hero no longer uses a numbered `<ol>` (which
+  suggested ranking/priority) — bullets match the dialog and
+  the older compact card and the broader visual language.
+- **The hero project now shows the full toolchain.** A
+  recruiter scanning the hero sees GitHub, Azure DevOps,
+  Playwright, Claude Code in the stack pills — clear signals
+  for "modern .NET + Azure + AI-assisted workflow". The
+  4 inferred items (xUnit, EF Core, Azure App Service,
+  Application Insights) round out the stack to a complete
+  production architecture.
+- **Tests grew 228 → 237** (9 new tests: hero-as-bulleted-
+  list, prev/next labels, click-next-calls-scrollBy-positive,
+  click-prev-calls-scrollBy-negative, dots-tablist-rendered,
+  click-dot-calls-scrollTo, first-dot-aria-selected, smooth-
+  scroll-default, next-disabled-at-end).
+- **No regressions.** Build clean. Privacy invariant 0 matches.
+
+### Negative
+
+- **The carousel is now more visually busy.** Three new
+  affordances (prev/next + dots) on top of the existing
+  cards-and-stack is a lot. We hid the prev/next on mobile
+  and the dots when only 1 page exists to mitigate.
+- **The 12-item stack on the hero is long.** On a 320px
+  carousel card (compact stack view in the modal), the stack
+  wraps to ~3-4 lines. Acceptable for a senior portfolio but
+  it pushes the contribution count down in the visual
+  hierarchy. A future option could collapse the stack
+  past 8 items to "+ N more".
+- **Native `<dialog>` is still a `<dialog>`** — the same
+  Tailwind v4 `::backdrop` caveat from Direction 2 applies.
+  The CSS class still handles it.
+
+### Neutral
+
+- **The Direction 2 "Consequences" sections above describe
+  the state after Direction 2.** They are kept intact for
+  decision-history purposes. This Direction 3 section lives
+  below them.
+- **The `data-layout` hooks didn't change** — still
+  `data-layout="hero"`, `data-layout="carousel"`. The new
+  test hooks are `data-testid="projects-carousel"`,
+  `data-testid="carousel-prev"`, `data-testid="carousel-next"`,
+  `data-testid="carousel-dots"`, and
+  `data-testid="carousel-dot-{i}"`.
+- **`xUnit` is an inference** — the candidate may actually
+  use NUnit or MSTest. The candidate can edit
+  `docs/projects.md` directly to change it (the parser
+  re-runs on every build via the Zod schema).
+
+## Alternatives Considered
+
+- **Keep CSS scroll-snap, don't add buttons.** Rejected — the
+  user reported the carousel wasn't scrollable. The buttons
+  give a reliable affordance for everyone.
+- **Add buttons but no dots.** Rejected — dots add a "you are
+  here" indicator that's especially helpful when 8 projects
+  span 3+ pages.
+- **Add buttons + dots but hide them on mobile.** Partial —
+  we hide the prev/next buttons on mobile (swipe is the
+  primary affordance) but show the dots on all viewports
+  (dots are useful even with swipe).
+- **Add real pagination (1, 2, 3, Next ›).** Rejected — the
+  visual language of the rest of the section is editorial,
+  not utility. Numbered pages would clash.
+- **Make the hero contributions look like a table (3 columns:
+  what / why / how).** Rejected — over-engineered for a
+  recruiter who skims. Bullets are the recruiter-friendly
+  format.
+- **Use a stack-collapse ("+ 4 more") for the 12-item stack.**
+  Rejected — recruiters want to see the full stack without
+  clicking. The 12-item wrap is acceptable visual cost.
+- **Refactor the stack into 3 categories (Frontend, Backend,
+  DevOps).** Rejected — would require a Zod schema change
+  (new `stack: { frontend, backend, devops }` shape) and the
+  parser doesn't currently emit that structure. A future
+  enhancement.
+
+## Notes
+
+- The 4 design-direction mockups in `.design-mockups/` are
+  still the Direction 1 reference; no new mockups were needed
+  for Direction 3 since the changes (nav controls + bullets +
+  stack) are well-defined.
+- The carousel `matchMedia` call is guarded:
+  `typeof window.matchMedia === 'function'` — the test
+  environment (jsdom) doesn't ship `matchMedia`, so the code
+  falls through to the sm+ default stride. The actual
+  browser always ships `matchMedia`.
+- The 9 new tests use jsdom property stubs
+  (`Object.defineProperty(HTMLElement.prototype, 'scrollLeft',
+  { get: () => 0 })`) to force a non-boundary scroll state —
+  without the stubs, both prev and next are disabled at
+  `scrollLeft=0` and the clicks don't fire.
+- No new dependencies. `ChevronLeft` and `ChevronRight` were
+  already in the lucide-react bundle from prior bolts.
+- Privacy invariant: the carousel + dialog still receive
+  only the public `ProjectMd` shape. The stack update is
+  just a markdown line — the parser never touches the
+  address.
+- The full project stack now reads: `Angular, Syncfusion,
+  .NET Core, GitHub, Azure DevOps, CosmosDB, Claude Code,
+  Playwright, xUnit, Entity Framework Core, Azure App
+  Service, Application Insights`. The candidate can edit
+  `docs/projects.md` line 12 directly to refine it.
+

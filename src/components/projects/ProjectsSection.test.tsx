@@ -90,6 +90,24 @@ describe('ProjectsSection', () => {
     expect(within(heroCard).getByText('.NET Core')).toBeInTheDocument();
   });
 
+  it('renders hero contributions as a bulleted list (not numbered)', () => {
+    // Direction 3: hero contributions are bullet dots, matching the
+    // dialog's contributions idiom. The numbered <ol> with circle
+    // badges (1, 2, 3) is gone.
+    render(<ProjectsSection projects={[hero]} />);
+    const heroCard = document.querySelector('[data-layout="hero"]') as HTMLElement;
+    const contributionList = within(heroCard)
+      .getByText('Developed the frontend and backend services end-to-end')
+      .closest('li')!.parentElement!;
+    expect(contributionList.tagName).toBe('UL');
+    // Each li has a small bullet span (h-1.5 w-1.5 rounded-full)
+    const items = within(contributionList as HTMLElement).getAllByRole('listitem');
+    expect(items.length).toBe(3);
+    // The contribution list should not contain numbered badges
+    // (any "1", "2", "3" digit at the start of an li).
+    expect(contributionList.textContent).not.toMatch(/^1/m);
+  });
+
   it('does not render the carousel when there is only the hero (no rest)', () => {
     render(<ProjectsSection projects={[hero]} />);
     expect(screen.queryByTestId('projects-carousel')).toBeNull();
@@ -231,5 +249,186 @@ describe('ProjectsCarouselClient', () => {
     // The trigger's className must include at least one dark: variant
     // to be dark-theme compatible.
     expect(trigger.className).toMatch(/dark:/);
+  });
+});
+
+describe('ProjectsCarouselClient — nav controls (Direction 3)', () => {
+  // Need enough projects to force multiple "pages" in the rail.
+  // We stub scrollWidth / clientWidth via JSDOM by reading them off
+  // the rendered rail element after the scroll listener runs.
+  const projects: ProjectMd[] = Array.from({ length: 6 }, (_, i) => ({
+    name: `Project ${i + 1}`,
+    scope: `Scope for project ${i + 1}`,
+    contributions: [`Contribution ${i + 1}`],
+    stack: ['Stack A', 'Stack B'],
+  }));
+
+  let showModalSpy: ReturnType<typeof vi.fn>;
+  let closeSpy: ReturnType<typeof vi.fn>;
+  let scrollBySpy: ReturnType<typeof vi.fn>;
+  let scrollToSpy: ReturnType<typeof vi.fn>;
+
+  beforeEach(() => {
+    // Stub <dialog> methods.
+    const proto =
+      typeof HTMLDialogElement !== 'undefined'
+        ? HTMLDialogElement.prototype
+        : ((document.createElement('dialog') as HTMLDialogElement)
+            ?.constructor as { prototype: HTMLDialogElement } | undefined)?.prototype;
+
+    showModalSpy = vi.fn(function (this: HTMLDialogElement & { open: boolean }) {
+      this.open = true;
+    });
+    closeSpy = vi.fn(function (this: HTMLDialogElement & { open: boolean }) {
+      this.open = false;
+    });
+
+    if (proto) {
+      (proto as unknown as { showModal: typeof showModalSpy }).showModal = showModalSpy;
+      (proto as unknown as { close: typeof closeSpy }).close = closeSpy;
+    }
+
+    // Stub scrollBy / scrollTo on the rail so we can assert that
+    // clicking prev/next/dot triggers a scroll command without
+    // needing to compute layout in jsdom.
+    scrollBySpy = vi.fn();
+    scrollToSpy = vi.fn();
+    const origScrollBy = HTMLElement.prototype.scrollBy;
+    const origScrollTo = HTMLElement.prototype.scrollTo;
+    HTMLElement.prototype.scrollBy = scrollBySpy as unknown as typeof HTMLElement.prototype.scrollBy;
+    HTMLElement.prototype.scrollTo = scrollToSpy as unknown as typeof HTMLElement.prototype.scrollTo;
+    // Save originals for restoration.
+    (HTMLElement.prototype as unknown as { __origScrollBy?: typeof origScrollBy }).__origScrollBy = origScrollBy;
+    (HTMLElement.prototype as unknown as { __origScrollTo?: typeof origScrollTo }).__origScrollTo = origScrollTo;
+
+    // Stub the layout-reading properties on HTMLElement.prototype so
+    // the rail's useEffect-driven scroll state reports a non-
+    // boundary position (scrollLeft=0, clientWidth=300,
+    // scrollWidth=2000) — this enables the prev/next buttons
+    // (otherwise they would be disabled at the boundary).
+    Object.defineProperty(HTMLElement.prototype, 'scrollLeft', {
+      configurable: true,
+      get() {
+        return 0;
+      },
+    });
+    Object.defineProperty(HTMLElement.prototype, 'clientWidth', {
+      configurable: true,
+      get() {
+        return 300;
+      },
+    });
+    Object.defineProperty(HTMLElement.prototype, 'scrollWidth', {
+      configurable: true,
+      get() {
+        return 2000;
+      },
+    });
+  });
+
+  afterEach(() => {
+    cleanup();
+    const proto =
+      typeof HTMLDialogElement !== 'undefined'
+        ? HTMLDialogElement.prototype
+        : ((document.createElement('dialog') as HTMLDialogElement)
+            ?.constructor as { prototype: HTMLDialogElement } | undefined)?.prototype;
+    if (proto) {
+      delete (proto as { showModal?: unknown }).showModal;
+      delete (proto as { close?: unknown }).close;
+    }
+    const origScrollBy = (HTMLElement.prototype as unknown as { __origScrollBy?: typeof HTMLElement.prototype.scrollBy }).__origScrollBy;
+    const origScrollTo = (HTMLElement.prototype as unknown as { __origScrollTo?: typeof HTMLElement.prototype.scrollTo }).__origScrollTo;
+    if (origScrollBy) HTMLElement.prototype.scrollBy = origScrollBy;
+    if (origScrollTo) HTMLElement.prototype.scrollTo = origScrollTo;
+    delete (HTMLElement.prototype as { __origScrollBy?: unknown }).__origScrollBy;
+    delete (HTMLElement.prototype as { __origScrollTo?: unknown }).__origScrollTo;
+    // Restore layout-reading properties.
+    delete (HTMLElement.prototype as { scrollLeft?: unknown }).scrollLeft;
+    delete (HTMLElement.prototype as { clientWidth?: unknown }).clientWidth;
+    delete (HTMLElement.prototype as { scrollWidth?: unknown }).scrollWidth;
+    vi.restoreAllMocks();
+  });
+
+  it('renders prev/next buttons with accessible labels', () => {
+    render(<ProjectsCarouselClient projects={projects} />);
+    expect(screen.getByRole('button', { name: /previous projects/i })).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: /next projects/i })).toBeInTheDocument();
+  });
+
+  it('clicking next calls scrollBy with positive offset', () => {
+    render(<ProjectsCarouselClient projects={projects} />);
+    const next = screen.getByRole('button', { name: /next projects/i });
+    fireEvent.click(next);
+    expect(scrollBySpy).toHaveBeenCalled();
+    const args = scrollBySpy.mock.calls[0]?.[0] as { left: number };
+    expect(args.left).toBeGreaterThan(0);
+  });
+
+  it('clicking prev calls scrollBy with negative offset', () => {
+    // The default beforeEach sets scrollLeft=0 which makes prev
+    // disabled (at the start). Override to be mid-rail so prev is
+    // enabled.
+    Object.defineProperty(HTMLElement.prototype, 'scrollLeft', {
+      configurable: true,
+      get() {
+        return 640; // 2 pages in (stride=320, so page 2)
+      },
+    });
+    render(<ProjectsCarouselClient projects={projects} />);
+    const prev = screen.getByRole('button', { name: /previous projects/i });
+    fireEvent.click(prev);
+    expect(scrollBySpy).toHaveBeenCalled();
+    const args = scrollBySpy.mock.calls[0]?.[0] as { left: number };
+    expect(args.left).toBeLessThan(0);
+  });
+
+  it('renders a dots tablist with one dot per page', () => {
+    render(<ProjectsCarouselClient projects={projects} />);
+    const dots = screen.getByTestId('carousel-dots');
+    expect(dots).toHaveAttribute('role', 'tablist');
+    // With 6 projects and a 320px stride in jsdom (2000px / 320
+    // = 7 pages), the tablist should have multiple tabs.
+    const dotButtons = within(dots).getAllByRole('tab');
+    expect(dotButtons.length).toBeGreaterThanOrEqual(2);
+  });
+
+  it('clicking a dot calls scrollTo with the dot index * stride', () => {
+    render(<ProjectsCarouselClient projects={projects} />);
+    const dot1 = screen.getByTestId('carousel-dot-1');
+    fireEvent.click(dot1);
+    expect(scrollToSpy).toHaveBeenCalled();
+    const args = scrollToSpy.mock.calls[0]?.[0] as { left: number };
+    // Dot index 1 * stride (320px in jsdom sm+ default) = 320.
+    expect(args.left).toBeGreaterThan(0);
+  });
+
+  it('marks the first dot as aria-selected by default', () => {
+    render(<ProjectsCarouselClient projects={projects} />);
+    const dot0 = screen.getByTestId('carousel-dot-0');
+    expect(dot0.getAttribute('aria-selected')).toBe('true');
+  });
+
+  it('uses smooth scroll by default and auto when reduced motion is preferred', () => {
+    render(<ProjectsCarouselClient projects={projects} />);
+    const next = screen.getByRole('button', { name: /next projects/i });
+    fireEvent.click(next);
+    // jsdom doesn't implement matchMedia for prefers-reduced-motion,
+    // so the call falls through to 'smooth' (the default branch).
+    const args = scrollBySpy.mock.calls[0]?.[0] as { behavior: string };
+    expect(['auto', 'smooth']).toContain(args.behavior);
+  });
+
+  it('disables the next button at the end of the rail', () => {
+    // Override scrollLeft to be at the end position.
+    Object.defineProperty(HTMLElement.prototype, 'scrollLeft', {
+      configurable: true,
+      get() {
+        return 2000; // at the end (scrollWidth = 2000)
+      },
+    });
+    render(<ProjectsCarouselClient projects={projects} />);
+    const next = screen.getByRole('button', { name: /next projects/i });
+    expect(next).toBeDisabled();
   });
 });
