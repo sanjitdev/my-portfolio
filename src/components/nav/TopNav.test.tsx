@@ -6,8 +6,12 @@ import type { NavLink } from './navLinks';
 // Primary row (always shown).
 // Direction 4 (2026-10-10): Experience moved ahead of Projects so the
 // nav mirrors the new page section order (Profile → Experience → Projects).
+// Direction 5 (2026-10-10): Profile was promoted from the "More" dropdown
+// to the primary row (between Home and Experience) so the nav matches the
+// page composition (Hero → Profile → Experience → Projects → ...).
 const primaryLinks: NavLink[] = [
   { id: 'top', label: 'Home' },
+  { id: 'about', label: 'Profile' },
   { id: 'experience', label: 'Experience' },
   { id: 'projects', label: 'Projects' },
   { id: 'contact', label: 'Contact' },
@@ -15,7 +19,6 @@ const primaryLinks: NavLink[] = [
 
 // "More" dropdown contents.
 const secondaryLinks: NavLink[] = [
-  { id: 'about', label: 'Profile' },
   { id: 'skills', label: 'Skills' },
   { id: 'education', label: 'Education' },
   { id: 'honors', label: 'Honors' },
@@ -82,8 +85,9 @@ describe('TopNav (editorial + More dropdown)', () => {
 
     it('does NOT render secondary links as plain links (they are in the dropdown)', () => {
       render(<TopNav links={primaryLinks} secondary={secondaryLinks} />);
-      // Closed dropdown: "Profile" should not be a regular link.
-      expect(screen.queryByRole('link', { name: 'Profile' })).not.toBeInTheDocument();
+      // Closed dropdown: secondary items should not be plain links.
+      // Note: "Profile" is now in primary (Direction 5) so it's allowed
+      // to be a plain link — we only check Education here.
       expect(screen.queryByRole('link', { name: 'Education' })).not.toBeInTheDocument();
     });
 
@@ -94,9 +98,7 @@ describe('TopNav (editorial + More dropdown)', () => {
     });
 
     it('uses uppercase letterspaced editorial styling on the primary row', () => {
-      const { container } = render(
-        <TopNav links={primaryLinks} secondary={secondaryLinks} />,
-      );
+      const { container } = render(<TopNav links={primaryLinks} secondary={secondaryLinks} />);
       // The primary link uses uppercase + tracking classes.
       const home = screen.getByRole('link', { name: 'Home' });
       expect(home.className).toMatch(/uppercase/);
@@ -148,9 +150,7 @@ describe('TopNav (editorial + More dropdown)', () => {
     });
 
     it('rotates the chevron when open', async () => {
-      const { container } = render(
-        <TopNav links={primaryLinks} secondary={secondaryLinks} />,
-      );
+      const { container } = render(<TopNav links={primaryLinks} secondary={secondaryLinks} />);
       const more = screen.getByRole('button', { name: /more/i });
       fireEvent.click(more);
       await waitFor(() => {
@@ -236,7 +236,10 @@ describe('TopNav (editorial + More dropdown)', () => {
       await waitFor(() => {
         expect(openButton.getAttribute('aria-expanded')).toBe('true');
       });
-      // In the mobile panel, "Profile" and "Education" appear as flat links.
+      // In the mobile panel, "Education" still appears as a flat link
+      // (it's in secondary). "Profile" now appears because it's primary
+      // (Direction 5) — primary items are also rendered as flat links in
+      // the mobile panel.
       // (Both desktop and mobile panels are in the DOM at this point — at
       // least one of each must be present.)
       const profileLinks = screen.getAllByRole('link', { name: 'Profile' });

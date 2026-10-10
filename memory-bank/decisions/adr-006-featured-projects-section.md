@@ -1063,4 +1063,150 @@ Recommendations).
   reorder) plus a corresponding tweak in the primary nav
   builder. Most of the diff is in the test fixtures.
 
+### Direction 5 — Profile moved to first content slot (2026-10-10, same day)
+
+After Direction 4 flipped Experience ahead of Projects, the
+user returned with a tighter request: *"Profile should be
+first"* (and clarified via question: *"Move Profile to right
+after Hero"*). The intent is that recruiters immediately see
+who the candidate is, then the career timeline, then the
+project detail, in that exact reading order.
+
+## Context
+
+Direction 4's page order was
+`Hero → Experience → Projects → Profile → Skills → …`. The
+top nav mirrored that for the first three rows, but Profile
+was still demoted to the secondary "More" dropdown along with
+Skills, Education, and friends. The user wants Profile to be
+**promoted into the primary nav row** and rendered
+**immediately after Hero**, before Experience and Projects.
+
+This is a pure layout/nav change — no visual direction
+inside the About or Experience sections is touched. All
+sections keep their existing markup, ordering inside the
+section, and DOM ids.
+
+## Decision
+
+**Page composition** (`src/app/page.tsx`) — the section list
+becomes:
+
+```
+Hero → Profile (AboutSection) → Experience → Projects →
+Skills → Education → Certifications → Languages → Honors →
+Recommendations → Contact
+```
+
+The change is a 2-line reorder: swap
+`<AboutSection summary={cv.summary} />` and
+`<ExperienceSection experiences={cv.experience} />`. All
+section props, imports, and DOM ids are preserved.
+
+**Top-nav primary row** (`src/components/nav/navLinks.ts`) —
+the `{ id: 'about', label: 'Profile' }` entry moves out of
+`SECONDARY_ORDER` (the source list for the "More" dropdown)
+and into the always-shown `primary` array, slotted between
+`top` (Home) and `experience` (Experience):
+
+```
+Home · Profile · Experience · Projects · Contact
+```
+
+Skills, Education, Certifications, Languages, Honors, and
+Recommendations stay in secondary. Contact remains at the
+end of primary. The "More" dropdown button is still only
+emitted when `secondary.length > 0`, so a CV with no
+education / honors / etc. shows a clean primary-only row.
+
+**Scroll-spy & anchors** — unchanged. DOM ids
+(`id="about"`, `id="experience"`, …) are stable across the
+reorder, so the existing IntersectionObserver scroll-spy
+inside `TopNav.tsx` continues to light up the correct active
+link without any code change.
+
+**Mobile menu** — already calls `getFlatNavLinks`, which
+returns `[...primary, ...secondary]`. So in the mobile
+hamburger panel, Profile sits between Home and Experience
+automatically — no separate code path to update.
+
+**Tests** (`navLinks.test.ts`, `TopNav.test.tsx`) — the
+Direction-4 expectations for ordering were updated:
+- `getNavLinks` now asserts `primary[1].id === 'about'` and
+  `primary[0].id === 'top'`.
+- `getNavLinks` asserts "does NOT include Profile in
+  secondary" (Direction 5 invariant).
+- `getFlatNavLinks` "with projects" returns
+  `['top', 'about', 'experience', 'projects', 'contact',
+  'skills', 'education']` (Profile is no longer at the end
+  of the list).
+- `TopNav.test.tsx` `primaryLinks` fixture grows from 4 to
+  5 entries; `secondaryLinks` shrinks by 1 (Profile moved
+  out).
+- The "Profile is not a regular link in the closed
+  dropdown" assertion was removed (Profile *is* a regular
+  link now — it's in the primary row). The remaining
+  Education check still validates that pure-secondary items
+  are hidden behind the dropdown.
+
+**No new components, no new dependencies, no new tokens.**
+
+## Consequences
+
+**Positive:**
+- Top nav exposes 5 main anchors instead of 4 — recruiters
+  can land directly on Profile with one click.
+- Reads top-to-bottom the same way the nav does: Hero →
+  Profile → Experience → Projects → …
+- Skill / education / honors / certs remain tucked behind
+  "More" so the primary row doesn't get crowded.
+
+**Trade-offs accepted:**
+- Primary row is now 5 items (up from 4). Still under the
+  editorial threshold (no wrapping at `md`+, verified in
+  the existing 18 TopNav tests).
+- Profile's section DOM id is still `about` (kept stable
+  for scroll-spy continuity) even though it now sits
+  before Experience — the `aria-label="Profile"` label is
+  what users see.
+
+## Alternatives Considered
+
+- **Promote Profile to first slot but keep it in secondary.**
+  Rejected — the user explicitly asked for Profile to be
+  visible in the top row, not buried behind a dropdown
+  click.
+- **Drop "More" entirely and show all 9 anchors as flat
+  links in the primary row.** Rejected — the original
+  editorial direction (ADR-005) deliberately chose the
+  "More" dropdown because 9 links look cluttered. Skills,
+  Education, etc. remain less-prominent signals.
+- **Reorder anchors only without moving Profile out of
+  secondary.** Not possible — Profile is *both* the link
+  in the nav and the section in the page. Either
+  Profile is primary or Profile is "More"; the user
+  wanted primary.
+
+## Notes
+
+- The page-test privacy invariant still holds: the home
+  address (Chunkhola / House 263) still does not appear
+  in the rendered HTML.
+- The full-page render order is now:
+  `top → about → experience → projects → skills → education
+  → certifications → languages → honors → recommendations →
+  contact`.
+- Test count is unchanged (240) — the navLinks test file
+  grows by 2 (new "Profile in primary between Home and
+  Experience" and "places Profile right after Home"
+  assertions), the "did NOT include Profile in secondary"
+  assertion replaces an existing one, and the
+  `getFlatNavLinks` expectations are updated. TopNav test
+  fixtures grow one entry each; assertion count is the
+  same.
+- Diff footprint: 2 lines in `page.tsx`, ~10 lines of new
+  comments + ~3 lines of changed array shape in
+  `navLinks.ts`, and adjusted test expectations. No
+  component / styling / dependency changes.
+
 

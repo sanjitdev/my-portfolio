@@ -25,8 +25,9 @@ export interface NavGroups {
 
 const SECONDARY_ORDER: ReadonlyArray<{ id: string; label: string; key: keyof CvData }> = [
   // The summary/about section's DOM id is "about" (see AboutSection.tsx) —
-  // keep the id stable so scroll-spy continues to work.
-  { id: 'about', label: 'Profile', key: 'summary' },
+  // moved to the primary row in Direction 5 (2026-10-10) so the top nav
+  // mirrors the page section order (Profile is now the second anchor
+  // after Home).
   { id: 'skills', label: 'Skills', key: 'top_skills' },
   { id: 'education', label: 'Education', key: 'education' },
   { id: 'certifications', label: 'Certifications', key: 'certifications' },
@@ -40,17 +41,23 @@ const SECONDARY_ORDER: ReadonlyArray<{ id: string; label: string; key: keyof CvD
 /**
  * Derives the navigation groups from CV data and the curated projects.
  *
- * The primary row always shows: Home, Experience, Projects (if any),
- * Contact. The page renders the sections in the same order: Hero →
- * Experience → Projects → Profile → Skills → ... so the primary nav
- * mirrors the visual order (Direction 4, 2026-10-10: Profile and
- * Experience moved ahead of Projects so recruiters see the career
- * timeline before the project detail).
+ * The primary row always shows: Home, Profile, Experience, Projects (if
+ * any), Contact. The page renders the sections in the same order: Hero
+ * → Profile → Experience → Projects → Skills → ... so the primary nav
+ * mirrors the visual order.
  *
- * "Skills" and "Profile" are demoted to the secondary group — Profile
- * is the same content the Hero already previews, and Skills is dense
- * enough to be a "deeper" stop after the recruiter has scanned the
- * experience and projects.
+ * History:
+ * - Direction 4 (2026-10-10): Profile and Experience moved ahead of
+ *   Projects so recruiters see the career timeline before the project
+ *   detail.
+ * - Direction 5 (2026-10-10): Profile (the summary/about section)
+ *   promoted from the "More" dropdown to the primary row so the top
+ *   nav exposes the second section directly. The page composition
+ *   became Hero → Profile → Experience → Projects → ...
+ *
+ * "Skills" remains in the secondary group — Skills is dense enough to
+ * be a "deeper" stop after the recruiter has scanned the experience
+ * and projects.
  *
  * The secondary group is only emitted when at least one of its items has
  * data, so a CV with no languages, honors, or recommendations will not
@@ -61,6 +68,7 @@ export function getNavLinks(projects: ProjectMd[], cv: CvData): NavGroups {
 
   const primary: NavLink[] = [
     { id: 'top', label: 'Home' },
+    { id: 'about', label: 'Profile' },
     { id: 'experience', label: 'Experience' },
     ...(hasProjects ? [{ id: 'projects' as const, label: 'Projects' }] : []),
   ];

@@ -73,15 +73,36 @@ describe('getNavLinks', () => {
     expect(ids.indexOf('projects')).toBeGreaterThan(ids.indexOf('experience'));
   });
 
-  it('always includes Profile and Skills in secondary (summary and top_skills are required)', () => {
+  it('includes Profile in primary between Home and Experience (Direction 5)', () => {
+    // Direction 5 (2026-10-10): Profile was promoted from the "More"
+    // dropdown to the primary nav so the top row mirrors the page
+    // section order (Hero → Profile → Experience → Projects → ...).
+    const { primary } = getNavLinks([project], makeCv());
+    const ids = primary.map(l => l.id);
+    expect(ids).toContain('about');
+    expect(ids.indexOf('about')).toBeGreaterThan(ids.indexOf('top'));
+    expect(ids.indexOf('about')).toBeLessThan(ids.indexOf('experience'));
+  });
+
+  it('places Profile right after Home in primary (Direction 5)', () => {
+    const { primary } = getNavLinks([], makeCv());
+    expect(primary[0]?.id).toBe('top');
+    expect(primary[1]?.id).toBe('about');
+  });
+
+  it('always includes Skills in secondary (top_skills is required)', () => {
     const { secondary } = getNavLinks([], makeCv());
-    expect(secondary.find(l => l.id === 'about')).toBeDefined();
     expect(secondary.find(l => l.id === 'skills')).toBeDefined();
   });
 
-  it('secondary group contains only Profile and Skills when CV has no other extras', () => {
+  it('does NOT include Profile in secondary (Direction 5: Profile is now primary)', () => {
     const { secondary } = getNavLinks([], makeCv());
-    expect(secondary.map(l => l.id)).toEqual(['about', 'skills']);
+    expect(secondary.find(l => l.id === 'about')).toBeUndefined();
+  });
+
+  it('secondary group contains only Skills when CV has no other extras', () => {
+    const { secondary } = getNavLinks([], makeCv());
+    expect(secondary.map(l => l.id)).toEqual(['skills']);
   });
 
   it('does NOT include Education, Certifications, Languages, Honors, or Recommendations when their data is empty', () => {
@@ -95,7 +116,10 @@ describe('getNavLinks', () => {
   });
 
   it('includes Education when education has at least one entry', () => {
-    const { secondary } = getNavLinks([], makeCv({ education: [{ institution: 'X', degree: 'B.Sc.' }] }));
+    const { secondary } = getNavLinks(
+      [],
+      makeCv({ education: [{ institution: 'X', degree: 'B.Sc.' }] }),
+    );
     expect(secondary.find(l => l.id === 'education')).toBeDefined();
   });
 
@@ -134,7 +158,9 @@ describe('getNavLinks', () => {
     expect(secondary.find(l => l.id === 'recommendations')).toBeDefined();
   });
 
-  it('preserves the secondary order: Profile → Skills → Education → Certifications → Languages → Honors → Recommendations', () => {
+  it('preserves the secondary order: Skills → Education → Certifications → Languages → Honors → Recommendations', () => {
+    // Direction 5: Profile moved out of secondary, so the secondary
+    // order no longer starts with "about".
     const { secondary } = getNavLinks(
       [],
       makeCv({
@@ -147,7 +173,6 @@ describe('getNavLinks', () => {
       }),
     );
     expect(secondary.map(l => l.id)).toEqual([
-      'about',
       'skills',
       'education',
       'certifications',
@@ -160,6 +185,8 @@ describe('getNavLinks', () => {
 
 describe('getFlatNavLinks', () => {
   it('returns primary followed by secondary in display order (no projects)', () => {
+    // Direction 5: Profile is now primary (between Home and Experience),
+    // so it leaves the secondary list.
     const flat = getFlatNavLinks(
       [],
       makeCv({
@@ -167,11 +194,19 @@ describe('getFlatNavLinks', () => {
         education: [{ institution: 'X', degree: 'B.Sc.' }],
       }),
     );
-    expect(flat.map(l => l.id)).toEqual(['top', 'experience', 'contact', 'about', 'skills', 'education']);
+    expect(flat.map(l => l.id)).toEqual([
+      'top',
+      'about',
+      'experience',
+      'contact',
+      'skills',
+      'education',
+    ]);
   });
 
   it('returns primary followed by secondary in display order (with projects)', () => {
     // Direction 4: Experience before Projects in the primary row.
+    // Direction 5: Profile is now primary too.
     const flat = getFlatNavLinks(
       [project],
       makeCv({
@@ -180,10 +215,10 @@ describe('getFlatNavLinks', () => {
     );
     expect(flat.map(l => l.id)).toEqual([
       'top',
+      'about',
       'experience',
       'projects',
       'contact',
-      'about',
       'skills',
       'education',
     ]);
