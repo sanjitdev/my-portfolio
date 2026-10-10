@@ -50,6 +50,20 @@ describe('ProjectsSection', () => {
     ).toBeInTheDocument();
   });
 
+  it('renders the section heading inside an accent-tinted anchor card', () => {
+    render(<ProjectsSection projects={[hero]} />);
+    const heading = screen.getByRole('heading', { name: /featured projects/i, level: 2 });
+    // Direction 1: heading is wrapped in an accent-tinted rounded panel,
+    // not just a plain <Heading>. Verify the wrapper exists and the
+    // heading is inside it.
+    const wrapper = heading.parentElement;
+    expect(wrapper).not.toBeNull();
+    expect(wrapper!.className).toMatch(/rounded-\[20px\]/);
+    expect(wrapper!.className).toMatch(/border-accent-200/);
+    // The "What I've built" eyebrow is part of the anchor card.
+    expect(wrapper!.textContent).toMatch(/What I.{0,2}ve built/);
+  });
+
   it('renders the first project as a hero card', () => {
     render(<ProjectsSection projects={[hero]} />);
     const heroCard = document.querySelector('[data-layout="hero"]');
@@ -90,14 +104,28 @@ describe('ProjectsSection', () => {
     expect(items[1]?.textContent).toMatch(/^2/);
   });
 
-  it('truncates compact card contributions to first 3 and shows "+ N more" when more exist', () => {
+  it('renders every compact card contribution (no "+ N more" truncation)', () => {
+    // Direction 1: compact cards are richer — they show all
+    // contributions, no truncation. The old "+ N more" affordance is
+    // gone.
     const manyContribs: ProjectMd = {
       ...compact,
       contributions: ['one', 'two', 'three', 'four', 'five'],
     };
     render(<ProjectsSection projects={[hero, manyContribs]} />);
     const compactCard = document.querySelector('[data-layout="compact"]') as HTMLElement;
-    expect(within(compactCard).getByText(/\+ 2 more/)).toBeInTheDocument();
+    // All 5 contributions should render
+    expect(within(compactCard).getByText('one')).toBeInTheDocument();
+    expect(within(compactCard).getByText('five')).toBeInTheDocument();
+    // No "+ N more" affordance
+    expect(within(compactCard).queryByText(/\+ \d+ more/)).toBeNull();
+  });
+
+  it('compact card has the accent left rule and rounded treatment', () => {
+    render(<ProjectsSection projects={[hero, compact]} />);
+    const compactCard = document.querySelector('[data-layout="compact"]') as HTMLElement;
+    // Direction 1: rounded-2xl + before: pseudo with accent-300 left rule
+    expect(compactCard.className).toMatch(/rounded-2xl/);
   });
 
   it('exposes a labeled list of "more" projects for assistive tech', () => {
