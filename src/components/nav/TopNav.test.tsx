@@ -97,12 +97,49 @@ describe('TopNav (editorial + More dropdown)', () => {
       expect(home.getAttribute('aria-current')).toBe('page');
     });
 
-    it('uses uppercase letterspaced editorial styling on the primary row', () => {
+    it('uses modern minimal SaaS styling on the primary row (sentence-case + pill background)', () => {
       const { container } = render(<TopNav links={primaryLinks} secondary={secondaryLinks} />);
-      // The primary link uses uppercase + tracking classes.
+      // The primary link uses sentence-case typography with a rounded
+      // pill background that fills in on hover/active. No uppercase,
+      // no letter-spacing — the editorial "tracking-[0.14em]" pattern
+      // is gone.
       const home = screen.getByRole('link', { name: 'Home' });
-      expect(home.className).toMatch(/uppercase/);
-      expect(home.className).toMatch(/tracking-/);
+      expect(home.className).toMatch(/text-sm/);
+      expect(home.className).toMatch(/font-medium/);
+      expect(home.className).toMatch(/rounded-full/);
+      expect(home.className).not.toMatch(/uppercase/);
+      expect(home.className).not.toMatch(/tracking-\[/);
+    });
+
+    it('renders a dual-mode LeetCode link as an anchor on home (scrollId) and a route on /leetcode (href)', () => {
+      // On home, the LeetCode link has both href AND scrollId, so it
+      // should render as an anchor targeting #leetcode-callout, NOT as
+      // a Next.js <Link> that would navigate away.
+      const leetcode: NavLink = {
+        id: 'leetcode',
+        label: 'LeetCode',
+        href: '/leetcode',
+        scrollId: 'leetcode-callout',
+      };
+      // Seed the section the link should scroll to
+      document.body.insertAdjacentHTML('beforeend', '<section id="leetcode-callout"></section>');
+
+      const { rerender } = render(
+        <TopNav links={[leetcode]} secondary={[]} currentPath="/" />,
+      );
+      // On home: anchor with href="#leetcode-callout"
+      const homeAnchor = document.querySelector('a[href="#leetcode-callout"]');
+      expect(homeAnchor).not.toBeNull();
+      expect(homeAnchor?.textContent).toBe('LeetCode');
+
+      // On the /leetcode page: same link data, but with currentPath set,
+      // it should render as a Next.js <Link href="/leetcode">.
+      rerender(<TopNav links={[leetcode]} secondary={[]} currentPath="/leetcode" />);
+      const routeLink = document.querySelector('a[href="/leetcode"]');
+      expect(routeLink).not.toBeNull();
+      // The anchor should no longer be present (we re-rendered, but
+      // querySelector picks fresh DOM each time).
+      expect(document.querySelector('a[href="#leetcode-callout"]')).toBeNull();
     });
 
     it('uses the heading (serif) font for the brand wordmark', () => {
@@ -120,6 +157,19 @@ describe('TopNav (editorial + More dropdown)', () => {
       fireEvent.click(screen.getByRole('link', { name: 'Experience' }));
       const section = document.getElementById('experience');
       expect(section?.scrollIntoView).toHaveBeenCalled();
+    });
+
+    it('does NOT mark Home as active on a non-home page (regression: initial activeId leak)', () => {
+      // Regression: the initial state of `activeId` is the first link's id
+      // (Home = "top"). The scroll-spy effect skips non-home pages, so
+      // without an `onHome` guard, Home would render aria-current="page"
+      // on every other page (including /leetcode) — highlighting the
+      // wrong link.
+      render(
+        <TopNav links={primaryLinks} secondary={secondaryLinks} currentPath="/leetcode" />,
+      );
+      const home = screen.getByRole('link', { name: 'Home' });
+      expect(home.getAttribute('aria-current')).not.toBe('page');
     });
   });
 
