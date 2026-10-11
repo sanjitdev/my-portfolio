@@ -181,12 +181,39 @@ describe('getNavLinks', () => {
       'recommendations',
     ]);
   });
+
+  // ------------------------------------------------------------------
+  // 002-leetcode-stats / Bolt 004: route link to /leetcode
+  // ------------------------------------------------------------------
+  it('includes LeetCode as a primary route link (Bolt 004)', () => {
+    const { primary } = getNavLinks([], makeCv());
+    const leetcode = primary.find(l => l.id === 'leetcode');
+    expect(leetcode).toBeDefined();
+    expect(leetcode?.href).toBe('/leetcode');
+    expect(leetcode?.label).toBe('LeetCode');
+  });
+
+  it('gives the LeetCode link a scrollId pointing at the home-page callout', () => {
+    // Dual-mode: on home the LeetCode nav link anchor-scrolls to
+    // #leetcode-callout, on other pages it routes to /leetcode.
+    const { primary } = getNavLinks([], makeCv());
+    const leetcode = primary.find(l => l.id === 'leetcode');
+    expect(leetcode?.scrollId).toBe('leetcode-callout');
+  });
+
+  it('places LeetCode before Contact in primary (recruiter-discoverable)', () => {
+    const { primary } = getNavLinks([], makeCv());
+    const ids = primary.map(l => l.id);
+    expect(ids.indexOf('leetcode')).toBeGreaterThan(-1);
+    expect(ids.indexOf('leetcode')).toBeLessThan(ids.indexOf('contact'));
+  });
 });
 
 describe('getFlatNavLinks', () => {
   it('returns primary followed by secondary in display order (no projects)', () => {
     // Direction 5: Profile is now primary (between Home and Experience),
     // so it leaves the secondary list.
+    // Bolt 004: LeetCode route link sits before Contact.
     const flat = getFlatNavLinks(
       [],
       makeCv({
@@ -198,6 +225,7 @@ describe('getFlatNavLinks', () => {
       'top',
       'about',
       'experience',
+      'leetcode',
       'contact',
       'skills',
       'education',
@@ -207,6 +235,7 @@ describe('getFlatNavLinks', () => {
   it('returns primary followed by secondary in display order (with projects)', () => {
     // Direction 4: Experience before Projects in the primary row.
     // Direction 5: Profile is now primary too.
+    // Bolt 004: LeetCode route link sits before Contact.
     const flat = getFlatNavLinks(
       [project],
       makeCv({
@@ -218,6 +247,7 @@ describe('getFlatNavLinks', () => {
       'about',
       'experience',
       'projects',
+      'leetcode',
       'contact',
       'skills',
       'education',

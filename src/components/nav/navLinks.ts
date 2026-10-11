@@ -4,6 +4,20 @@ import type { ProjectMd } from '@/lib/projects-md';
 export interface NavLink {
   id: string;
   label: string;
+  /**
+   * If present, the link navigates to a Next.js route (rendered as a real
+   * `<Link>` / `<a>`). If absent, the link is an in-page anchor used by
+   * the scroll-spy on the home page.
+   */
+  href?: string;
+  /**
+   * Optional id of a section on the home page that this link should
+   * anchor-scroll to when the user is on `/`. When set together with
+   * `href`, the link renders as an anchor on home and a route link on
+   * other pages — keeping the LeetCode nav link consistent with the rest
+   * of the primary row, which all scroll to their sections on home.
+   */
+  scrollId?: string;
 }
 
 /**
@@ -42,9 +56,12 @@ const SECONDARY_ORDER: ReadonlyArray<{ id: string; label: string; key: keyof CvD
  * Derives the navigation groups from CV data and the curated projects.
  *
  * The primary row always shows: Home, Profile, Experience, Projects (if
- * any), Contact. The page renders the sections in the same order: Hero
- * → Profile → Experience → Projects → Skills → ... so the primary nav
- * mirrors the visual order.
+ * any), LeetCode (route link), Contact. The page renders the sections in
+ * the same order: Hero → Profile → Experience → Projects → Skills → ... so
+ * the primary nav mirrors the visual order.
+ *
+ * LeetCode was added as a route link (Bolt 004 of intent 002) — it lives
+ * at `/leetcode` and is rendered as a real `<Link>` rather than an anchor.
  *
  * History:
  * - Direction 4 (2026-10-10): Profile and Experience moved ahead of
@@ -71,6 +88,11 @@ export function getNavLinks(projects: ProjectMd[], cv: CvData): NavGroups {
     { id: 'about', label: 'Profile' },
     { id: 'experience', label: 'Experience' },
     ...(hasProjects ? [{ id: 'projects' as const, label: 'Projects' }] : []),
+    // Route link (Bolt 004 / 002-leetcode-stats): on the home page, this
+    // link smooth-scrolls to the #leetcode-callout section; on any other
+    // page it navigates to /leetcode. The dual behavior keeps the nav
+    // consistent with the rest of the primary row.
+    { id: 'leetcode', label: 'LeetCode', href: '/leetcode', scrollId: 'leetcode-callout' },
   ];
 
   const secondary: NavLink[] = [];

@@ -1,10 +1,10 @@
 # Global Story Index
 
 ## Overview
-- **Total stories**: 16
-- **Generated**: 16
-- **Implemented**: 16
-- **Last updated**: 2026-10-10T19:00:00Z
+- **Total stories**: 24
+- **Generated**: 24
+- **Implemented**: 24
+- **Last updated**: 2026-10-11T17:45:00Z
 
 ---
 
@@ -29,22 +29,33 @@
 - [x] **015-seo** (001-portfolio-ui): Meta tags + Open Graph + sitemap + robots + favicon — Should — ✅ IMPLEMENTED
 - [x] **016-deploy** (001-portfolio-ui): Vercel deployment verification + last-updated timestamp — Must — ✅ IMPLEMENTED
 
+### 002-leetcode-stats
+
+- [x] **001-leetcode-data** (001-leetcode-stats-ui): Data layer — types, server-side fetcher, env config, normalization, stale-data handling — Must — ✅ IMPLEMENTED
+- [x] **002-leetcode-route-and-nav** (001-leetcode-stats-ui): `/leetcode` route + main nav entry — Must — ✅ IMPLEMENTED
+- [x] **003-leetcode-home-callout** (001-leetcode-stats-ui): Home-page callout card linking to `/leetcode` — Must — ✅ IMPLEMENTED
+- [x] **004-kpi-cards** (001-leetcode-stats-ui): Four headline KPI tiles (Total Solved, Acceptance Rate, Global Ranking, Contribution Points) — Must — ✅ IMPLEMENTED
+- [x] **005-difficulty-chart** (001-leetcode-stats-ui): Difficulty distribution donut/bar — Must — ✅ IMPLEMENTED
+- [x] **006-topic-chart** (001-leetcode-stats-ui): Topic/tag distribution bar chart — Must — ✅ IMPLEMENTED
+- [x] **007-activity-heatmap** (001-leetcode-stats-ui): 90-day GitHub-style activity heatmap — Must — ✅ IMPLEMENTED
+- [x] **008-contest-timeline** (001-leetcode-stats-ui): Contest rating sparkline + badge + "Top X%" — Should — ✅ IMPLEMENTED
+
 ---
 
 ## Stories by Status
 
 - **Planned**: 0
-- **Generated**: 16
+- **Generated**: 0
 - **In Progress**: 0
-- **Implemented**: 16
+- **Implemented**: 24 (16 from 001-portfolio-site + 8 from 002-leetcode-stats)
 
 ---
 
 ## Stories by Priority
 
-- **Must**: 9 (bootstrap, cv-data, shared-components, hero, about, experience, skills, contact, deploy)
-- **Should**: 5 (education, certifications, nav, theme, seo)
-- **Could**: 2 (languages, honors)
+- **Must**: 16 (9 from 001-portfolio-site + 7 from 002-leetcode-stats)
+- **Should**: 6 (5 from 001-portfolio-site + 1 from 002-leetcode-stats)
+- **Could**: 2 (from 001-portfolio-site)
 
 ---
 
@@ -81,3 +92,17 @@ If the project evolves further (e.g., a future "Projects" or "Blog" section), a 
 - **Live**: https://sanjit-dev.vercel.app
 - **Domain**: aliased from `my-portfolio-*-super-max1.vercel.app` to `sanjit-dev.vercel.app`
 - **Last deployment**: pending (ADR-006 work — featured Projects section)
+
+---
+
+## Verification: 001-leetcode-stats-ui
+
+- Stories planned: 8
+- Stories created: 8
+- Index updated: 8 marked ✅ IMPLEMENTED
+- Gaps: none
+- Inception: complete
+- Construction: complete (all 3 bolts done)
+- Tests: 290 passing (12 new fetcher tests + 11 ContestTimeline + 7 KpiCards + 5 DifficultyChart + 6 TopicChart + 6 ActivityHeatmap + 2 nav-link + 4 home page + 241 pre-existing)
+- Build: clean (6 static routes, /leetcode uses 1h ISR)
+- Live: https://sanjit-dev.vercel.app/leetcode

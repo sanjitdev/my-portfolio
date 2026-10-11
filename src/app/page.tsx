@@ -14,12 +14,17 @@ import { HonorsSection } from '@/components/honors/HonorsSection';
 import { RecommendationsSection } from '@/components/recommendations/RecommendationsSection';
 import { ContactSection } from '@/components/contact/ContactSection';
 import { Footer } from '@/components/layout/Footer';
+import { LeetCodeCallout } from '@/components/home/leetcode-callout';
+import { Section } from '@/components/shared/Section';
+import { Container } from '@/components/shared/Container';
+import { getLeetCodePageData } from '@/lib/leetcode/fetcher';
 
-export default function Home() {
+export default async function Home() {
   const cv = loadCvData();
   const contact = getDisplayContact(cv);
   const projects = loadProjectsFromMd();
   const { primary: navLinks, secondary: navSecondary } = getNavLinks(projects, cv);
+  const leetcodeData = await getLeetCodePageData();
 
   return (
     <>
@@ -30,6 +35,14 @@ export default function Home() {
         <ExperienceSection experiences={cv.experience} />
         <ProjectsSection projects={projects} />
         <SkillsSection cv={cv} />
+        <Section id="leetcode-callout" ariaLabelledBy="leetcode-callout-heading" divided>
+          <Container className="max-w-[1100px]">
+            <h2 id="leetcode-callout-heading" className="sr-only">
+              LeetCode stats preview
+            </h2>
+            <LeetCodeCallout data={leetcodeData} />
+          </Container>
+        </Section>
         <EducationSection education={cv.education} />
         <CertificationsSection certifications={cv.certifications} />
         <LanguagesSection languages={cv.languages} />
